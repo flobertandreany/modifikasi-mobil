@@ -45,6 +45,9 @@ Route::post('/logout', [LoginController::class, 'logout']);
 Route::post('/register', [RegisterController::class, 'postRegisterUser']);
 Route::post('/register/store', [RegisterController::class, 'postRegisterStore']);
 
+Route::get('/store/city', [RegisterController::class, 'getCity'])->name('store.getCity');
+Route::get('/store/district', [RegisterController::class, 'getDistrict'])->name('store.getDistrict');
+Route::get('/store/subdistrict', [RegisterController::class, 'getSubdistrict'])->name('store.getSubdistrict');
 
 Route::get('users/{id}', function ($id) {
     return 'User '.$id;

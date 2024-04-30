@@ -73,8 +73,8 @@
                                             <div class="pt-1 mb-2">
                                                 <button class="btn text-light" style="background-color: #F36600;" type="submit">Register</button>
                                             </div>
-                                            <p class="pb-lg-2" style="color: #393f81;">Have an account? <a href="/login"
-                                                style="color: #393f81;">Login here</a>
+                                            <p class="pb-lg-2" style="color: #5F5F5F;">Already have An Account? <a href="/login" class="text-decoration-none"
+                                                style="color: #F36600;">Login</a>
                                             </p>
                                         </form>
                                     </div>

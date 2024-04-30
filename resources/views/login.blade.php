@@ -67,11 +67,11 @@
                                         <div class="pt-1 mb-4">
                                             <button class="btn text-light" style="background-color: #F36600;" type="submit">Log In</button>
                                         </div>
-                                        <p class="mb-3 pb-lg-2" style="color: #393f81;">Don't have an account? <a href="/register"
-                                            style="color: #393f81;">Register here</a>
+                                        <p class="mb-3 pb-lg-2" style="color: #5F5F5F;">Don't have An Account? <a href="/register"
+                                            style="text-decoration: none; color: #F36600;">Register</a>
                                         </p>
-                                        <a href="{{ route('form.store') }}" style="text-decoration: none; color:#4B4B4B;">
-                                            <div class="btn btn-outline-dark">Register As Store</div>
+                                        <a href="{{ route('form.store') }}">
+                                            <div class="btn btn-outline-light">Register As Store</div>
                                         </a>
                                     </form>
                                 </div>

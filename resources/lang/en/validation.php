@@ -145,6 +145,9 @@ return [
         'attribute-name' => [
             'rule-name' => 'custom-message',
         ],
+        'store_phone' => [
+            'regex' => 'The store phone number must be at least 10 digits.',
+        ],
     ],
 
     /*

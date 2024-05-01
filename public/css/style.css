@@ -2,3 +2,39 @@ body {
     background-image: url('../img/login/Wallpaper Login Register.jpg');
     background-size: cover;
 }
+
+.register-store {
+    height: 350px;
+    overflow: scroll;
+}
+
+.register-store::-webkit-scrollbar {
+    display: none;
+}
+
+.select-icon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
+.btn-outline-light {
+    color: #4B4B4B;
+    border: 1px solid #F36600;
+    padding: 10px 20px;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.btn-outline-light:hover {
+    border: 1px solid #F36600;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.is-invalid, .error-message {
+    color: #dc3545;
+    font-size: 14px;
+    margin-top: 4px;
+}
+

@@ -29,8 +29,15 @@ Route::get('/', function () {
 
 Route::middleware(['auth'])->group(function (){
     Route::get('/home', [HomeController::class, 'index'])->middleware('userAkses:user');
-    Route::get('/admin', [AdminController::class, 'index'])->middleware('userAkses:admin');
+    Route::get('/admin', [AdminController::class, 'index'])->middleware('userAkses:admin')->name('admin.store.approval');
     Route::get('/store', [StoreController::class, 'index'])->middleware('userAkses:store');
+});
+
+Route::middleware(['userAkses:admin'])->group(function (){
+    Route::post('/store/approval/{id}', [AdminController::class, 'approvalStore']);
+    // Route::get('/store/detail/{id}', [AdminController::class, 'getStoreDetail']);
+    // Route::get('/store/approval', [StoreController::class, 'approval']);
+    // Route::get('/store/approval/{id}', [StoreController::class, 'approvalStore']);
 });
 
 Route::middleware(['guest'])->group(function (){

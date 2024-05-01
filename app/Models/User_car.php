@@ -5,24 +5,22 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Store extends Model
+class User_car extends Model
 {
     use HasFactory;
-
-    protected $guarded =['id'];
 
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    public function sparepart()
+    public function car_engine()
     {
-        return $this->hasMany(Spareparts::class);
+        return $this->belongsTo(Car_engine::class);
     }
 
-    public function modification()
+    public function favorite()
     {
-        return $this->hasMany(Modification::class);
+        return $this->hasMany(Favorite::class);
     }
 }

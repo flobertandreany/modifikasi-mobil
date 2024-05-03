@@ -15,7 +15,7 @@ class CreateDistrictTable extends Migration
     {
         Schema::create('district', function (Blueprint $table) {
             $table->id();
-            $table->integer('city_id');
+            $table->foreignId('city_id')->constrained('city');
             $table->string('name');
         });
     }

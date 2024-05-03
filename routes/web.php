@@ -35,6 +35,11 @@ Route::middleware(['auth'])->group(function (){
 
 Route::middleware(['userAkses:admin'])->group(function (){
     Route::post('/store/approval/{id}', [AdminController::class, 'approvalStore']);
+    Route::post('/store/reject/{id}', [AdminController::class, 'rejectStore']);
+    Route::get('store/list', [AdminController::class, 'viewStoreList'])->name('view.store.list');
+    Route::get('car/model', [AdminController::class, 'carModelList'])->name('car.model.list');
+    Route::get('car/brand', [AdminController::class, 'carBrandList'])->name('car.brand.list');
+    Route::get('car/parts' , [AdminController::class, 'carPartList'])->name('car.part.list');
     // Route::get('/store/detail/{id}', [AdminController::class, 'getStoreDetail']);
     // Route::get('/store/approval', [StoreController::class, 'approval']);
     // Route::get('/store/approval/{id}', [StoreController::class, 'approvalStore']);

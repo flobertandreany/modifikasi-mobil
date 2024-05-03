@@ -53,4 +53,14 @@ class User extends Authenticatable
     {
         return $this->hasOne(Store::class);
     }
+
+    public function isAdmin()
+    {
+        return $this->role === 'admin';
+    }
+
+    public function isStore()
+    {
+        return $this->role === 'store';
+    }
 }

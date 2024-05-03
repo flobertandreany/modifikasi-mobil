@@ -55,14 +55,55 @@
     <div style="min-height: 120px;">
         <div class="collapse collapse-horizontal" id="collapseWidthExample">
             <div class="card card-body" style="width: 223px; background-color: #363636; border-radius: 0 0 10px 0;">
-                <ul class="nav flex-column">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Active</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Link</a>
-                    </li>
-                </ul>
+                @if(auth()->check())
+                    @if(auth()->user()->isAdmin())
+                        <!-- Navbar untuk admin -->
+                        <ul class="nav flex-column">
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('admin.store.approval') }}">Store Approval List</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('view.store.list') }}">Store List</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('car.model.list') }}">Manage Car Model</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('car.brand.list') }}">Manage Car Brand</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('car.part.list') }}">Manage Parts</a>
+                            </li>
+                        </ul>
+                    @elseif(auth()->user()->isStore())
+                        <!-- Navbar untuk pengguna biasa -->
+                        <ul class="nav flex-column">
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Product List</a>
+                            </li>
+                            <!-- Opsi lain untuk pengguna biasa -->
+                        </ul>
+                    @else
+                        <ul class="nav flex-column">
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">user dan guest</a>
+                            </li>
+                        </ul>
+                    @endif
+                @else
+                    <!-- Navbar untuk pengunjung tanpa login -->
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">user dan guest</a>
+                        </li>
+                        {{-- <li class="nav-item">
+                            <a class="nav-link" href="{{ route('login') }}">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('register') }}">Register</a>
+                        </li> --}}
+                    </ul>
+                @endif
             </div>
         </div>
     </div>

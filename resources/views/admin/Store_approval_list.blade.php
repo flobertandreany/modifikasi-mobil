@@ -9,7 +9,7 @@
               <tr>
                 <th scope="col">No.</th>
                 <th scope="col">Shop Name</th>
-                <th scope="col">Tokopedia</th>
+                <th scope="col">Email</th>
                 <th scope="col">Phone</th>
                 <th scope="col">Details</th>
                 <th scope="col">Settings</th>
@@ -20,7 +20,7 @@
                     <tr>
                         <th scope="row">{{ $loop->index + 1 }}</th>
                         <td>{{ $s->store_name}}</td>
-                        <td>{{ $s->store_tokopedia }}</td>
+                        <td>{{ $s->user->email }}</td>
                         <td>{{ $s->store_phone }}</td>
                         <td>
                             <button type="button" class="btn btn-primary open-modal" data-bs-toggle="modal" data-bs-target="#popupStore{{ $s->id }}">
@@ -28,13 +28,15 @@
                             </button>
                         </td>
                         <td>
+                            <form id="rejectForm{{ $s->id }}" action="store/reject/{{ $s->id }}" method="POST">
+                                @csrf
+                                <button type="submit" name="reject" onclick="reject_button({{ $s->id }})" class="btn btn-link btn-rounded btn-sm fw-bold" data-mdb-ripple-color="dark">
+                                    Decline
+                                </button>
+                            </form>
                             <form id="approvalForm{{ $s->id }}" action="store/approval/{{ $s->id }}" method="POST">
                                 @csrf
-                                <button type="submit" name="reject" class="btn btn-link btn-rounded btn-sm fw-bold" data-mdb-ripple-color="dark">
-                                    Reject
-                                </button>
-                                @csrf
-                                <button id="approve" name="approve" onclick="submit_approve({{ $s->id }})" type="submit" class="btn btn-link btn-rounded btn-sm fw-bold" data-mdb-ripple-color="dark">
+                                <button type="submit" name="approve" onclick="approve_button({{ $s->id }})" class="btn btn-link btn-rounded btn-sm fw-bold" data-mdb-ripple-color="dark">
                                     Approve
                                 </button>
                             </form>
@@ -124,47 +126,38 @@
     </div>
 
     <script>
-        function submit_approve(formId) {
-            var form = document.getElementById("approvalForm" + formId);
-
-            var confirmation = confirm("Are you sure you want to approve?");
-
-            // Jika pengguna menyetujui
-            if (confirmation) {
-                form.submit();
-            } else {
-                // Jika pengguna membatalkan, tidak melakukan apa pun
-                return false;
-            }
+        function reject_button(id) {
+            event.preventDefault();
+            Swal.fire({
+                title: 'Are you sure want to decline this Store ?',
+                text: 'This will decline this store permanently, and you cannot undo this action.',
+                showCancelButton: true,
+                confirmButtonText: 'Decline',
+                confirmButtonColor: '#F36600',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var form = document.getElementById("rejectForm" + id);
+                    form.submit();
+                }
+            });
         }
 
-        // document.addEventListener('DOMContentLoaded', function() {
-        //     const approveButtons = document.querySelectorAll('.approve-button');
+        function approve_button(id) {
+            event.preventDefault();
+            Swal.fire({
+                title: 'Are you sure want to approve this Store ?',
+                text: 'This will approve this store, and you cannot undo this action.',
+                showCancelButton: true,
+                confirmButtonText: 'Approve',
+                confirmButtonColor: '#F36600',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var form = document.getElementById("approvalForm" + id);
+                    form.submit();
+                }
+            });
+        }
 
-        //     approveButtons.forEach(button => {
-        //         button.addEventListener('click', function(event) {
-        //             event.preventDefault(); // Mencegah tindakan default tombol submit
-
-        //             const formId = button.parentElement.getAttribute('id');
-
-        //             // Menampilkan SweetAlert
-        //             Swal.fire({
-        //                 title: 'Are you sure?',
-        //                 text: "You won't be able to revert this!",
-        //                 icon: 'warning',
-        //                 showCancelButton: true,
-        //                 confirmButtonColor: '#3085d6',
-        //                 cancelButtonColor: '#d33',
-        //                 confirmButtonText: 'Yes, approve it!'
-        //             }).then((result) => {
-        //                 if (result.isConfirmed) {
-        //                     // Jika pengguna menekan "Yes", kirimkan formulir
-        //                     document.getElementById(formId).submit();
-        //                 }
-        //             });
-        //         });
-        //     });
-        // });
     </script>
 
 @endsection

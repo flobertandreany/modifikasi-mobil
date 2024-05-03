@@ -15,7 +15,7 @@ class CreateCityTable extends Migration
     {
         Schema::create('city', function (Blueprint $table) {
             $table->id();
-            $table->integer('province_id');
+            $table->foreignId('province_id')->constrained('province');
             $table->string('name');
         });
     }

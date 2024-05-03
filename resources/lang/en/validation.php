@@ -146,7 +146,8 @@ return [
             'rule-name' => 'custom-message',
         ],
         'store_phone' => [
-            'regex' => 'The store phone number must be at least 10 digits.',
+            'regex' => 'The :attribute number must be at least 10 digits.',
+            'starts_with' => 'The :attribute number must start with "08".'
         ],
     ],
 

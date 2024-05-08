@@ -25,12 +25,12 @@ Route::get('/', function () {
     }
 
     return redirect('/home');
-});
+})->name('home');
 
 Route::middleware(['auth'])->group(function (){
     Route::get('/home', [HomeController::class, 'index'])->middleware('userAkses:user');
     Route::get('/admin', [AdminController::class, 'index'])->middleware('userAkses:admin')->name('admin.store.approval');
-    Route::get('/store', [StoreController::class, 'index'])->middleware('userAkses:store');
+    Route::get('/store', [StoreController::class, 'index'])->middleware('userAkses:store')->name('store.home');
 });
 
 Route::middleware(['userAkses:admin'])->group(function (){
@@ -49,19 +49,21 @@ Route::middleware(['userAkses:admin'])->group(function (){
 
 Route::middleware(['guest'])->group(function (){
     Route::get('/dashboard', [HomeController::class, 'index']);
-    Route::get('/login', [LoginController::class, 'index'])->name('login');
-    Route::get('/register', [RegisterController::class, 'formRegisterUser']);
-    Route::get('/register/store', [RegisterController::class, 'formRegisterStore'])->name('form.store');
+    Route::get('/login', [LoginController::class, 'index'])->name('view.login');
+    Route::get('/register', [RegisterController::class, 'formRegisterUser'])->name('view.register');
+    Route::get('/register/store', [RegisterController::class, 'formRegisterStore'])->name('view.registerStore');
 });
 
-Route::post('/login', [LoginController::class, 'authenticate']);
-Route::post('/logout', [LoginController::class, 'logout']);
-Route::post('/register', [RegisterController::class, 'postRegisterUser']);
-Route::post('/register/store', [RegisterController::class, 'postRegisterStore']);
+Route::post('/login', [LoginController::class, 'authenticate'])->name('login');
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+Route::post('/register', [RegisterController::class, 'postRegisterUser'])->name('register');
+Route::post('/register/store', [RegisterController::class, 'postRegisterStore'])->name('registerStore');
 
 Route::get('/store/city', [RegisterController::class, 'getCity'])->name('store.getCity');
 Route::get('/store/district', [RegisterController::class, 'getDistrict'])->name('store.getDistrict');
 Route::get('/store/subdistrict', [RegisterController::class, 'getSubdistrict'])->name('store.getSubdistrict');
+
+Route::post('/store/edit/profile', [StoreController::class, 'editProfile'])->name('store.editProfile');
 
 Route::get('users/{id}', function ($id) {
     return 'User '.$id;

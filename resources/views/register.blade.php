@@ -3,7 +3,7 @@
 @section('content')
     <div class="col-md-6 col-lg-7 d-flex align-items-center">
         <div class="card-body p-4 p-lg-5 text-black">
-            <form action="/register" method="POST">
+            <form action="{{ route('register') }}" method="POST">
                 @csrf
                 <div class="d-flex align-items-center justify-content-center mb-3 pb-1">
                     <span class="h1 fw-bold mb-0">REGISTER</span>
@@ -51,10 +51,16 @@
                 <div class="pt-1 mb-2">
                     <button class="btn text-light" style="background-color: #F36600;" type="submit">Register</button>
                 </div>
-                <p class="pb-lg-2" style="color: #5F5F5F;">Already have An Account? <a href="/login" class="text-decoration-none"
+                <p class="pb-lg-2" style="color: #5F5F5F;">Already have An Account? <a href="{{ route('view.login') }}" class="text-decoration-none"
                     style="color: #F36600;">Login</a>
                 </p>
             </form>
         </div>
     </div>
 @endsection
+@push('custom_css')
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    <style>
+
+    </style>
+@endpush

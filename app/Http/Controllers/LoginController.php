@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class LoginController extends Controller
 {
@@ -21,6 +22,9 @@ class LoginController extends Controller
 
         if(Auth::attempt($credentials)){
             $request->session()->regenerate();
+
+            $userId = Auth::user()->id;
+            Session::put('user_id', $userId);
 
             if(Auth::user()->role == 'user'){
                 return redirect()->intended('/');
@@ -40,6 +44,8 @@ class LoginController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        return response()->json([
+            'success' => true
+        ]);
     }
 }

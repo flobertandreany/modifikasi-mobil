@@ -32,7 +32,7 @@ class RegisterController extends Controller
 
         User::create($validateData);
 
-        return redirect('/login')->with('success', 'Registration successfull! Please login');
+        return redirect()->route('view.login')->with('success', 'Registration successfull! Please login');
     }
 
     public function formRegisterStore(){

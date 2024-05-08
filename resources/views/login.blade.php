@@ -17,7 +17,7 @@
                 </div>
             @endif
 
-            <form action="/login" method="POST">
+            <form action="{{ route('login') }}" method="POST">
                 @csrf
                 <div class="d-flex align-items-center justify-content-center mb-3 pb-1">
                     <span class="h1 fw-bold mb-0">LOGIN</span>
@@ -45,13 +45,28 @@
                 <div class="pt-1 mb-4">
                     <button class="btn text-light" style="background-color: #F36600;" type="submit">Log In</button>
                 </div>
-                <p class="mb-3 pb-lg-2" style="color: #5F5F5F;">Don't have An Account? <a href="/register"
+                <p class="mb-3 pb-lg-2" style="color: #5F5F5F;">Don't have An Account? <a href="{{ route('view.register') }}"
                     style="text-decoration: none; color: #F36600;">Register</a>
                 </p>
-                <a href="{{ route('form.store') }}">
+                <a href="{{ route('view.registerStore') }}">
                     <div class="btn btn-outline-light">Register As Store</div>
                 </a>
             </form>
         </div>
     </div>
 @endsection
+@push('custom_css')
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    <style>
+        .btn-outline-light {
+            color: #4B4B4B;
+            border: 1px solid #F36600;
+            padding: 10px 20px;
+            box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        .btn-outline-light:hover {
+            border: 1px solid #F36600;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+        }
+    </style>
+@endpush

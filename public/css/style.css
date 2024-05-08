@@ -1,35 +1,6 @@
-body {
+.regis-login-body {
     background-image: url('../img/login/Wallpaper Login Register.jpg');
     background-size: cover;
-}
-
-.register-store {
-    height: 350px;
-    overflow: scroll;
-}
-
-.register-store::-webkit-scrollbar {
-    display: none;
-}
-
-.select-icon {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    pointer-events: none;
-}
-
-.btn-outline-light {
-    color: #4B4B4B;
-    border: 1px solid #F36600;
-    padding: 10px 20px;
-    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-.btn-outline-light:hover {
-    border: 1px solid #F36600;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
 }
 
 .is-invalid, .error-message {
@@ -38,3 +9,25 @@ body {
     margin-top: 4px;
 }
 
+.confirm-button-swal{
+    border: 2px solid #00621C !important;
+}
+
+.cancel-button-swal{
+    color: #222222 !important;
+    border: 2px solid #222222 !important;
+}
+
+.confirm-button-swal, .cancel-button-swal {
+    border-radius: 10px !important;
+    text-align: center !important;
+    line-height: 0px !important;
+    width: 160px !important;
+    height: 45px !important;
+}
+
+.swal2-actions {
+    display: flex;
+    flex-direction: row-reverse;
+    gap: 10px;
+}

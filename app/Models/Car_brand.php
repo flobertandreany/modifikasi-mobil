@@ -9,6 +9,11 @@ class Car_brand extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'car_brand_name',
+        'car_brand_logo',
+    ];
+
     public function car_models()
     {
         return $this->hasMany(Car_model::class);

@@ -18,7 +18,7 @@
             </div>
         @else
         <div type="button" class="">
-            <a href="/login" style="display: grid; justify-items: center; margin-right: 30px; text-decoration: none;">
+            <a href="{{ route('view.login') }}" style="display: grid; justify-items: center; margin-right: 30px; text-decoration: none;">
                 <i class="bi bi-person-circle text-white fs-4"></i>
                 <span class="text-white" style="font-size: 11px;">Sign In</span>
             </a>
@@ -26,27 +26,14 @@
         @endauth
         <!-- Profile Modal -->
         <div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content text-white" style="background-color: #363636;">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Profile</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        @if(auth()->check())
-                            <h5>Name: {{ auth()->user()->name }}</h5>
-                            <h5>Username: {{ auth()->user()->username }}</h5>
-                            <h5>Email: {{ auth()->user()->email }}</h5>
-                            <h5>Role: {{ auth()->user()->role }}</h5>
-                        @endif
-                    </div>
-                    <div class="modal-footer">
-                        <form action="/logout" method="POST">
-                            @csrf
-                            <button type="submit" class="btn btn-secondary" data-bs-dismiss="modal">Sign Out</button>
-                        </form>
-                    </div>
-                </div>
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+
+                @include('components.profileModal')
+
+                @stack('content_profile_css')
+
+                @stack('content_profile_js')
+
             </div>
         </div>
     </div>
@@ -108,3 +95,19 @@
         </div>
     </div>
 </div>
+@push('content_css')
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+
+    <style>
+
+    </style>
+@endpush
+@push('content_js')
+    <script src="{{ asset('js/script.js') }}"></script>
+    <script>
+        // Panggil fungsi reset saat modal profile ditutup
+        $('#profileModal').on('hidden.bs.modal', function (e) {
+            location.reload();
+        });
+    </script>
+@endpush

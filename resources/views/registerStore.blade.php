@@ -3,7 +3,7 @@
 @section('content')
     <div class="register-container col-md-6 col-lg-7 d-flex align-items-center">
         <div class="p-4 p-lg-5 text-black card-body">
-            <form action="/register/store" method="POST">
+            <form action="{{ route('registerStore') }}" method="POST">
                 @csrf
                 <div class="d-flex align-items-center justify-content-center mb-3 pb-1">
                     <span class="h1 fw-bold mb-0">STORE REGISTER</span>
@@ -27,7 +27,7 @@
                     </div>
                     <div class="form-outline mb-3 form-floating">
                         <select name="store_province" id="store_province" class="form-control" required value="{{ old('store_province') }}">
-                            <option value="">Select Province</option>
+                            <option value="">**Select Province**</option>
                             @foreach($provinces as $province)
                                 <option value="{{ $province->id }}">{{ $province->name }}</option>
                             @endforeach
@@ -37,21 +37,21 @@
                     </div>
                     <div class="form-outline mb-3 form-floating">
                         <select name="store_city" id="store_city" class="form-control" required value="{{ old('store_city') }}">
-                            <option value="">Select City</option>
+                            <option value="">**Select City**</option>
                         </select>
                         <label for="store_city">City</label>
                         <i class="fas fa-chevron-down select-icon"></i>
                     </div>
                     <div class="form-outline mb-3 form-floating">
                         <select name="store_district" id="store_district" class="form-control" required value="{{ old('store_district') }}">
-                            <option value="">Select District</option>
+                            <option value="">**Select District**</option>
                         </select>
                         <label for="store_district">District</label>
                         <i class="fas fa-chevron-down select-icon"></i>
                     </div>
                     <div class="form-outline mb-3 form-floating">
                         <select name="store_subdistrict" id="store_subdistrict" class="form-control" required value="{{ old('store_subdistrict') }}">
-                            <option value="">Select Subdistrict</option>
+                            <option value="">**Select Subdistrict**</option>
                         </select>
                         <label for="store_subdistrict">Subdistrict</label>
                         <i class="fas fa-chevron-down select-icon"></i>
@@ -83,7 +83,7 @@
                     <div class="pt-1 mb-2">
                         <button class="btn text-light" style="background-color: #F36600;" type="submit">Register</button>
                     </div>
-                    <p class="pb-lg-2" style="color: #5F5F5F;">Already have An Account? <a href="/login" class="text-decoration-none"
+                    <p class="pb-lg-2" style="color: #5F5F5F;">Already have An Account? <a href="{{ route('view.login') }}" class="text-decoration-none"
                         style="color: #F36600;">Login</a>
                     </p>
                 </div>
@@ -91,8 +91,30 @@
         </div>
     </div>
 @endsection
+@push('custom_css')
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    <style>
+        .register-store {
+            height: 350px;
+            overflow: scroll;
+        }
+        .register-store::-webkit-scrollbar {
+            display: none;
+        }
+        .select-icon {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+    </style>
+@endpush
 @push('custom_js')
+    <script src="{{ asset('js/script.js') }}"></script>
     <script>
+        loadDataSelectAddress();
+
         $('form').submit(function(event) {
             event.preventDefault();
             $.ajax({
@@ -101,7 +123,7 @@
                 data: $(this).serialize(),
                 success: function(response) {
                     if (response.success) {
-                        showSuccessAlert();
+                        showSuccessRegisterAlert();
                     }
                 },
                 error: function(xhr, status, error) {
@@ -123,88 +145,6 @@
                     }
                 }
             });
-        });
-
-        // Fungsi untuk menampilkan popup register berhasil
-        function showSuccessAlert() {
-            Swal.fire({
-                icon: 'success',
-                title: 'Thank You For Your Registration!',
-                text: 'Thank you for registering your shop on our website. Please check your email within 1-2 days to find out the status of the store',
-                confirmButtonText: 'Back',
-                confirmButtonColor: '#F36600',
-            }).then((result) => {
-                window.location.href = '/login';
-            });
-        }
-
-        $('#store_province').change(function() {
-            var provinceId = $(this).val();
-            //Reset options
-            $('#store_city').empty().append('<option value="">Select City</option>');
-            $('#store_district').empty().append('<option value="">Select District</option>');
-            $('#store_subdistrict').empty().append('<option value="">Select Subdistrict</option>');
-
-            if (provinceId) {
-                $.ajax({
-                    url: "{{ route('store.getCity') }}",
-                    method: 'GET',
-                    dataType: 'json',
-                    data: {
-                        id: provinceId,
-                    },
-                    success: function(data) {
-                        data.forEach(function(city) {
-                            $('#store_city').append('<option value="' + city.id + '">' + city.name + '</option>');
-                        });
-                    }
-                });
-            }
-        });
-
-        $('#store_city').change(function() {
-            var cityId = $(this).val();
-            //Reset options
-            $('#store_district').empty().append('<option value="">Select District</option>');
-            $('#store_subdistrict').empty().append('<option value="">Select Subdistrict</option>');
-
-            if (cityId) {
-                $.ajax({
-                    url: "{{ route('store.getDistrict') }}",
-                    method: 'GET',
-                    dataType: 'json',
-                    data: {
-                        id: cityId,
-                    },
-                    success: function(data) {
-                        data.forEach(function(district) {
-                            $('#store_district').append('<option value="' + district.id + '">' + district.name + '</option>');
-                        });
-                    }
-                });
-            }
-        });
-
-        $('#store_district').change(function() {
-            var districtId = $(this).val();
-            //Reset options
-            $('#store_subdistrict').empty().append('<option value="">Select Subdistrict</option>');
-
-            if (districtId) {
-                $.ajax({
-                    url: "{{ route('store.getSubdistrict') }}",
-                    method: 'GET',
-                    dataType: 'json',
-                    data: {
-                        id: districtId,
-                    },
-                    success: function(data) {
-                        data.forEach(function(subdistrict) {
-                            $('#store_subdistrict').append('<option value="' + subdistrict.id + '">' + subdistrict.name + '</option>');
-                        });
-                    }
-                });
-            }
         });
     </script>
 @endpush

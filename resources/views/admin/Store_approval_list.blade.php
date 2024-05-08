@@ -1,10 +1,10 @@
-@extends('layouts.main')
+@extends('layouts.main_adminStore')
 
 @section('content')
-    <h1>{{ $title }}</h1>
+    <h1 style="color: white; margin-bottom: 30px;">{{ $title }}</h1>
 
-    <div>
-        <table class="table align-middle mb-0 bg-white">
+    <div style="width:100%; justify-content: center; align-items: center; text-align: center;">
+        <table class="table table-bordered border-dark bg-white" style="border-radius : 5px; overflow: hidden; text-align: center;">
             <thead>
               <tr>
                 <th scope="col">No.</th>
@@ -12,31 +12,33 @@
                 <th scope="col">Email</th>
                 <th scope="col">Phone</th>
                 <th scope="col">Details</th>
-                <th scope="col">Settings</th>
+                <th scope="col" colspan="2">Settings</th>
               </tr>
             </thead>
             <tbody>
                 @foreach ($store as $s)
                     <tr>
-                        <th scope="row">{{ $loop->index + 1 }}</th>
+                        <td scope="row">{{ $loop->index + 1 }}.</td>
                         <td>{{ $s->store_name}}</td>
-                        <td>{{ $s->user->email }}</td>
+                        <td>{{ $s->email }}</td>
                         <td>{{ $s->store_phone }}</td>
                         <td>
                             <button type="button" class="btn btn-primary open-modal" data-bs-toggle="modal" data-bs-target="#popupStore{{ $s->id }}">
-                                Details
+                                See Details
                             </button>
                         </td>
-                        <td>
+                        <td style="border-right: 0px;">
                             <form id="rejectForm{{ $s->id }}" action="store/reject/{{ $s->id }}" method="POST">
                                 @csrf
-                                <button type="submit" name="reject" onclick="reject_button({{ $s->id }})" class="btn btn-link btn-rounded btn-sm fw-bold" data-mdb-ripple-color="dark">
+                                <button type="submit" name="reject" onclick="reject_button({{ $s->id }})" class="" style="background-color: red;">
                                     Decline
                                 </button>
                             </form>
+                        </td>
+                        <td>
                             <form id="approvalForm{{ $s->id }}" action="store/approval/{{ $s->id }}" method="POST">
                                 @csrf
-                                <button type="submit" name="approve" onclick="approve_button({{ $s->id }})" class="btn btn-link btn-rounded btn-sm fw-bold" data-mdb-ripple-color="dark">
+                                <button type="submit" name="approve" onclick="approve_button({{ $s->id }})" class="" style="background-color: green;">
                                     Approve
                                 </button>
                             </form>
@@ -70,6 +72,14 @@
                                                 <input type="name" class="form-control" id="name" value="{{ $s->store_name }}" readonly>
                                             </div>
                                             <div class="col-md-5">
+                                                <label for="inputAddress" class="form-label">Subdisctrict</label>
+                                                <input type="text" class="form-control" id="inputAddress" value="{{ $s->subdistrict_name }}" readonly>
+                                            </div>
+                                            <div class="col-md-5 custom-column">
+                                                <label for="inputAddress2" class="form-label">Email</label>
+                                                <input type="text" class="form-control" id="inputAddress2" value="{{ $s->email }}" readonly>
+                                            </div>
+                                            <div class="col-md-5">
                                                 <label for="inputAddress" class="form-label">Postal Code</label>
                                                 <input type="text" class="form-control" id="inputAddress" value="{{ $s->store_postal_code }}" readonly>
                                             </div>
@@ -83,7 +93,7 @@
                                             </div>
                                             <div class="col-md-5 custom-column">
                                                 <label for="inputAddress" class="form-label">Province</label>
-                                                <input type="text" class="form-control" id="inputAddress" value="{{ $s->store_province }}" readonly>
+                                                <input type="text" class="form-control" id="inputAddress" value="{{ $s->province_name }}" readonly>
                                             </div>
                                             <div class="col-md-5">
                                                 <label for="inputAddress2" class="form-label">Store Tokopedia</label>
@@ -91,15 +101,15 @@
                                             </div>
                                             <div class="col-md-5 custom-column">
                                                 <label for="inputCity" class="form-label">City</label>
-                                                <input type="text" class="form-control" id="inputCity" value="{{ $s->store_city }}" readonly>
+                                                <input type="text" class="form-control" id="inputCity" value="{{ $s->city_name }}" readonly>
                                             </div>
                                             <div class="col-md-5">
                                                 <label for="inputAddress2" class="form-label">Store Shoope</label>
-                                                <input type="text" class="form-control" id="inputAddress2" value="{{ $s->store_shoope }}" readonly>
+                                                <input type="text" class="form-control" id="inputAddress2" value="{{ $s->store_shopee }}" readonly>
                                             </div>
                                             <div class="col-md-5 custom-column">
-                                                <label for="inputAddress" class="form-label">Store Village</label>
-                                                <input type="text" class="form-control" id="inputAddress" value="{{ $s->store_village }}" readonly>
+                                                <label for="inputAddress" class="form-label">Store District</label>
+                                                <input type="text" class="form-control" id="inputAddress" value="{{ $s->district_name }}" readonly>
                                             </div>
                                             <div class="col-md-5">
                                                 <label for="inputAddress2" class="form-label">Store Instagram</label>
@@ -117,6 +127,7 @@
 
                 @endforeach
             </tbody>
+
         </table>
         @if ($store->links()->paginator->hasPages())
             <div class="d-flex justify-content-center my-4">
@@ -129,6 +140,7 @@
         function reject_button(id) {
             event.preventDefault();
             Swal.fire({
+                icon: 'warning',
                 title: 'Are you sure want to decline this Store ?',
                 text: 'This will decline this store permanently, and you cannot undo this action.',
                 showCancelButton: true,
@@ -145,6 +157,7 @@
         function approve_button(id) {
             event.preventDefault();
             Swal.fire({
+                icon: 'warning',
                 title: 'Are you sure want to approve this Store ?',
                 text: 'This will approve this store, and you cannot undo this action.',
                 showCancelButton: true,

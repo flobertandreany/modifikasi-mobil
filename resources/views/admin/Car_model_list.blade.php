@@ -1,4 +1,4 @@
-@extends('layouts.main')
+@extends('layouts.main_adminStore')
 
 @section('content')
     <h1>{{ $title }}</h1>

@@ -39,6 +39,8 @@ Route::middleware(['userAkses:admin'])->group(function (){
     Route::get('store/list', [AdminController::class, 'viewStoreList'])->name('view.store.list');
     Route::get('car/model', [AdminController::class, 'carModelList'])->name('car.model.list');
     Route::get('car/brand', [AdminController::class, 'carBrandList'])->name('car.brand.list');
+    Route::get('car/brand/form', [AdminController::class, 'carBrandForm'])->name('car.brand.form');
+    Route::post('car/brand/create', [AdminController::class, 'addCarBrand'])->name('brand.create');
     Route::get('car/parts' , [AdminController::class, 'carPartList'])->name('car.part.list');
     // Route::get('/store/detail/{id}', [AdminController::class, 'getStoreDetail']);
     // Route::get('/store/approval', [StoreController::class, 'approval']);

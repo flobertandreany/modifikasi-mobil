@@ -16,6 +16,7 @@ class CreateCarBrandsTable extends Migration
         Schema::create('car_brands', function (Blueprint $table) {
             $table->id();
             $table->string('car_brand_name');
+            $table->string('car_brand_logo');
             $table->timestamps();
         });
     }

@@ -15,11 +15,11 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 
     </head>
-    <body class="" style="">
+    <body class="" style="width: 100%; height: 100%; position: relative; background-color: #171716;">
 
         @include('components.navbar')
 
-        <div class="container mt-lg-3 p-lg-5" style="">
+        <div class="container mt-lg-3 p-xl-5" style="width:100%;">
             @yield('content')
 
             <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>

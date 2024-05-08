@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Store;
 use App\Models\User;
+use App\Models\Car_brand;
 use Illuminate\Support\Facades\Log;
+use App\Models\Province;
 use Illuminate\Http\Request;
 
 class AdminController extends Controller
@@ -13,9 +15,13 @@ class AdminController extends Controller
         Log::info("Masuk ke dalam metode index pada AdminController");
         $store = Store::whereNull('store_code')
             ->join('users', 'stores.user_id', '=', 'users.id')
+            ->join('province', 'stores.store_province', '=', 'province.id')
+            ->join('city', 'stores.store_city', '=', 'city.id')
+            ->join('district', 'stores.store_district', '=', 'district.id')
+            ->join('subdistrict', 'stores.store_subdistrict', '=', 'subdistrict.id')
             ->orderBy('stores.created_at', 'desc')
-            ->select('stores.*', 'users.email')
-            ->simplePaginate(3);
+            ->select('stores.*', 'users.email as email', 'province.name as province_name', 'city.name as city_name', 'district.name as district_name', 'subdistrict.name as subdistrict_name')
+            ->simplePaginate(5);
 
         return view('admin.Store_approval_list', [
             'title' => 'STORE APPROVAL LIST',
@@ -73,9 +79,46 @@ class AdminController extends Controller
 
     public function carBrandList(){
         Log::info("Masuk ke dalam metode carBrandList pada AdminController");
+
+        $brand = Car_brand::orderBy('created_at', 'desc')->simplePaginate(5);
+
         return view('admin.Car_brand_list', [
-            'title' => 'CAR BRAND LIST',
+            'title' => 'MANAGE CAR BRAND',
+            'brand' => $brand,
         ]);
+    }
+
+    public function carBrandForm(){
+        Log::info("Masuk ke dalam metode addCarBrandView pada AdminController");
+
+        return view('admin.Brand_create', [
+            'title' => 'ADD CAR BRAND',
+        ]);
+    }
+
+    public function addCarBrand(Request $request){
+        Log::info("Masuk ke dalam metode addCarBrand");
+
+        $request->validate([
+            'car_brand_name' => 'required',
+            // 'r-type_brand_name' => 'required|same:car_brand_name',
+            'car_brand_logo'=> 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        Log::info("Request: " . $request);
+
+        $car_brand = new Car_brand;
+        $car_brand->car_brand_name = $request->car_brand_name;
+
+        $imageName = $request->file('car_brand_logo')->getClientOriginalName();
+        $request->file('car_brand_logo')->move(public_path('img/brand'), $imageName);
+
+        $car_brand->car_brand_logo = $imageName;
+        $car_brand->save();
+
+        Log::info("Berhasil menambahkan brand");
+
+        return redirect()->route('car.brand.list');
     }
 
     public function carPartList(){

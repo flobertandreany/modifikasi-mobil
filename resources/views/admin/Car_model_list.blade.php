@@ -1,15 +1,68 @@
-@extends('layouts.main_adminStore')
+@extends('layouts.main')
 
 @section('content')
-    <h1>{{ $title }}</h1>
+    <h1 style="color: white; margin-bottom: 30px;">{{ $title }}</h1>
 
     <div>
-
+        <table class="table-utama table table-bordered border-dark bg-white">
+            <thead>
+                <tr style="background-color: rgb(224, 224, 224);">
+                    <th scope="col">No</th>
+                    <th scope="col">Car Model</th>
+                    <th scope="col">Car Brand</th>
+                    <th scope="col">Car Year</th>
+                    <th scope="col">Engine Type</th>
+                    <th scope="col">Settings</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($model as $m)
+                    <tr>
+                        <th scope="row">{{ $loop->index + 1 }}.</th>
+                        <td>{{ $m->car_model_name }}</td>
+                        <td>{{ $m->brand_name }}</td>
+                        <td>{{ $m->car_year }}</td>
+                        <td>{{ $m->engine_name }}</td>
+                        <td style="width:300px;">
+                                {{-- <a href="{{ route('brand.edit', ['id' => $b->id]) }}" class="button-a btn btn-secondary btn-sm" style="background-color: black; margin-right: 10px;">Edit</a> --}}
+                                {{-- <button onclick="delete_button({{ $b->id }})" class="button-a btn btn-secondary btn-sm" style="background-color: red;">Delete</button> --}}
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+            <a href="{{ route('model.form') }}" class="btn btn-primary">Add New Model</a>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+@push('content_css')
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    <style>
+        .button-a{
+            border-radius: 100px;
+            width: 100px;
+            font-size: 13px;
+        }
+    </style>
+@endpush
+@push('content_js')
+    <script src="{{ asset('js/script.js') }}"></script>
     <script>
+        function delete_button(id) {
+            event.preventDefault();
+            Swal.fire({
+                icon: 'warning',
+                title: 'Are you sure want to delete this Car Model ?',
+                text: 'This will delete this model permanently, and you cannot undo this action.',
+                showCancelButton: true,
+                confirmButtonText: 'Delete',
+                confirmButtonColor: '#F36600',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = '/car/model/delete/' + id;
+                }
+            });
+        }
+
 
     </script>
-
+@endpush
 @endsection

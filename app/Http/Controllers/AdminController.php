@@ -5,8 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Store;
 use App\Models\User;
 use App\Models\Car_brand;
+use App\Models\Car_model;
+use App\Models\Car_engine;
 use Illuminate\Support\Facades\Log;
-use App\Models\Province;
 use Illuminate\Http\Request;
 
 class AdminController extends Controller
@@ -72,9 +73,51 @@ class AdminController extends Controller
 
     public function carModelList(){
         Log::info("Masuk ke dalam metode carModelList pada AdminController");
+
+        $model = Car_model::join('car_brands', 'car_models.car_brand_id', '=', 'car_brands.id')
+            ->join('car_engines', 'car_models.id', '=', 'car_engines.car_model_id')
+            ->orderBy('car_models.created_at', 'desc')
+            ->select('car_models.*', 'car_brands.car_brand_name as brand_name', 'car_engines.engine_name as engine_name')
+            ->simplePaginate(5);
+
         return view('admin.Car_model_list', [
             'title' => 'CAR MODEL LIST',
+            'model' => $model,
         ]);
+    }
+
+    public function carModelForm(){
+        Log::info("Masuk ke dalam metode carModelForm pada AdminController");
+
+        $brand = Car_brand::orderBy('car_brand_name', 'asc')->get();
+
+        return view('admin.Model_create', [
+            'title' => 'ADD CAR MODEL',
+            'brand' => $brand,
+        ]);
+}
+
+    public function addCarModel(Request $request){
+        Log::info("Masuk ke dalam metode addCarModel pada AdminController");
+        $request->validate([
+            'car_brand' => 'required',
+            'car_model_name' => 'required',
+            'car_year' => 'required | numeric',
+            'engine_name' => 'required',
+        ]);
+
+        $model = new Car_model;
+        $model->car_brand_id = $request->car_brand;
+        $model->car_model_name = $request->car_model_name;
+        $model->car_year = $request->car_year;
+        $model->save();
+
+        $engine = new Car_engine;
+        $engine->car_model_id = $model->id;
+        $engine->engine_name = $request->engine_name;
+        $engine->save();
+
+        return redirect()->route('car.model.list');
     }
 
     public function carBrandList(){
@@ -101,7 +144,6 @@ class AdminController extends Controller
 
         $request->validate([
             'car_brand_name' => 'required',
-            // 'r-type_brand_name' => 'required|same:car_brand_name',
             'car_brand_logo'=> 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
@@ -117,6 +159,51 @@ class AdminController extends Controller
         $car_brand->save();
 
         Log::info("Berhasil menambahkan brand");
+
+        return redirect()->route('car.brand.list');
+    }
+
+    public function editCarBrand($id){
+        Log::info("Masuk ke dalam metode editCarBrand pada AdminController");
+
+        $brand = Car_brand::find($id);
+
+        return view('admin.Brand_edit', [
+            'title' => 'EDIT CAR BRAND',
+            'brand' => $brand,
+        ]);
+    }
+
+    public function updateCarBrand(Request $request, $id){
+        Log::info("Masuk ke dalam metode updateCarBrand pada AdminController");
+
+        $request->validate([
+            'car_brand_name' => 'required',
+            'car_brand_logo'=> 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        $brand = Car_brand::find($id);
+        $brand->car_brand_name = $request->car_brand_name;
+
+        if($request->file('car_brand_logo') == null){
+            $brand->save();
+            return redirect()->route('car.brand.list');
+        }
+
+        $imageName = $request->file('car_brand_logo')->getClientOriginalName();
+        $request->file('car_brand_logo')->move(public_path('img/brand'), $imageName);
+
+        $brand->car_brand_logo = $imageName;
+        $brand->save();
+
+        return redirect()->route('car.brand.list');
+    }
+
+    public function deleteCarBrand($id){
+        Log::info("Masuk ke dalam metode deleteCarBrand pada AdminController");
+
+        $brand = Car_brand::find($id);
+        $brand->delete();
 
         return redirect()->route('car.brand.list');
     }

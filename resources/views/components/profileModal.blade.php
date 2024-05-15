@@ -1,14 +1,63 @@
-<div class="modal-content modal-custom text-white" id="store_modal" style="background-color: #363636;">
-    <div class="modal-body">
+<div class="modal-content text-white" id="store_modal" style="background-color: #363636;">
+    <div class="modal-body mb-3">
         @if(auth()->check())
-            @if(auth()->user()->isAdmin())
-                <!-- Profile untuk Admin -->
-                <h5>Name: {{ auth()->user()->name }}</h5>
-                <h5>Username: {{ auth()->user()->username }}</h5>
-                <h5>Email: {{ auth()->user()->email }}</h5>
-                <h5>Role: {{ auth()->user()->role }}</h5>
-                <div class="btn-sign-out d-flex">
-                    <button id="btnSignOut" class="btn btn-secondary" type="button">Sign Out</button>
+            @if(auth()->user()->isAdmin() || auth()->user()->isUser())
+                <div class="btn-close-user mb-4">
+                    <button type="button" class="btn-close btn-close-red" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="d-flex">
+                    <!-- Konten upload image -->
+                    <div class="upload-image-container col-md-4 d-flex flex-column">
+                        <div class="upload-image d-flex flex-column mt-3">
+                            <img id="image_profile" src="{{ asset('img/login/profile.jpg') }}" class="rounded mb-3" alt="Image Profile" width="250" height="200" onerror="this.onerror=null;this.src='{{ asset('img/login/profile.jpg') }}';">
+                        </div>
+                        <div class="btn-sign-out d-flex">
+                            <button id="btnSignOut" class="btn btn-secondary btn-SignOut" type="button">
+                                <i class="fas fa-sign-out-alt" style="color: red;"></i> Sign Out
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Profile untuk Admin && User -->
+                    <div class="profile-form col-md-7">
+                        <div class="col-md-12" style="padding: 1rem 2rem 1rem 2rem;">
+                            <div class="title-form d-flex align-items-left">
+                                <span class="h1 fw-bold mb-0">EDIT PROFILE</span>
+                            </div>
+                            <form id="edit-profile-form" action="{{ auth()->user()->isAdmin() ? route('admin.editProfile') : route('user.editProfile') }}" method="POST" class="d-flex flex-column" enctype="multipart/form-data">
+                                @csrf
+                                <div class="field-form">
+                                    <label class="label-form-user text-light" for="name">Name</label>
+                                    <input type="text" name="name" id="name" class="form-control @error('name') is-invalid @enderror" placeholder="" required value="{{ $user->name }}"/>
+                                    @error('name')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
+                                <div class="field-form">
+                                    <label class="label-form-user text-light" for="store_phone">Username</label>
+                                    <input type="tel" name="username" id="username" class="form-control @error('username') is-invalid @enderror" placeholder="" required value="{{ $user->username }}"/>
+                                    @error('username')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
+                                <div class="field-form">
+                                    <label class="label-form-user text-light" for="email">Email Address</label>
+                                    <input type="email" name="email" id="email" class="form-control @error('email') is-invalid @enderror" placeholder="" required value="{{ $user->email }}"/>
+                                    @error('email')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
+                                <div class="col-md-12 pt-1 mb-2 d-flex justify-content-end">
+                                    <button id="btnSubmit" class="btn text-light" style="background-color: #F36600;" type="button">Save</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             @elseif(auth()->user()->isStore())
                 <!-- Profile untuk Store -->
@@ -22,7 +71,7 @@
                         <input type="hidden" name="store_id" value="{{ $store->store_id }}">
                         <div class="d-flex">
                             <!-- Konten profile form -->
-                            <div class="profile-form col-md-7">
+                            <div class="profile-form-store col-md-7">
                                 <div class="store-detail d-flex flex-wrap justify-content-between" id="{{ $store->store_id }}">
                                     <!-- Kolom Kiri -->
                                     <div class="col-md-6" style="padding-right: 15px;">
@@ -111,7 +160,7 @@
                                         <div class="field-form">
                                             <label class="label-form" for="store_subdistrict">Subdistrict</label>
                                             <div class="dropdown-wrapper">
-                                                <select name="store_subdistrict" id="store_subdistrict" class="form-control @error('store_subdistric') is-invalid @enderror" required>
+                                                <select name="store_subdistrict" id="store_subdistrict" class="form-control @error('store_subdistrict') is-invalid @enderror" required>
                                                     <option value="">**Select Subdistrict**</option>
                                                     @foreach($subdistricts as $subdistrict)
                                                         <option {{ $store->store_subdistrict == $subdistrict->id ? 'selected' : '' }} value="{{ $subdistrict->id }}">{{ $subdistrict->name }}</option>
@@ -178,35 +227,31 @@
                             </div>
                             <!-- Konten upload image -->
                             <div class="col-md-5 d-flex flex-column align-items-center">
-                                <div class="upload-image d-flex flex-column align-items-center">
+                                <div class="upload-image-store d-flex flex-column align-items-center">
                                         <input type="hidden" name="store_id" value="{{ $store->store_id }}">
                                         @if($store->store_logo)
-                                            <img id="output" src="{{ asset('img/uploads/' . $store->store_logo) }}" class="rounded mb-3" alt="Image Store Profile" width="250" height="200">
+                                            <img id="output" src="{{ route('store.profileImage', ['imageName' => $store->store_logo]) }}" class="rounded mb-3" alt="Image Store Profile" width="250" height="200">
                                         @else
                                             <img id="output" src="{{ asset('img/login/profile.jpg') }}" class="rounded mb-3" alt="Image Profile" width="250" height="200" onerror="this.onerror=null;this.src='{{ asset('img/login/profile.jpg') }}';">
                                         @endif
-                                        <input type="file" id="myFile" name="filename" class="form-control file-input @error('filename') is-invalid @enderror" onchange="previewImage(event)">
+                                        <label for="myFile" class="btn btn-primary" style="background-color:#F36600; border: 0px">
+                                            Choose Image Profile
+                                            <input type="file" id="myFile" name="filename" class="form-control file-input @error('filename') is-invalid @enderror" onchange="previewImage(event)" accept="image/jpeg, image/png, image/jpg" style="display: none;">
+                                        </label>
                                         @error('filename')
                                             <div class="invalid-feedback">
                                                 {{ $message }}
                                             </div>
                                         @enderror
                                 </div>
-                                <div class="btn-sign-out d-flex">
-                                    <button id="btnSignOut" class="btn btn-secondary" type="button">Sign Out</button>
+                                <div class="btn-signOut-store d-flex">
+                                    <button id="btnSignOut" class="btn btn-secondary btn-SignOut" type="button">
+                                        <i class="fas fa-sign-out-alt" style="color: red;"></i> Sign Out
+                                    </button>
                                 </div>
                             </div>
                         </div>
                     </form>
-                </div>
-            @else
-                <!-- Profile untuk User -->
-                <h5>Name: {{ auth()->user()->name }}</h5>
-                <h5>Username: {{ auth()->user()->username }}</h5>
-                <h5>Email: {{ auth()->user()->email }}</h5>
-                <h5>Role: {{ auth()->user()->role }}</h5>
-                <div class="btn-sign-out d-flex">
-                    <button id="btnSignOut" class="btn btn-secondary" type="button">Sign Out</button>
                 </div>
             @endif
         @endif
@@ -226,7 +271,12 @@
             right: 1rem;
         }
 
-        .btn-sign-out {
+        .btn-SignOut, .btn-SignOut:hover{
+            border-color:#FF0000;
+            border-width: 2px;
+        }
+
+        .btn-signOut-store, .btn-sign-out {
             position: absolute;
             bottom: 0;
             margin-bottom: 2rem;
@@ -235,12 +285,25 @@
         .title-form {
             padding: 0rem 0rem 1rem 0rem;
         }
+        .upload-image-container {
+            background-color: #000000;
+            margin-right: 3rem;
+            border-radius: 10px;
+            height: 500px;
+            align-items: center;
+        }
 
         .profile-container {
             padding: 0rem 2rem 1rem 2rem;
         }
 
         .profile-form {
+            background-color: #000000;
+            border-radius: 10px;
+            height: 25rem;
+        }
+
+        .profile-form-store {
             padding: 2rem 2rem 1rem 2rem;
             border-radius: 15px;
             margin-right: 3rem;

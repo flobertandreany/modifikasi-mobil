@@ -1,4 +1,4 @@
-@extends('layouts.main_adminStore')
+@extends('layouts.main')
 
 @section('content')
     <h1 style="color: white; margin-bottom: 30px;">{{ $title }}</h1>

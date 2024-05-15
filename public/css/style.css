@@ -46,3 +46,28 @@
     flex-direction: row-reverse;
     gap: 10px;
 }
+
+/* buat table list store admin */
+.table-utama{
+    vertical-align: middle;
+    border-radius : 5px;
+    overflow: hidden;
+    text-align: center;
+}
+
+/* buat button submit */
+.buttonSubmit{
+    border-radius: 100px;
+    width: 100px;
+    font-size: 13px;
+    font-weight: bold;
+    border: 2px solid #F36600;
+    margin-top: 20px;
+}
+
+/* buat border color dan background color */
+.divBorder{
+    background-color: rgb(83, 83, 83);
+    border-radius: 5px;
+    border: 2px solid rgb(214, 214, 214);
+}

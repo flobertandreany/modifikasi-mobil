@@ -4,24 +4,28 @@
     <h1 style="color: white; margin-bottom: 30px;">{{ $title }}</h1>
 
     <div class="container" style="">
-        <form action="{{ route('brand.create') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('brand.update', ['id' => $brand->id]) }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="container" style="display: flex; justify-content: space-between; gap: 100px; align-items: center;">
-                <div class="divBorder" style="padding: 50px 60px 60px 60px; color:white;">
+                <div class="divBrandName">
                     <label for="car_brand_name" class="form-label">Car Brand Name</label>
-                    <input type="text" class="inputName form-control @error('car_brand_name') is-invalid @enderror" id="car_brand_name" name="car_brand_name" value="{{ old('car_brand_name') }}">
+                    <input type="text" class="inputName form-control @error('car_brand_name') is-invalid @enderror" id="car_brand_name" name="car_brand_name" value="{{ $brand->car_brand_name }}">
                     @error('car_brand_name')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                     <div class="col-md-12" style="text-align: right; padding-top:10px;">
-                        <input type="submit" class="buttonSubmit btn" style="background-color: #f3b200;">
+                        <button type="submit" class="sub btn" style="background-color: #f3b200;">Update</button>
                     </div>
                 </div>
 
                 <div class="" style="color: white;">
                     <label for="brand_name" class="form-label">Upload Brand Logo</label>
                     <div class="div_carLogo container-fluid @error('car_brand_logo') is-invalid @enderror" style="" width="285" height="245">
+                        @if ($brand->car_brand_logo)
+                            <img id="output" src="{{ asset('img/brand/' . $brand->car_brand_logo) }}" class="img_logo rounded" alt="Image Profile" width="295" height="245">
+                        @else
                         <img id="output" src="{{ asset('img/Logo/image.png') }}" class="img_logo rounded" alt="Image Profile" width="295" height="245" onerror="this.onerror=null;this.src='{{ asset('img/Logo/carLogo.png') }}';">
+                        @endif
                     </div>
                     @error('car_brand_logo')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -40,6 +44,12 @@
 @push('content_css')
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <style>
+        .divBrandName{
+            background-color: rgb(97, 97, 97);
+            padding: 50px 60px 60px 60px;
+            border-radius: 5px;
+            color: white;
+        }
 
         .inputName{
             border-color: black;
@@ -58,6 +68,15 @@
             width: 295px;
             height: 245px;
             /* padding: 40px 60px 40px 60px; */
+        }
+
+        .sub{
+            border-radius: 100px;
+            width: 100px;
+            font-size: 13px;
+            font-weight: bold;
+            border: 2px solid #F36600;
+            margin-top: 20px;
         }
     </style>
 @endpush

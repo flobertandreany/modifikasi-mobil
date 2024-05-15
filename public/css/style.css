@@ -3,6 +3,21 @@
     background-size: cover;
 }
 
+.user-body {
+    background-image: url('../img/login/Background.jpg');
+    background-size: cover;
+}
+
+.admin-store-body {
+    background: #171716;
+}
+
+.container-content {
+    min-height: calc(100vh - 110px);
+    max-width: 1500px;
+    margin: 3rem 5rem;
+}
+
 .is-invalid, .error-message {
     color: #dc3545;
     font-size: 14px;

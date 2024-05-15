@@ -54,6 +54,11 @@ class User extends Authenticatable
         return $this->hasOne(Store::class);
     }
 
+    public function isUser()
+    {
+        return $this->role === 'user';
+    }
+
     public function isAdmin()
     {
         return $this->role === 'admin';
@@ -62,5 +67,10 @@ class User extends Authenticatable
     public function isStore()
     {
         return $this->role === 'store';
+    }
+
+    public function isAdminOrStore()
+    {
+        return $this->isAdmin() || $this->isStore();
     }
 }

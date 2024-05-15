@@ -8,13 +8,15 @@
             <thead>
                 <tr>
                     <th scope="col">No</th>
-                    <th scope="col">Brand Photo</th>
-                    <th scope="col">Brand Name</th>
+                    <th scope="col">Product Name</th>
+                    <th scope="col">Height</th>
+                    <th scope="col">Weight</th>
+                    <th scope="col">Price</th>
                     <th scope="col">Settings</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach ($brand as $b)
+                {{-- @foreach ($brand as $b)
                     <tr>
                         <th scope="row">{{ $loop->index + 1 }}.</th>
                         <td>
@@ -23,23 +25,27 @@
                         <td>{{ $b->car_brand_name }}</td>
                         <td>
                             <button>
-                                {{-- <a href="{{ route('car.brand.edit', $b->id) }}" class="btn btn-primary">Edit</a> --}}
+                                <a href="{{ route('car.brand.edit', $b->id) }}" class="btn btn-primary">Edit</a>
                             </button>
                             <button>
-                                {{-- <a href="{{ route('car.brand.delete', $b->id) }}" class="btn btn-danger">Delete</a> --}}
+                                <a href="{{ route('car.brand.delete', $b->id) }}" class="btn btn-danger">Delete</a>
                             </button>
                         </td>
                     </tr>
-                @endforeach
+                @endforeach --}}
             </tbody>
         </table>
-        <button>
-            <a href="{{ route('car.brand.form') }}" class="btn btn-primary">Add New Brand</a>
-        </button>
     </div>
+@endsection
+@push('content_css')
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    <style>
 
+    </style>
+@endpush
+@push('content_js')
+    <script src="{{ asset('js/script.js') }}"></script>
     <script>
 
     </script>
-
-@endsection
+@endpush

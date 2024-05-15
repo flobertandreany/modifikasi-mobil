@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
-use App\Http\Controllers\HomeController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\StoreController;
@@ -28,9 +28,13 @@ Route::get('/', function () {
 })->name('home');
 
 Route::middleware(['auth'])->group(function (){
-    Route::get('/home', [HomeController::class, 'index'])->middleware('userAkses:user');
+    Route::get('/home', [UserController::class, 'index'])->middleware('userAkses:user');
     Route::get('/admin', [AdminController::class, 'index'])->middleware('userAkses:admin')->name('admin.store.approval');
-    Route::get('/store', [StoreController::class, 'index'])->middleware('userAkses:store')->name('store.home');
+    Route::get('/store', [StoreController::class, 'index'])->middleware('userAkses:store')->name('store.productList');
+});
+
+Route::middleware(['userAkses:user'])->group(function (){
+    Route::post('/user/edit/profile', [UserController::class, 'editProfileUser'])->name('user.editProfile');
 });
 
 Route::middleware(['userAkses:admin'])->group(function (){
@@ -47,13 +51,21 @@ Route::middleware(['userAkses:admin'])->group(function (){
     Route::post('car/brand/update/{id}', [AdminController::class, 'updateCarBrand'])->name('brand.update');
     Route::get('car/brand/delete/{id}', [AdminController::class, 'deleteCarBrand'])->name('brand.delete');
     Route::get('car/parts' , [AdminController::class, 'carPartList'])->name('car.part.list');
+    Route::post('/admin/edit/profile', [AdminController::class, 'editProfileAdmin'])->name('admin.editProfile');
     // Route::get('/store/detail/{id}', [AdminController::class, 'getStoreDetail']);
     // Route::get('/store/approval', [StoreController::class, 'approval']);
     // Route::get('/store/approval/{id}', [StoreController::class, 'approvalStore']);
 });
 
+Route::middleware(['userAkses:store'])->group(function (){
+    Route::post('/store/edit/profile', [StoreController::class, 'editProfileStore'])->name('store.editProfile');
+    Route::get('/store/profile/{imageName}', [StoreController::class, 'loadProfileImage'])->name('store.profileImage');
+    Route::get('/store/modification', [StoreController::class, 'loadModificationList'])->name('store.modificationList');
+    Route::get('/store/sparepart', [StoreController::class, 'loadSparePartList'])->name('store.sparePartList');
+});
+
 Route::middleware(['guest'])->group(function (){
-    Route::get('/dashboard', [HomeController::class, 'index']);
+    Route::get('/dashboard', [UserController::class, 'index']);
     Route::get('/login', [LoginController::class, 'index'])->name('view.login');
     Route::get('/register', [RegisterController::class, 'formRegisterUser'])->name('view.register');
     Route::get('/register/store', [RegisterController::class, 'formRegisterStore'])->name('view.registerStore');
@@ -67,8 +79,6 @@ Route::post('/register/store', [RegisterController::class, 'postRegisterStore'])
 Route::get('/store/city', [RegisterController::class, 'getCity'])->name('store.getCity');
 Route::get('/store/district', [RegisterController::class, 'getDistrict'])->name('store.getDistrict');
 Route::get('/store/subdistrict', [RegisterController::class, 'getSubdistrict'])->name('store.getSubdistrict');
-
-Route::post('/store/edit/profile', [StoreController::class, 'editProfile'])->name('store.editProfile');
 
 Route::get('users/{id}', function ($id) {
     return 'User '.$id;

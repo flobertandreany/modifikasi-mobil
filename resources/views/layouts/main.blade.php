@@ -8,6 +8,7 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <title>Sparecar | {{ $title }}</title>
 
+        <link rel="icon" type="image/x-icon" href="{{ asset('/img/Logo.ico') }}">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
         rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
         crossorigin="anonymous">
@@ -16,11 +17,11 @@
 
         @stack('content_css')
     </head>
-    <body class="main-body">
+    <body class="@if(auth()->check() && auth()->user()->isAdminOrStore()) admin-store-body @else user-body @endif">
 
         @include('components.navbar')
 
-        <div class="container mt-lg-3 p-lg-5" style="">
+        <div class="container-content">
             @yield('content')
         </div>
 

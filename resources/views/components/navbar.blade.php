@@ -1,23 +1,23 @@
 @if(auth()->check() && auth()->user()->isAdminOrStore())
     <nav class="navbar" style="background-color: #363636;">
         <div class="container-fluid">
-            <div class="d-flex flex-column" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSidebar">
+            <div class="d-flex flex-column" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSidebar" style="margin-left: 2rem;">
                 <i class="bi bi-list text-white fs-3"></i>
                 <span class="text-white" style="font-size: 11px;">Menu</span>
             </div>
             <img class="mt-3" src="{{ asset('img/login/Logo SpareCar.png') }}" alt="image logo" width="250px" height="45px">
             <!-- Button profile trigger modal -->
-            <div type="button" class="" style="display: grid; justify-items: center; margin-right: 30px;" data-bs-toggle="modal" data-bs-target="#profileModal">
+            <div type="button" class="" style="display: grid; justify-items: center; margin-right: 3rem;" data-bs-toggle="modal" data-bs-target="#profileModal">
                 <i class="bi bi-person-circle text-white fs-4"></i>
                 <span class="text-white" style="font-size: 11px;">Profile</span>
             </div>
         </div>
     </nav>
 @else
-    <div class="container-fluid" style="text-align: center; background-color: #363636; height: 55px;">
-        <img class="mt-3" src="{{ asset('img/login/Logo SpareCar.png') }}" alt="image logo" width="250px" height="45px">
-    </div>
     <nav class="navbar" style="background-color: #363636;">
+        <div class="container-fluid" style="justify-content: center;">
+            <img class="mt-3" src="{{ asset('img/login/Logo SpareCar.png') }}" alt="image logo" width="250px" height="45px">
+        </div>
         <div class="container-fluid">
             <div class="d-flex flex-column" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSidebar">
                 <i class="bi bi-list text-white fs-3"></i>
@@ -82,12 +82,6 @@
                     <ul class="nav flex-column">
                         <li class="nav-item">
                             <a class="nav-link text-white" href="{{ route('store.productList') }}">Product List</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-white" href="{{ route('store.modificationList') }}">Modifications</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-white" href="{{ route('store.sparePartList') }}">Spare Parts</a>
                         </li>
                     </ul>
                 @else

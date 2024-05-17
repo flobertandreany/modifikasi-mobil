@@ -35,12 +35,24 @@
                 @endforeach --}}
             </tbody>
         </table>
+        <div class="d-flex justify-content-center">
+            <button id="" class="btn btn-light btn-add" type="button">
+                <a href="{{ route('store.productForm') }}" class="text-decoration-none text-dark">
+                    <i class="fa fa-plus me-2" style="color: #000000;"></i>
+                    <span class="fw-bold">Add Product</span>
+                </a>
+            </button>
+        </div>
     </div>
 @endsection
 @push('content_css')
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <style>
-
+        .btn-add {
+            position: absolute;
+            bottom: 0;
+            margin-bottom: 2rem;
+        }
     </style>
 @endpush
 @push('content_js')

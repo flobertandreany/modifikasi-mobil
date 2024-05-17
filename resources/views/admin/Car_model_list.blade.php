@@ -24,14 +24,19 @@
                         <td>{{ $m->car_year }}</td>
                         <td>{{ $m->engine_name }}</td>
                         <td style="width:300px;">
-                                {{-- <a href="{{ route('brand.edit', ['id' => $b->id]) }}" class="button-a btn btn-secondary btn-sm" style="background-color: black; margin-right: 10px;">Edit</a> --}}
-                                {{-- <button onclick="delete_button({{ $b->id }})" class="button-a btn btn-secondary btn-sm" style="background-color: red;">Delete</button> --}}
+                                <a href="{{ route('model.edit', ['id' => $m->id]) }}" class="button-a btn btn-secondary btn-sm" style="background-color: black; margin-right: 10px;">Edit</a>
+                                <button onclick="delete_button({{ $m->id }})" class="button-a btn btn-secondary btn-sm" style="background-color: red;">Delete</button>
                         </td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
-            <a href="{{ route('model.form') }}" class="btn btn-primary">Add New Model</a>
+            {{-- <a href="{{ route('model.form') }}" class="btn btn-primary">Add New Model</a> --}}
+            <div class="d-flex justify-content-center">
+                <a href="{{ route('model.form') }}" class="btn btn-light btn-add">
+                    <i class="fa fa-plus" style="color: #000000;"></i> Add Car Model
+                </a>
+            </div>
     </div>
 @push('content_css')
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
@@ -41,6 +46,7 @@
             width: 100px;
             font-size: 13px;
         }
+
     </style>
 @endpush
 @push('content_js')

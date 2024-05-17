@@ -116,7 +116,7 @@ class AdminController extends Controller
 
         $model = Car_model::join('car_brands', 'car_models.car_brand_id', '=', 'car_brands.id')
             ->join('car_engines', 'car_models.id', '=', 'car_engines.car_model_id')
-            ->orderBy('car_models.created_at', 'desc')
+            ->orderBy('car_models.car_model_name', 'asc')
             ->select('car_models.*', 'car_brands.car_brand_name as brand_name', 'car_engines.engine_name as engine_name')
             ->simplePaginate(5);
 
@@ -143,7 +143,7 @@ class AdminController extends Controller
             'car_brand' => 'required',
             'car_model_name' => 'required',
             'car_year' => 'required | numeric',
-            'engine_name' => 'required',
+            'engine_name' => 'required | unique:car_engines',
         ]);
 
         $model = new Car_model;
@@ -156,6 +156,80 @@ class AdminController extends Controller
         $engine->car_model_id = $model->id;
         $engine->engine_name = $request->engine_name;
         $engine->save();
+
+        return redirect()->route('car.model.list');
+    }
+
+    public function editCarModel($id){
+        Log::info("Masuk ke dalam metode editCarModel pada AdminController");
+
+        $brand = Car_brand::orderBy('car_brand_name', 'asc')->get();
+        $model = Car_model::find($id);
+        $engine = Car_engine::where('car_model_id', $id)->first();
+
+        return view('admin.Model_edit', [
+            'title' => 'EDIT CAR MODEL',
+            'brand' => $brand,
+            'model' => $model,
+            'engine' => $engine,
+        ]);
+    }
+
+    // if($request->engine_name == $engine->engine_name){
+    //     $request->validate([
+    //         'engine_name' => 'unique:car_engines',
+    //     ]);
+
+    // }
+
+    public function updateCarModel(Request $request, $id){
+        Log::info("Masuk ke dalam metode updateCarModel pada AdminController");
+
+        $errors = [];
+
+        $request->validate([
+            'car_brand' => 'required',
+            'car_model_name' => 'required',
+            'car_year' => 'required | numeric',
+            'engine_name' => 'required',
+        ]);
+
+        $engine = Car_engine::where('car_model_id', $id)->first();
+
+        if($engine->engine_name != $request->engine_name){
+            $engine = Car_engine::where('engine_name', $request->engine_name)->first();
+
+            if($engine){
+                $errors['engine_name'] = 'The engine name has already been taken. Please choose a different name.';
+                // return redirect()->back()->withErrors(['engine_name' => 'The engine name has already been taken. Please choose a different name.'])->withInput();
+            }
+        }
+
+        if(!empty($errors)){
+            return redirect()->back()->withErrors($errors)->withInput();
+        }
+
+        $model = Car_model::find($id);
+        $model->car_brand_id = $request->car_brand;
+        $model->car_model_name = $request->car_model_name;
+        $model->car_year = $request->car_year;
+        $model->save();
+
+        $engine = Car_engine::where('car_model_id', $id)->first();
+        $engine->engine_name = $request->engine_name;
+        $engine->save();
+
+        return redirect()->route('car.model.list');
+    }
+
+    public function deleteCarModel($id){
+        Log::info("Masuk ke dalam metode deleteCarModel pada AdminController");
+
+        $engine = Car_engine::where('car_model_id', $id)->first();
+        $engine->delete();
+
+        $model = Car_model::find($id);
+        $model->delete();
 
         return redirect()->route('car.model.list');
     }

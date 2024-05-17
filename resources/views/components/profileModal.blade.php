@@ -76,9 +76,9 @@
                                     <!-- Kolom Kiri -->
                                     <div class="col-md-6" style="padding-right: 15px;">
                                         <div class="field-form">
-                                            <label class="label-form" for="name">Store Name</label>
-                                            <input type="text" name="name" id="name" class="form-control @error('name') is-invalid @enderror" placeholder="" required value="{{ $store->store_name }}"/>
-                                            @error('name')
+                                            <label class="label-form" for="store_name">Store Name</label>
+                                            <input type="text" name="store_name" id="store_name" class="form-control @error('store_name') is-invalid @enderror" placeholder="" required value="{{ $store->store_name }}"/>
+                                            @error('store_name')
                                                 <div class="invalid-feedback">
                                                     {{ $message }}
                                                 </div>

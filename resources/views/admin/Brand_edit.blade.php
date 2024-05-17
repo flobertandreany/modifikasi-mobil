@@ -1,13 +1,13 @@
 @extends('layouts.main')
 
 @section('content')
-    <h1 style="color: white; margin-bottom: 30px;">{{ $title }}</h1>
+    <h1 style="color: white; margin-bottom: 30px; padding-left:25px;">{{ $title }}</h1>
 
     <div class="container" style="">
         <form action="{{ route('brand.update', ['id' => $brand->id]) }}" method="POST" enctype="multipart/form-data">
             @csrf
-            <div class="container" style="display: flex; justify-content: space-between; gap: 100px; align-items: center;">
-                <div class="divBrandName">
+            <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
+                <div class="divBorder divBrandName">
                     <label for="car_brand_name" class="form-label">Car Brand Name</label>
                     <input type="text" class="inputName form-control @error('car_brand_name') is-invalid @enderror" id="car_brand_name" name="car_brand_name" value="{{ $brand->car_brand_name }}">
                     @error('car_brand_name')
@@ -45,9 +45,7 @@
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <style>
         .divBrandName{
-            background-color: rgb(97, 97, 97);
             padding: 50px 60px 60px 60px;
-            border-radius: 5px;
             color: white;
         }
 

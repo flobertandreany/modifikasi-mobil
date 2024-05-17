@@ -40,17 +40,25 @@ Route::middleware(['userAkses:user'])->group(function (){
 Route::middleware(['userAkses:admin'])->group(function (){
     Route::get('/store/approval/{id}', [AdminController::class, 'approvalStore']);
     Route::get('/store/reject/{id}', [AdminController::class, 'rejectStore']);
+
     Route::get('store/list', [AdminController::class, 'viewStoreList'])->name('view.store.list');
+
     Route::get('car/model', [AdminController::class, 'carModelList'])->name('car.model.list');
     Route::get('car/model/form', [AdminController::class, 'carModelForm'])->name('model.form');
     Route::post('car/model/create', [AdminController::class, 'addCarModel'])->name('model.create');
+    Route::get('car/model/edit/{id}', [AdminController::class, 'editCarModel'])->name('model.edit');
+    Route::post('car/model/update/{id}', [AdminController::class, 'updateCarModel'])->name('model.update');
+    Route::get('car/model/delete/{id}', [AdminController::class, 'deleteCarModel'])->name('model.delete');
+
     Route::get('car/brand', [AdminController::class, 'carBrandList'])->name('car.brand.list');
     Route::get('car/brand/form', [AdminController::class, 'carBrandForm'])->name('car.brand.form');
     Route::post('car/brand/create', [AdminController::class, 'addCarBrand'])->name('brand.create');
     Route::get('car/brand/edit/{id}', [AdminController::class, 'editCarBrand'])->name('brand.edit');
     Route::post('car/brand/update/{id}', [AdminController::class, 'updateCarBrand'])->name('brand.update');
     Route::get('car/brand/delete/{id}', [AdminController::class, 'deleteCarBrand'])->name('brand.delete');
+
     Route::get('car/parts' , [AdminController::class, 'carPartList'])->name('car.part.list');
+
     Route::post('/admin/edit/profile', [AdminController::class, 'editProfileAdmin'])->name('admin.editProfile');
     // Route::get('/store/detail/{id}', [AdminController::class, 'getStoreDetail']);
     // Route::get('/store/approval', [StoreController::class, 'approval']);

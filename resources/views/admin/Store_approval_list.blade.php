@@ -116,6 +116,7 @@
             </tbody>
 
         </table>
+
         @if ($store->links()->paginator->hasPages())
             <div class="pagination d-flex justify-content-center my-4">
                 {{ $store->links() }}

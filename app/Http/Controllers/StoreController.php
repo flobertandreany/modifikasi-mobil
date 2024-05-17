@@ -164,15 +164,9 @@ class StoreController extends Controller
         }
     }
 
-    public function loadModificationList (){
-        return view('store.modificationList', [
-            'title' => 'Modification',
-        ]);
-    }
-
-    public function loadSparePartList (){
-        return view('store.sparePartList', [
-            'title' => 'Spare Part',
+    public function productForm(){
+        return view('store.addProduct', [
+            'title' => 'Add Product',
         ]);
     }
 }

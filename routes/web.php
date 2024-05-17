@@ -60,8 +60,8 @@ Route::middleware(['userAkses:admin'])->group(function (){
 Route::middleware(['userAkses:store'])->group(function (){
     Route::post('/store/edit/profile', [StoreController::class, 'editProfileStore'])->name('store.editProfile');
     Route::get('/store/profile/{imageName}', [StoreController::class, 'loadProfileImage'])->name('store.profileImage');
-    Route::get('/store/modification', [StoreController::class, 'loadModificationList'])->name('store.modificationList');
-    Route::get('/store/sparepart', [StoreController::class, 'loadSparePartList'])->name('store.sparePartList');
+    Route::get('/store/product/form', [StoreController::class, 'productForm'])->name('store.productForm');
+    Route::post('/store/product/form', [StoreController::class, 'addProductForm'])->name('store.postProductForm');
 });
 
 Route::middleware(['guest'])->group(function (){

@@ -29,7 +29,11 @@
                 @endforeach
             </tbody>
         </table>
-            <a href="{{ route('car.brand.form') }}" class="btn btn-primary">Add New Brand</a>
+            <div class="d-flex justify-content-center">
+                <a href="{{ route('car.brand.form') }}" class="btn btn-light btn-add">
+                    <i class="fa fa-plus" style="color: #000000;"></i> Add Car Brand
+                </a>
+            </div>
     </div>
 @push('content_css')
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">

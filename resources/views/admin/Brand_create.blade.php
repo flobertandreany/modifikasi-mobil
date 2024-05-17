@@ -1,12 +1,12 @@
 @extends('layouts.main')
 
 @section('content')
-    <h1 style="color: white; margin-bottom: 30px;">{{ $title }}</h1>
+    <h1 style="color: white; margin-bottom: 30px; padding-left:25px;">{{ $title }}</h1>
 
     <div class="container" style="">
         <form action="{{ route('brand.create') }}" method="POST" enctype="multipart/form-data">
             @csrf
-            <div class="container" style="display: flex; justify-content: space-between; gap: 100px; align-items: center;">
+            <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
                 <div class="divBorder" style="padding: 50px 60px 60px 60px; color:white;">
                     <label for="car_brand_name" class="form-label">Car Brand Name</label>
                     <input type="text" class="inputName form-control @error('car_brand_name') is-invalid @enderror" id="car_brand_name" name="car_brand_name" value="{{ old('car_brand_name') }}">

@@ -8,24 +8,27 @@
             <thead>
                 <tr style="background-color: rgb(224, 224, 224);">
                     <th scope="col">No</th>
-                    <th scope="col">Car Model</th>
-                    <th scope="col">Car Brand</th>
-                    <th scope="col">Car Year</th>
-                    <th scope="col">Engine Type</th>
-                    <th scope="col">Settings</th>
+                    <th scope="col">Product Name</th>
+                    <th scope="col">Height</th>
+                    <th scope="col">Weight</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Notes</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach ($model as $m)
+                @foreach ($products as $p)
                     <tr>
                         <th scope="row">{{ $loop->index + 1 }}.</th>
-                        <td>{{ $m->car_model_name }}</td>
-                        <td>{{ $m->brand_name }}</td>
-                        <td>{{ $m->car_year }}</td>
-                        <td>{{ $m->engine_name }}</td>
+                        <td>{{ $p->mod_name ?? $p->sparepart_name }}</td>
+                        <td>{{ $p->mod_name }}</td>
+                        <td>{{ $p->height }}</td>
+                        <td>{{ $p->weight }}</td>
+                        <td>{{ $p->price }}</td>
+                        <td>{{ $p->notes }}</td>
+                        {{-- <td>{{ $p->product_name }}</td> --}}
                         <td style="width:300px; padding: 15px 0 15px 0;">
-                                <a href="{{ route('model.edit', ['id' => $m->id]) }}" class="button-a btn btn-secondary btn-sm" style="background-color: black; margin-right: 10px;">Edit</a>
-                                <button onclick="delete_button({{ $m->id }})" class="button-a btn btn-secondary btn-sm" style="background-color: red;">Delete</button>
+                                <a href="{{ route('part.edit', ['id' => $p->id]) }}" class="button-a btn btn-secondary btn-sm" style="background-color: black; margin-right: 10px;">Edit</a>
+                                <button onclick="delete_button({{ $p->id }})" class="button-a btn btn-secondary btn-sm" style="background-color: red;">Delete</button>
                         </td>
                     </tr>
                 @endforeach
@@ -33,8 +36,8 @@
         </table>
             {{-- <a href="{{ route('model.form') }}" class="btn btn-primary">Add New Model</a> --}}
             <div class="d-flex justify-content-center">
-                <a href="{{ route('model.form') }}" class="btn btn-light btn-add">
-                    <i class="fa fa-plus" style="color: #000000;"></i> Add Car Model
+                <a href="{{ route('part.form') }}" class="btn btn-light btn-add">
+                    <i class="fa fa-plus" style="color: #000000;"></i> Add Car Part
                 </a>
             </div>
     </div>
@@ -56,14 +59,14 @@
             event.preventDefault();
             Swal.fire({
                 icon: 'warning',
-                title: 'Are you sure want to delete this Car Model ?',
-                text: 'This will delete this model permanently, and you cannot undo this action.',
+                title: 'Are you sure want to delete this Part ?',
+                text: 'This will delete this car part permanently, and you cannot undo this action.',
                 showCancelButton: true,
                 confirmButtonText: 'Delete',
                 confirmButtonColor: '#F36600',
             }).then((result) => {
                 if (result.isConfirmed) {
-                    window.location.href = '/car/model/delete/' + id;
+                    window.location.href = '/car/parts/delete/' + id;
                 }
             });
         }

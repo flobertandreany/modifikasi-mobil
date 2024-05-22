@@ -7,6 +7,9 @@ use App\Models\User;
 use App\Models\Car_brand;
 use App\Models\Car_model;
 use App\Models\Car_engine;
+use App\Models\Product;
+use App\Models\Spareparts;
+use App\Models\Modification;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
@@ -75,7 +78,7 @@ class AdminController extends Controller
         $store = Store::find($id);
 
         if ($store) {
-            $store->store_code = 'STR' . date('dmy') . '_' . $store->user_id . $store->id . rand(100, 999);
+            $store->store_code = date('dmy') . $store->user_id . $store->id . 'STR' . rand(100, 999);
             $store->save();
         }
 
@@ -101,14 +104,39 @@ class AdminController extends Controller
         Log::info("Masuk ke dalam metode viewStoreList pada AdminController");
         $store = Store::whereNotNull('store_code')
             ->join('users', 'stores.user_id', '=', 'users.id')
+            ->join('province', 'stores.store_province', '=', 'province.id')
+            ->join('city', 'stores.store_city', '=', 'city.id')
+            ->join('district', 'stores.store_district', '=', 'district.id')
+            ->join('subdistrict', 'stores.store_subdistrict', '=', 'subdistrict.id')
             ->orderBy('stores.created_at', 'desc')
-            ->select('stores.*', 'users.email')
-            ->simplePaginate(3);
+            ->select('stores.*', 'users.email as email', 'province.name as province_name', 'city.name as city_name', 'district.name as district_name', 'subdistrict.name as subdistrict_name')
+            ->simplePaginate(5);
 
         return view('admin.View_store_list', [
             'title' => 'STORE LIST',
             'store' => $store,
         ]);
+    }
+
+    public function viewProductList($id){
+        Log::info("Masuk ke dalam metode viewProductList pada AdminController");
+        $product = Store::join('spareparts', 'stores.id', '=', 'spareparts.store_id')
+            ->join('modifications', 'stores.id', '=', 'modifications.store_id')
+            ->where('stores.id', $id)
+            ->select('spareparts.*', 'modifications.*')
+            ->simplePaginate(5);
+
+        $mod = Modification::where('store_id', $id)->get();
+
+        $part = Spareparts::where('store_id', $id)->get();
+
+        $products = $mod->merge($part);
+
+        return view('admin.Store_product_list', [
+            'title' => 'STORE PRODUCT',
+            'products' => $products,
+        ]);
+
     }
 
     public function carModelList(){
@@ -121,7 +149,7 @@ class AdminController extends Controller
             ->simplePaginate(5);
 
         return view('admin.Car_model_list', [
-            'title' => 'CAR MODEL LIST',
+            'title' => 'MANAGE CAR MODEL',
             'model' => $model,
         ]);
     }
@@ -184,10 +212,9 @@ class AdminController extends Controller
 
     public function updateCarModel(Request $request, $id){
         Log::info("Masuk ke dalam metode updateCarModel pada AdminController");
+        $rules = [];
 
-        $errors = [];
-
-        $request->validate([
+        $rules = array_merge($rules, [
             'car_brand' => 'required',
             'car_model_name' => 'required',
             'car_year' => 'required | numeric',
@@ -195,18 +222,16 @@ class AdminController extends Controller
         ]);
 
         $engine = Car_engine::where('car_model_id', $id)->first();
-
         if($engine->engine_name != $request->engine_name){
             $engine = Car_engine::where('engine_name', $request->engine_name)->first();
-
             if($engine){
-                $errors['engine_name'] = 'The engine name has already been taken. Please choose a different name.';
-                // return redirect()->back()->withErrors(['engine_name' => 'The engine name has already been taken. Please choose a different name.'])->withInput();
+                $rules['engine_name'] = 'required|unique:car_engines';
             }
         }
 
-        if(!empty($errors)){
-            return redirect()->back()->withErrors($errors)->withInput();
+        $validator = Validator::make($request->all(), $rules);
+        if($validator->fails()){
+            return redirect()->back()->withErrors($validator)->withInput();
         }
 
         $model = Car_model::find($id);
@@ -324,8 +349,88 @@ class AdminController extends Controller
 
     public function carPartList(){
         Log::info("Masuk ke dalam metode carPartList pada AdminController");
+
+        $parts = Product::orderBy('created_at', 'asc')->simplePaginate(5);
+
         return view('admin.Car_part_list', [
-            'title' => 'CAR PART LIST',
+            'title' => 'MANAGE PARTS',
+            'parts' => $parts,
         ]);
+    }
+
+    public function carPartForm(){
+        Log::info("Masuk ke dalam metode carPartForm pada AdminController");
+
+        return view('admin.Part_create', [
+            'title' => 'ADD PART TYPE',
+        ]);
+    }
+
+    public function addCarPart(Request $request){
+        Log::info("Masuk ke dalam metode addCarPart pada AdminController");
+
+        $request->validate([
+            'part_type' => 'required',
+            'part_name' => 'required|min:4',
+        ]);
+
+        $part = new Product;
+        $part->product_category_id = $request->part_type;
+        $part->product_name = $request->part_name;
+        $part->save();
+
+        return redirect()->route('car.part.list');
+    }
+
+    public function editCarPart($id){
+        Log::info("Masuk ke dalam metode editCarPart pada AdminController");
+
+        $part = Product::find($id);
+
+        return view('admin.Part_edit', [
+            'title' => 'EDIT PART TYPE',
+            'part' => $part,
+        ]);
+    }
+
+    public function updateCarPart(Request $request, $id){
+        Log::info("Masuk ke dalam metode updateCarPart pada AdminController");
+
+        $rules = [];
+
+        $rules = array_merge($rules, [
+            'part_type' => 'required',
+            'product_name' => 'required|min:4',
+        ]);
+
+        $part = Product::find($id);
+        if($part->product_name != $request->product_name){
+            $part = Product::where('product_name', $request->product_name)->first();
+            if($part){
+                $rules['product_name'] = 'required|unique:products';
+            }
+        }
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if($validator->fails()){
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        $part = Product::find($id);
+        $part->product_category_id = $request->part_type;
+        $part->product_name = $request->part_name;
+        $part->save();
+
+        return redirect()->route('car.part.list');
+    }
+
+    public function deleteCarPart($id){
+        Log::info("Masuk ke dalam metode deleteCarPart pada AdminController");
+
+        $part = Product::find($id);
+        $part->delete();
+
+        return redirect()->route('car.part.list');
     }
 }

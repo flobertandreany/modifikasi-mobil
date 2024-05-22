@@ -143,6 +143,8 @@ class StoreController extends Controller
             'store_logo'=> $newImage,
         ]);
 
+
+
         // Delete image di server
         if ($oldImage && $oldImage !== $newImage && !empty($request->file('filename'))) {
             unlink(storage_path('app/imageProfile/' . $oldImage));
@@ -154,9 +156,9 @@ class StoreController extends Controller
     public function editProfileStore(Request $request){
         $userId = Session::get('user_id');
         $storeId = $request->input('store_id');
-        $errors = [];
+        $rules = [];
 
-        $validator = Validator::make($request->all(), [
+        $rules = array_merge($rules, [
             'store_name' => 'required|min:5|max:255',
             'email' => 'required|email:dns',
             'store_phone' => 'required|starts_with:08|regex:/^(\d){10,}$/',
@@ -172,17 +174,13 @@ class StoreController extends Controller
             'filename' => 'image|mimetypes:image/jpeg,image/png,image/jpg|max:2048',
         ]);
 
-        //balikin validasi pertama jika gagal
-        if($validator->fails()){
-            return redirect()->back()->withErrors($validator)->with('error', 'Update failed. Please check your input.')->withInput();
-        }
-
         //cek ke database store by store name unique
         $store = Store::where('id', $storeId)->first();
         if($store->store_name != $request->store_name){
             $store_request = Store::where('store_name', $request->store_name)->first();
             if($store_request){
-                $errors['store_name'] = 'Store name already exists';
+                // $errors['store_name'] = 'Store name already exists';
+                $rules['store_name'] = 'required|min:5|max:255|unique:stores';
             }
         }
 
@@ -190,7 +188,8 @@ class StoreController extends Controller
         if($store->store_phone != $request->store_phone){
             $store_request = Store::where('store_phone', $request->store_phone)->first();
             if($store_request){
-                $errors['store_phone'] = 'Phone number already exists';
+                // $errors['store_phone'] = 'Phone number already exists';
+                $rules['store_phone'] = 'required|starts_with:08|regex:/^(\d){10,}$/|unique:stores';
             }
         }
 
@@ -199,14 +198,38 @@ class StoreController extends Controller
         if($user->email != $request->email){
             $user_request = User::where('email', $request->email)->first();
             if($user_request){
-                $errors['email'] = 'Email already exists';
+                // $errors['email'] = 'Email already exists';
+                $rules['email'] = 'required|email:dns|unique:users';
             }
         }
 
-        //balikin validasi kedua jika gagal
-        if(!empty($errors)){
-            return redirect()->back()->withErrors($errors)->with('error', 'Update failed. Please check your input.')->withInput();
+        $validator = Validator::make($request->all(), $rules);
+
+        // $validator = Validator::make($request->all(), [
+        //     'store_name' => 'required|min:5|max:255',
+        //     'email' => 'required|email:dns',
+        //     'store_phone' => 'required|starts_with:08|regex:/^(\d){10,}$/',
+        //     'store_address' => 'required',
+        //     'store_instagram' => 'required',
+        //     'store_tokopedia' => 'required|url',
+        //     'store_shopee' => 'required|url',
+        //     'store_province' => 'required',
+        //     'store_city' => 'required',
+        //     'store_district' => 'required',
+        //     'store_subdistrict' => 'required',
+        //     'store_postal_code' => 'required|numeric',
+        //     'filename' => 'image|mimetypes:image/jpeg,image/png,image/jpg|max:2048',
+        // ]);
+
+        //balikin validasi pertama jika gagal
+        if($validator->fails()){
+            return redirect()->back()->withErrors($validator)->with('error', 'Update failed. Please check your input.')->withInput();
         }
+
+        //balikin validasi kedua jika gagal
+        // if(!empty($errors)){
+        //     return redirect()->back()->withErrors($errors)->with('error', 'Update failed. Please check your input.')->withInput();
+        // }
 
         $user = User::find($userId);
         $user->name = $request->store_name;

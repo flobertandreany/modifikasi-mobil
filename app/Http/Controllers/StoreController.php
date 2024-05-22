@@ -2,9 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Car_brand;
+use App\Models\Car_model;
+use App\Models\Modification;
+use App\Models\ModificationDetail;
+use App\Models\Product;
+use App\Models\SparepartDetail;
+use App\Models\Spareparts;
 use App\Models\Store;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -12,8 +20,44 @@ use Illuminate\Support\Facades\Validator;
 class StoreController extends Controller
 {
     public function index(){
+        $userId = Session::get('user_id');
+        $storeId = Store::where('user_id', $userId)->value('id');
+
+        $modifications = Modification::select(
+            'modifications.id as id',
+            'product_name as product_name',
+            'mod_name as name',
+            'mod_image as image',
+            'mod_price as price',
+            'mod_height as height',
+            'mod_weight as weight',
+            'modifications.created_at as created_at',
+            DB::raw("'modification' as type")
+        )
+        ->join('products', 'modifications.product_id', '=', 'products.id')
+        ->where('store_id', $storeId);
+
+        $spareparts = Spareparts::select(
+            'spareparts.id as id',
+            'product_name as product_name',
+            'sparepart_name as name',
+            'sparepart_image as image',
+            'sparepart_price as price',
+            'sparepart_height as height',
+            'sparepart_weight as weight',
+            'spareparts.created_at as created_at',
+            DB::raw("'sparepart' as type")
+        )
+        ->join('products', 'spareparts.product_id', '=', 'products.id')
+        ->where('store_id', $storeId);
+
+        $products = $modifications->union($spareparts)
+        ->orderBy('created_at', 'desc')->paginate(5);
+        // dd($products);
+
         return view('store.allProductList', [
             'title' => 'Product List',
+            'products' => $products,
         ]);
     }
 
@@ -152,6 +196,7 @@ class StoreController extends Controller
     }
 
     public function editProfileStore(Request $request){
+        // dd($request->file('filename'));
         $userId = Session::get('user_id');
         $storeId = $request->input('store_id');
         $errors = [];
@@ -264,8 +309,214 @@ class StoreController extends Controller
     }
 
     public function productForm(){
+        $car_brand = Car_brand::all();
+
         return view('store.addProduct', [
             'title' => 'Add Product',
+            'car_brand' => $car_brand,
         ]);
+    }
+
+    public function addProduct(Request $request){
+        // dd($request->all());
+        $rules = [];
+        $rules = [
+            'product_category_id' => 'required',
+            'product_subcategory_id' => 'required',
+            'name'=> 'required',
+            'description'=> 'required',
+            'price'=> 'required|numeric',
+            'weight'=> 'required|numeric',
+            'height'=> 'required|numeric',
+            'link_tokopedia' => 'required|url',
+            'link_shopee' => 'required|url',
+            'notes'=> 'required',
+            'image_product' => 'required|image|mimetypes:image/jpeg,image/png,image/jpg|max:2048',
+        ];
+
+        //aturan validasi untuk car_brand_id-* dan car_model_id-* secara dinamis
+        foreach ($request->all() as $key => $value) {
+            if (strpos($key, 'car_brand_id-') === 0) {
+                $rules[$key] = 'required';
+            }
+            if (strpos($key, 'car_model_id-') === 0) {
+                $rules[$key] = 'required';
+            }
+        }
+        $validatedData = $request->validate($rules);
+
+        $carBrands = [];
+        $carModels = [];
+
+        foreach ($request->all() as $key => $value) {
+            if (strpos($key, 'car_brand_id-') === 0) {
+                // Dapatkan indeks dengan memotong bagian string setelah "car_brand_id-"
+                $index = substr($key, strlen('car_brand_id-'));
+                $carBrands[$index] = $value;
+            }
+            if (strpos($key, 'car_model_id-') === 0) {
+                // Dapatkan indeks dengan memotong bagian string setelah "car_model_id-"
+                $index = substr($key, strlen('car_model_id-'));
+                $carModels[$index] = $value;
+            }
+        }
+        // dd($carModels);
+
+        $productCategory = $request->input('product_category_id');
+        $imageName = $request->file('image_product')->getClientOriginalName();
+        $newImage = uniqid() . '_' . $imageName;
+        $request->file('image_product')->move(storage_path('app/imageProduct'), $newImage);
+
+        if($productCategory == 1){
+            $sparepartInput = [
+                'product_id' => $request->product_subcategory_id,
+                'store_id' => $request->store_id,
+                'sparepart_name'=> $request->name,
+                'sparepart_image'=> $newImage,
+                'sparepart_price'=> $request->price,
+                'sparepart_weight'=> $request->weight,
+                'sparepart_height'=> $request->height,
+                'description'=> $request->description,
+                'link_tokopedia' => $request->link_tokopedia,
+                'link_shopee' => $request->link_shopee,
+                'notes'=> $request->notes
+            ];
+            $sparepart = Spareparts::create($sparepartInput);
+
+            $sparepartDetails = [];
+            foreach ($carBrands as $index => $carBrand) {
+                $sparepartDetails[] = [
+                    'sparepart_id' => $sparepart->id,
+                    'car_brand_id' => $carBrand,
+                    'car_model_id' => $carModels[$index],
+                ];
+            }
+            SparepartDetail::insert($sparepartDetails);
+        } else {
+            $modificationInput = [
+                'product_id' => $request->product_subcategory_id,
+                'store_id' => $request->store_id,
+                'mod_name'=> $request->name,
+                'mod_image'=> $newImage,
+                'mod_price'=> $request->price,
+                'mod_weight'=> $request->weight,
+                'mod_height'=> $request->height,
+                'description'=> $request->description,
+                'link_tokopedia' => $request->link_tokopedia,
+                'link_shopee' => $request->link_shopee,
+                'notes'=> $request->notes
+            ];
+            $modification = Modification::create($modificationInput);
+
+            $modificationDetails = [];
+            foreach ($carBrands as $index => $carBrand) {
+                $modificationDetails[] = [
+                    'modification_id' => $modification->id,
+                    'car_brand_id' => $carBrand,
+                    'car_model_id' => $carModels[$index],
+                ];
+            }
+            ModificationDetail::insert($modificationDetails);
+        }
+
+        return response()->json([
+            'success' => true
+        ]);
+    }
+
+    public function editProductForm($type, $id){
+        $userId = Session::get('user_id');
+        $storeId = Store::where('user_id', $userId)->value('id');
+        // dd($type, $id);
+
+        $car_brand = Car_brand::all();
+
+        if($type == 'sparepart'){
+            $products = Spareparts::select(
+                'spareparts.id as product_id',
+                'product_name as product_name',
+                'sparepart_name as name',
+                'sparepart_image as image',
+                'sparepart_price as price',
+                'sparepart_height as height',
+                'sparepart_weight as weight',
+                DB::raw("'sparepart' as type")
+            )
+            ->join('products', 'spareparts.product_id', '=', 'products.id')
+            ->where('spareparts.id', $id)
+            ->where('store_id', $storeId)->first();
+        }else{
+            $products = Modification::select(
+                'modifications.id as product_id',
+                'product_name as product_name',
+                'mod_image as image',
+                'mod_name as name',
+                'mod_price as price',
+                'mod_height as height',
+                'mod_weight as weight',
+                DB::raw("'modification' as type")
+            )
+            ->join('products', 'modifications.product_id', '=', 'products.id')
+            ->where('modifications.id', $id)
+            ->where('store_id', $storeId)->first();
+        }
+        // dd($products);
+
+        return view('store.editProduct', [
+            'title' => 'Edit Product',
+            'products' => $products,
+            'car_brand' => $car_brand
+        ]);
+    }
+
+    public function updateProductForm(){
+
+        // if($request->file('filename') == null){
+        //     $store->save();
+        //     return redirect()->back()->with('success', 'Store profile has been updated successfully.');
+        // }
+
+        // $oldImage = $store->store_logo;
+        // $imageName = !empty($request->file('img_product')) ? $request->file('img_product')->getClientOriginalName() : $oldImage;
+        // $newImage = $imageName;
+
+        // if (!empty($request->file('img_product'))) {
+        //     $newImage = uniqid() . '_' . $imageName;
+        //     $request->file('img_product')->move(storage_path('app/imageProfile'), $newImage);
+        // }
+
+        // $store->store_logo = $newImage;
+        // $store->save();
+
+        // if ($oldImage && $oldImage !== $newImage && !empty($request->file('img_product'))) {
+        //     unlink(storage_path('app/imageProfile/' . $oldImage));
+        // }
+
+        // return redirect()->back()->with('successAdd', 'Product has been added successfully.');
+    }
+
+    public function getCarBrand(Request $request){
+        $car_model = Car_model::where('car_brand_id', $request->id)->get();
+
+        return $car_model;
+    }
+
+    public function getSubcategory(Request $request){
+        $subcategory = Product::where('product_category_id', $request->id)->get();
+
+        return $subcategory;
+    }
+
+    public function loadProductImage($imageName){
+        $imagePath = storage_path('app/imageProduct/' . $imageName);
+
+        if (file_exists($imagePath)) {
+            $file = Storage::disk('local')->get('imageProduct/' . $imageName);
+            $type = mime_content_type($imagePath);
+            return response($file, 200)->header('Content-Type', $type);
+        } else {
+            // Handle jika gambar tidak ditemukan
+            abort(404);
+        }
     }
 }

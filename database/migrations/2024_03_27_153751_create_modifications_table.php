@@ -17,12 +17,14 @@ class CreateModificationsTable extends Migration
             $table->id();
             $table->foreignId('product_id')->constrained('products');
             $table->foreignId('store_id')->constrained('stores');
-            $table->foreignId('car_model_id')->constrained('car_models');
             $table->string('mod_name');
+            $table->string('mod_image');
             $table->string('mod_price');
             $table->string('mod_weight');
             $table->string('mod_height');
             $table->string('description');
+            $table->string('link_tokopedia');
+            $table->string('link_shopee');
             $table->string('notes');
             $table->timestamps();
         });

@@ -35,6 +35,9 @@ Route::middleware(['auth'])->group(function (){
 
 Route::middleware(['userAkses:user'])->group(function (){
     Route::post('/user/edit/profile', [UserController::class, 'editProfileUser'])->name('user.editProfile');
+    Route::get('/user/brand', [UserController::class, 'carBrandList'])->name('user.carBrandList');
+    Route::get('/user/model', [UserController::class, 'carModelList'])->name('user.carModelList');
+
 });
 
 Route::middleware(['userAkses:admin'])->group(function (){
@@ -42,6 +45,8 @@ Route::middleware(['userAkses:admin'])->group(function (){
     Route::get('/store/reject/{id}', [AdminController::class, 'rejectStore']);
 
     Route::get('store/list', [AdminController::class, 'viewStoreList'])->name('view.store.list');
+    Route::get('store/delete/{id}', [AdminController::class, 'deleteStore'])->name('store.delete');
+    Route::get('store/product/list/{id}', [AdminController::class, 'viewProductList'])->name('view.store.product.list');
 
     Route::get('car/model', [AdminController::class, 'carModelList'])->name('car.model.list');
     Route::get('car/model/form', [AdminController::class, 'carModelForm'])->name('model.form');
@@ -58,11 +63,13 @@ Route::middleware(['userAkses:admin'])->group(function (){
     Route::get('car/brand/delete/{id}', [AdminController::class, 'deleteCarBrand'])->name('brand.delete');
 
     Route::get('car/parts' , [AdminController::class, 'carPartList'])->name('car.part.list');
+    Route::get('car/parts/form', [AdminController::class, 'carPartForm'])->name('part.form');
+    Route::post('car/parts/create', [AdminController::class, 'addCarPart'])->name('part.create');
+    Route::get('car/parts/edit/{id}', [AdminController::class, 'editCarPart'])->name('part.edit');
+    Route::post('car/parts/update/{id}', [AdminController::class, 'updateCarPart'])->name('part.update');
+    Route::get('car/parts/delete/{id}', [AdminController::class, 'deleteCarPart'])->name('part.delete');
 
     Route::post('/admin/edit/profile', [AdminController::class, 'editProfileAdmin'])->name('admin.editProfile');
-    // Route::get('/store/detail/{id}', [AdminController::class, 'getStoreDetail']);
-    // Route::get('/store/approval', [StoreController::class, 'approval']);
-    // Route::get('/store/approval/{id}', [StoreController::class, 'approvalStore']);
 });
 
 Route::middleware(['userAkses:store'])->group(function (){

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Modification extends Model
 {
     use HasFactory;
+    protected $guarded =['id'];
 
     public function car_model()
     {
@@ -22,5 +23,10 @@ class Modification extends Model
     public function product()
     {
         return $this->belongsTo(Product::class);
+    }
+
+    public function modificationDetail()
+    {
+        return $this->hasMany(ModificationDetail::class);
     }
 }

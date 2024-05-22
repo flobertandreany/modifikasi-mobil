@@ -26,7 +26,7 @@
                         <label for="email">Email Address</label>
                     </div>
                     <div class="form-outline mb-3 form-floating">
-                        <select name="store_province" id="store_province" class="form-control" required value="{{ old('store_province') }}">
+                        <select name="store_province" id="store_province" class="form-control" required>
                             <option value="">**Select Province**</option>
                             @foreach($provinces as $province)
                                 <option value="{{ $province->id }}">{{ $province->name }}</option>
@@ -36,21 +36,21 @@
                         <i class="fas fa-chevron-down select-icon"></i>
                     </div>
                     <div class="form-outline mb-3 form-floating">
-                        <select name="store_city" id="store_city" class="form-control" required value="{{ old('store_city') }}">
+                        <select name="store_city" id="store_city" class="form-control" required>
                             <option value="">**Select City**</option>
                         </select>
                         <label for="store_city">City</label>
                         <i class="fas fa-chevron-down select-icon"></i>
                     </div>
                     <div class="form-outline mb-3 form-floating">
-                        <select name="store_district" id="store_district" class="form-control" required value="{{ old('store_district') }}">
+                        <select name="store_district" id="store_district" class="form-control" required>
                             <option value="">**Select District**</option>
                         </select>
                         <label for="store_district">District</label>
                         <i class="fas fa-chevron-down select-icon"></i>
                     </div>
                     <div class="form-outline mb-3 form-floating">
-                        <select name="store_subdistrict" id="store_subdistrict" class="form-control" required value="{{ old('store_subdistrict') }}">
+                        <select name="store_subdistrict" id="store_subdistrict" class="form-control" required>
                             <option value="">**Select Subdistrict**</option>
                         </select>
                         <label for="store_subdistrict">Subdistrict</label>

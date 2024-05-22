@@ -82,3 +82,34 @@
     border-radius: 5px;
     border: 2px solid rgb(214, 214, 214);
 }
+
+.btn-back, .btn-back:hover {
+    color: #FF0000;
+    margin-top: .5rem;
+}
+
+.product-form {
+    padding: 0rem 2rem 1rem 3rem;
+}
+
+.product-form-container {
+    padding: 2rem 2rem 1rem 2rem;
+    margin-right: 3rem;
+    background-color: rgb(83, 83, 83);
+    border-radius: 5px;
+    border: 2px solid rgb(214, 214, 214);
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #FDC42C;
+    border-color: #F36600;
+    border-width: 2px;
+    color: #fff; /* Warna teks menjadi putih atau sesuai kebutuhan */
+}
+
+.pagination .page-item .page-link:hover {
+    background-color: #FDC42C;
+    border-color: #F36600;
+    border-width: 2px;
+    color: #fff; /* Warna teks saat hover */
+}

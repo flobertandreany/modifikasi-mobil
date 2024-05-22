@@ -17,12 +17,14 @@ class CreateSparepartsTable extends Migration
             $table->id();
             $table->foreignId('product_id')->constrained('products');
             $table->foreignId('store_id')->constrained('stores');
-            $table->foreignId('car_model_id')->constrained('car_models');
             $table->string('sparepart_name');
+            $table->string('sparepart_image');
             $table->string('sparepart_price');
             $table->string('sparepart_weight');
             $table->string('sparepart_height');
             $table->string('description');
+            $table->string('link_tokopedia');
+            $table->string('link_shopee');
             $table->string('notes');
             $table->timestamps();
         });

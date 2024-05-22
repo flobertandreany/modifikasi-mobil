@@ -16,23 +16,41 @@
                 </tr>
             </thead>
             <tbody>
-                {{-- @foreach ($brand as $b)
+                @foreach ($products as $p)
                     <tr>
-                        <th scope="row">{{ $loop->index + 1 }}.</th>
-                        <td>
-                            <img src="{{ asset('img/brand/' . $b->car_brand_logo) }}" alt="Brand Logo" width="100px" height="100px">
+                        <th scope="row" class="center-position" style="width:5%;">{{ $loop->index + 1 }}.</th>
+                        <td style="text-align: left; width:50%;">
+                            @if($p->image)
+                                <img class="img-product-table" src="{{ route('store.productImage', ['imageName' => $p->image]) }}" alt="Image Product">
+                            @else
+                                <img class="img-product-table" src="{{ asset('img/logo/LogoParts.jpg') }}" alt="Image Product" onerror="this.onerror=null;this.src='{{ asset('img/logo/LogoParts.jpg') }}';">
+                            @endif
+                            <div>
+                                <strong>{{ $p->product_name }}</strong><br>
+                                {{ $p->name }}
+                            </div>
                         </td>
-                        <td>{{ $b->car_brand_name }}</td>
-                        <td>
-                            <button>
-                                <a href="{{ route('car.brand.edit', $b->id) }}" class="btn btn-primary">Edit</a>
-                            </button>
-                            <button>
-                                <a href="{{ route('car.brand.delete', $b->id) }}" class="btn btn-danger">Delete</a>
+                        <td class="center-position" style="width:10%;">{{ $p->height }} Cm</td>
+                        <td class="center-position" style="width:10%;">{{ $p->weight }} Kg</td>
+                        <td class="center-position" style="width:15%;">Rp. {{ number_format($p->price, 0, ',', '.') }}</td>
+                        <td class="center-position" style="width:10%;">
+                            <a href="{{ route('store.editProductForm', ['id' => $p->id, 'type' => $p->type]) }}" class="button-a btn btn-secondary btn-sm" style="background-color: black; margin-right: 10px;">Edit</a>
+                            <button class="btn btn-sm text-light" type="button" style="background-color: #FF0000;">
+                                <i class="fa fa-trash"></i>
                             </button>
                         </td>
                     </tr>
-                @endforeach --}}
+                @endforeach
+                @for ($i = count($products); $i < 5; $i++)
+                    <tr style="height: 5rem;">
+                        <th scope="row" class="center-position">{{ $i + 1 }}.</th>
+                        <td class="">&nbsp;</td>
+                        <td class="">&nbsp;</td>
+                        <td class="">&nbsp;</td>
+                        <td class="">&nbsp;</td>
+                        <td class="">&nbsp;</td>
+                    </tr>
+                @endfor
             </tbody>
         </table>
         <div class="d-flex justify-content-center">
@@ -43,6 +61,9 @@
                 </a>
             </button>
         </div>
+        <div class="d-flex justify-content-end">
+            {{ $products->links('vendor.pagination.bootstrap-5') }}
+        </div>
     </div>
 @endsection
 @push('content_css')
@@ -51,7 +72,20 @@
         .btn-add {
             position: absolute;
             bottom: 0;
-            margin-bottom: 2rem;
+        }
+        .center-position {
+            vertical-align: middle;
+        }
+        .img-product-table {
+            float: left;
+            margin-left:20px;
+            margin-right: 30px;
+            height: 4em;
+            width: 4em;
+            transition: 0.7s ease;
+        }
+        .img-product-table:hover {
+            transform: scale(3);
         }
     </style>
 @endpush

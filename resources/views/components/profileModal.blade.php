@@ -9,7 +9,7 @@
                     <!-- Konten upload image -->
                     <div class="upload-image-container col-md-4 d-flex flex-column">
                         <div class="upload-image d-flex flex-column mt-3">
-                            <img id="image_profile" src="{{ asset('img/login/profile.jpg') }}" class="rounded mb-3" alt="Image Profile" width="250" height="200" onerror="this.onerror=null;this.src='{{ asset('img/login/profile.jpg') }}';">
+                            <img id="image_profile" src="{{ asset('img/login/profile.jpg') }}" class="logo-image rounded mb-3" alt="Image Profile" width="250" height="200" onerror="this.onerror=null;this.src='{{ asset('img/login/profile.jpg') }}';">
                         </div>
                         <div class="btn-sign-out d-flex">
                             <button id="btnSignOut" class="btn btn-secondary btn-SignOut" type="button">
@@ -230,9 +230,9 @@
                                 <div class="upload-image-store d-flex flex-column align-items-center">
                                         <input type="hidden" name="store_id" value="{{ $store->store_id }}">
                                         @if($store->store_logo)
-                                            <img id="output" src="{{ route('store.profileImage', ['imageName' => $store->store_logo]) }}" class="rounded mb-3" alt="Image Store Profile" width="250" height="200">
+                                            <img id="output" src="{{ route('store.profileImage', ['imageName' => $store->store_logo]) }}" class="logo-image rounded mb-3" alt="Image Store Profile" width="250" height="200">
                                         @else
-                                            <img id="output" src="{{ asset('img/login/profile.jpg') }}" class="rounded mb-3" alt="Image Profile" width="250" height="200" onerror="this.onerror=null;this.src='{{ asset('img/login/profile.jpg') }}';">
+                                            <img id="output" src="{{ asset('img/login/profile.jpg') }}" class="logo-image rounded mb-3" alt="Image Profile" width="250" height="200" onerror="this.onerror=null;this.src='{{ asset('img/login/profile.jpg') }}';">
                                         @endif
                                         <label for="myFile" class="btn btn-primary" style="background-color:#F36600; border: 0px">
                                             Choose Image Profile
@@ -291,6 +291,10 @@
             border-radius: 10px;
             height: 500px;
             align-items: center;
+        }
+
+        .logo-image {
+            border: 3px solid #F36600;
         }
 
         .profile-container {

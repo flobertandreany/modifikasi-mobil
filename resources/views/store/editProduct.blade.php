@@ -3,10 +3,13 @@
 @section('content')
         <div class="d-flex">
             <a href="{{ route('store.productList') }}" class="btn-back"><i class="fa fa-arrow-left fa-2x"></i></a>
-            <h1 style="color: white; margin-bottom: 30px; margin-left: 1rem;">ADD PRODUCT</h1>
+            <h1 style="color: white; margin-bottom: 30px; margin-left: 1rem;">EDIT PRODUCT</h1>
         </div>
-        <form class="product-form" id="addProductForm" action="{{ route('store.createProduct') }}" method="POST" enctype="multipart/form-data">
+        <form class="product-form" id="editProductForm" action="" method="POST" enctype="multipart/form-data">
             @csrf
+            @php
+                // dd($products);
+            @endphp
             <input type="hidden" name="store_id" value="{{ $store->store_id }}">
             <div class="d-flex">
                 <div class="product-form-container col-md-7">
@@ -34,7 +37,7 @@
                             </div>
                             <div class="field-form">
                                 <label class="label-form text-white" for="name">Product Name</label>
-                                <input type="text" name="name" id="name" class="input-field form-control" placeholder="" value=""/>
+                                <input type="text" name="name" id="name" class="input-field form-control" placeholder="" value="{{ $products->name }}"/>
                             </div>
                             <div class="field-form">
                                 <label class="label-form text-white" for="description">Product Description</label>
@@ -125,7 +128,11 @@
                 <div class="image-container">
                     <label class="label-logo fw-bold text-white mb-3">Upload Part Photo</label>
                     <div class="image-product-container">
-                        <img id="imgProduct" src="{{ asset('img/logo/LogoParts.jpg') }}" class="rounded image-product" alt="Image Product" width="295" height="245" onerror="this.onerror=null;this.src='{{ asset('img/logo/LogoParts.jpg') }}';">
+                        @if($products->image)
+                            <img id="imgProduct" src="{{ route('store.productImage', ['imageName' => $products->image]) }}" class="rounded image-product" alt="Image Product" width="295" height="245">
+                        @else
+                            <img id="imgProduct" src="{{ asset('img/logo/LogoParts.jpg') }}" class="rounded image-product" alt="Image Product" width="295" height="245" onerror="this.onerror=null;this.src='{{ asset('img/logo/LogoParts.jpg') }}';">
+                        @endif
                     </div>
                     <div style="text-align: center;">
                         <label for="image_product" class="btn btn-primary mt-3" style="background-color:#F36600; border: 0px">
@@ -234,6 +241,7 @@
             });
         }
 
+
         $(document).on('change', '#car_brand_id', function() {
             const $carModel = $(this).closest('tr').find('#car_model_id');
             $carModel.empty().append('<option value="">**Choose Car Model**</option>');
@@ -272,25 +280,17 @@
                 }
             }).then((result) => {
                 if (result.isConfirmed) {
-                    $('#addProductForm').submit();
+                    $('#editProductForm').submit();
                 }
             });
         });
 
-        $('#addProductForm').submit(function(event) {
+        $('#editProductForm').submit(function(event) {
             event.preventDefault();
-            // Ambil elemen form sebagai objek DOM
-            var form = $(this)[0];
-            // Buat objek FormData baru dari elemen form
-            var formData = new FormData(form);
-
             $.ajax({
                 url: $(this).attr('action'),
                 method: $(this).attr('method'),
-                // data: $(this).serialize(),
-                data: formData,
-                processData: false, // Jangan proses data karena sudah dalam bentuk FormData
-                contentType: false, // Jangan set contentType, biarkan browser yang mengatur
+                data: $(this).serialize(),
                 success: function(response) {
                     if (response.success) {
                         window.location.href = '/store';

@@ -35,7 +35,7 @@
                         <td class="center-position" style="width:15%;">Rp. {{ number_format($p->price, 0, ',', '.') }}</td>
                         <td class="center-position" style="width:10%;">
                             <a href="{{ route('store.editProductForm', ['id' => $p->id, 'type' => $p->type]) }}" class="button-a btn btn-secondary btn-sm" style="background-color: black; margin-right: 10px;">Edit</a>
-                            <button class="btn btn-sm text-light" type="button" style="background-color: #FF0000;">
+                            <button class="btn btn-sm text-light" data-id="{{ $p->id }}" data-type="{{ $p->type }}" onclick="delete_button(this)" type="button" style="background-color: #FF0000;">
                                 <i class="fa fa-trash"></i>
                             </button>
                         </td>
@@ -92,6 +92,29 @@
 @push('content_js')
     <script src="{{ asset('js/script.js') }}"></script>
     <script>
-
+        function delete_button(element) {
+            var type = element.getAttribute('data-type');
+            var id = element.getAttribute('data-id');
+            event.preventDefault();
+            Swal.fire({
+                icon: 'warning',
+                title: 'Are you sure want to delete this Product ?',
+                text: 'This will delete this product permanently, and you cannot undo this action.',
+                showCancelButton: true,
+                confirmButtonColor: '#FF0000',
+                cancelButtonColor: '#FFFFFF',
+                confirmButtonText: 'Delete',
+                cancelButtonText: 'Cancel',
+                customClass: {
+                    confirmButton: 'delete-button-swal',
+                    cancelButton: 'cancel-button-swal'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    console.log(type, id);
+                    window.location.href = '/store/product/delete/' + type + '/' + id;
+                }
+            });
+        }
     </script>
 @endpush

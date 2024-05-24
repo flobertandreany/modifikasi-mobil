@@ -198,7 +198,7 @@
             event.preventDefault();
             Swal.fire({
                 icon: 'warning',
-                title: 'Are you sure want to decline this Store ?',
+                title: 'Are you sure want to decline this store ?',
                 text: 'This will decline this store permanently, and you cannot undo this action.',
                 showCancelButton: true,
                 confirmButtonText: 'Decline',

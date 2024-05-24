@@ -18,6 +18,8 @@ class CreateModificationDetailTable extends Migration
             $table->foreignId('modification_id')->constrained('modifications');
             $table->foreignId('car_brand_id')->constrained('car_brands');
             $table->foreignId('car_model_id')->constrained('car_models');
+            $table->string('car_year');
+            $table->foreignId('car_engine_id')->constrained('car_engines');
             $table->timestamps();
         });
     }

@@ -18,6 +18,8 @@ class CreateSparepartDetailsTable extends Migration
             $table->foreignId('sparepart_id')->constrained('spareparts');
             $table->foreignId('car_brand_id')->constrained('car_brands');
             $table->foreignId('car_model_id')->constrained('car_models');
+            $table->string('car_year');
+            $table->foreignId('car_engine_id')->constrained('car_engines');
             $table->timestamps();
         });
     }

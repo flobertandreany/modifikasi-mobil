@@ -9,7 +9,7 @@
             @csrf
             <input type="hidden" name="store_id" value="{{ $store->store_id }}">
             <div class="d-flex">
-                <div class="product-form-container col-md-7">
+                <div class="product-form-container col-md-9">
                     <div class="d-flex flex-wrap justify-content-between">
                         <div class="col-md-12" style="padding-right: 15px;">
                             <div class="field-form">
@@ -80,13 +80,15 @@
                                 <th scope="col">No.</th>
                                 <th scope="col">Car Brand</th>
                                 <th scope="col">Car Model</th>
+                                <th scope="col">Car Year</th>
+                                <th scope="col">Car Engine</th>
                                 <th scope="col">Action</th>
                               </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td scope="row">1.</td>
-                                    <td>
+                                    <td scope="row" style="width: 5%;">1.</td>
+                                    <td style="width: 20%;">
                                         <div class="dropdown-wrapper">
                                             <select name="car_brand_id-1" id="car_brand_id" class="input-field form-control">
                                                 <option value="">**Choose Car Brand**</option>
@@ -97,7 +99,7 @@
                                             <i class="fas fa-chevron-down select-icon"></i>
                                         </div>
                                     </td>
-                                    <td>
+                                    <td style="width: 20%;">
                                         <div class="dropdown-wrapper">
                                             <select name="car_model_id-1" id="car_model_id" class="input-field form-control" >
                                                 <option value="">**Choose Car Model**</option>
@@ -105,11 +107,27 @@
                                             <i class="fas fa-chevron-down select-icon"></i>
                                         </div>
                                     </td>
-                                    <td>
+                                    <td style="width: 15%;">
+                                        <div class="dropdown-wrapper">
+                                            <select name="car_year-1" id="car_year" class="input-field form-control" >
+                                                <option value="">**Choose Car Year**</option>
+                                            </select>
+                                            <i class="fas fa-chevron-down select-icon"></i>
+                                        </div>
+                                    </td>
+                                    <td style="width: 25%;">
+                                        <div class="dropdown-wrapper">
+                                            <select name="car_engine_id-1" id="car_engine_id" class="input-field form-control" >
+                                                <option value="">**Choose Car Engine**</option>
+                                            </select>
+                                            <i class="fas fa-chevron-down select-icon"></i>
+                                        </div>
+                                    </td>
+                                    <td style="width: 10%;">
                                         <button class="btn btn-sm text-light" type="button" onclick="addRow()" style="background-color: #F36600;">
                                             <i class="fa fa-plus"></i>
                                         </button>
-                                        <button class="btn btn-sm text-light" type="button" style="background-color: #FF0000;">
+                                        <button class="btn btn-sm text-light" type="button" onclick="deleteRow(this)" style="background-color: #FF0000;">
                                             <i class="fa fa-trash"></i>
                                         </button>
                                     </td>
@@ -146,10 +164,6 @@
 
         .image-product{
             border: 3px solid #F36600;
-        }
-
-        .image-container{
-            margin-left: 7rem;
         }
     </style>
 @endpush
@@ -193,10 +207,10 @@
             const rowCount = tableBody.children('tr').length;
             const newRow = `
                 <tr>
-                    <td scope="row">${rowCount + 1}.</td>
-                    <td>
+                    <td scope="row" style="width: 5%;">${rowCount + 1}.</td>
+                    <td style="width: 20%;">
                         <div class="dropdown-wrapper">
-                            <select name="car_brand_id-${rowCount + 1}" id="car_brand_id" class="input-field form-control" required>
+                            <select name="car_brand_id-${rowCount + 1}" id="car_brand_id" class="input-field form-control">
                                 <option value="">**Choose Car Brand**</option>
                                 @foreach($car_brand as $brand)
                                     <option value="{{ $brand->id }}">{{ $brand->car_brand_name }}</option>
@@ -205,15 +219,31 @@
                             <i class="fas fa-chevron-down select-icon"></i>
                         </div>
                     </td>
-                    <td>
+                    <td style="width: 20%;">
                         <div class="dropdown-wrapper">
-                            <select name="car_model_id-${rowCount + 1}" id="car_model_id" class="input-field form-control" required>
+                            <select name="car_model_id-${rowCount + 1}" id="car_model_id" class="input-field form-control">
                                 <option value="">**Choose Car Model**</option>
                             </select>
                             <i class="fas fa-chevron-down select-icon"></i>
                         </div>
                     </td>
-                    <td>
+                    <td style="width: 15%;">
+                        <div class="dropdown-wrapper">
+                            <select name="car_year-${rowCount + 1}" id="car_year" class="input-field form-control">
+                                <option value="">**Choose Car Year**</option>
+                            </select>
+                            <i class="fas fa-chevron-down select-icon"></i>
+                        </div>
+                    </td>
+                    <td style="width: 25%;">
+                        <div class="dropdown-wrapper">
+                            <select name="car_engine_id-${rowCount + 1}" id="car_engine_id" class="input-field form-control">
+                                <option value="">**Choose Car Engine**</option>
+                            </select>
+                            <i class="fas fa-chevron-down select-icon"></i>
+                        </div>
+                    </td>
+                    <td style="width: 10%;">
                         <button class="btn btn-sm text-light" type="button" onclick="addRow()" style="background-color: #F36600;">
                             <i class="fa fa-plus"></i>
                         </button>
@@ -228,21 +258,44 @@
         }
 
         function deleteRow(button) {
-            $(button).closest('tr').remove();
-            $('#add-product-table tbody tr').each(function(index, row) {
-                $(row).find('td:first').text((index + 1) + '.');
-            });
+            var tableRow = $(button).closest('tr');
+            var tableBody = tableRow.parent();
+            var rowCount = tableBody.children('tr').length;
+            if (rowCount > 1) {
+                tableRow.remove();
+
+                $('#add-product-table tbody tr').each(function(index, row) {
+                    $(row).find('td:first').text((index + 1) + '.');
+
+                    $(row).find('select').each(function() {
+                        const nameAttr = $(this).attr('name');
+                        const newNameAttr = nameAttr.replace(/-\d+$/, `-${index + 1}`);
+                        $(this).attr('name', newNameAttr);
+                    });
+
+                    $(row).find('.error-message').each(function() {
+                        const errorText = $(this).text();
+                        const updatedErrorText = errorText.replace(/-\d+/g, `-${index + 1}`);
+                        $(this).text(updatedErrorText);
+                    });
+                });
+            }
         }
 
         $(document).on('change', '#car_brand_id', function() {
             const $carModel = $(this).closest('tr').find('#car_model_id');
+            const $carYear = $(this).closest('tr').find('#car_year');
+            const $carEngine = $(this).closest('tr').find('#car_engine_id');
+
             $carModel.empty().append('<option value="">**Choose Car Model**</option>');
+            $carYear.empty().append('<option value="">**Choose Car Year**</option>');
+            $carEngine.empty().append('<option value="">**Choose Car Engine**</option>');
 
             $.ajax({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
-                url: '{{ route('store.getCarBrand') }}',
+                url: '{{ route('store.getCarModel') }}',
                 method: 'GET',
                 dataType: 'json',
                 data: {
@@ -250,7 +303,58 @@
                 },
                 success: function(data) {
                     data.forEach(function(model) {
-                        $carModel.append('<option value="' + model.id + '">' + model.car_model_name + '</option>');
+                        $carModel.append('<option value="' + model.car_model_name + '">' + model.car_model_name + '</option>');
+                    });
+                }
+            });
+        });
+
+        $(document).on('change', '#car_model_id', function() {
+            const $carYear = $(this).closest('tr').find('#car_year');
+            const $carEngine = $(this).closest('tr').find('#car_engine_id');
+
+            $carYear.empty().append('<option value="">**Choose Car Year**</option>');
+            $carEngine.empty().append('<option value="">**Choose Car Engine**</option>');
+
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                url: '{{ route('store.getCarYear') }}',
+                method: 'GET',
+                dataType: 'json',
+                data: {
+                    car_model_name: $(this).val()
+                },
+                success: function(data) {
+                    data.forEach(function(model) {
+                        $carYear.append('<option value="' + model.car_year + '">' + model.car_year + '</option>');
+                    });
+                }
+            });
+        });
+
+        $(document).on('change', '#car_year', function() {
+            const $carModel = $(this).closest('tr').find('#car_model_id').val();
+            const $carEngine = $(this).closest('tr').find('#car_engine_id');
+
+            $carEngine.empty().append('<option value="">**Choose Car Engine**</option>');
+            console.log($carModel);
+
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                url: '{{ route('store.getCarEngine') }}',
+                method: 'GET',
+                dataType: 'json',
+                data: {
+                    car_year: $(this).val(),
+                    car_model_name: $carModel
+                },
+                success: function(data) {
+                    data.forEach(function(engine) {
+                        $carEngine.append('<option value="' + engine.id + '">' + engine.engine_name + '</option>');
                     });
                 }
             });

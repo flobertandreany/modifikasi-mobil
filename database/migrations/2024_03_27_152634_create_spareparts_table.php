@@ -22,7 +22,7 @@ class CreateSparepartsTable extends Migration
             $table->string('sparepart_price');
             $table->string('sparepart_weight');
             $table->string('sparepart_height');
-            $table->string('description');
+            $table->string('description', 1000);
             $table->string('link_tokopedia');
             $table->string('link_shopee');
             $table->string('notes');

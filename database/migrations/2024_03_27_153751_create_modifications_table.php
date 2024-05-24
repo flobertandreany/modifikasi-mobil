@@ -22,7 +22,7 @@ class CreateModificationsTable extends Migration
             $table->string('mod_price');
             $table->string('mod_weight');
             $table->string('mod_height');
-            $table->string('description');
+            $table->string('description', 1000);
             $table->string('link_tokopedia');
             $table->string('link_shopee');
             $table->string('notes');

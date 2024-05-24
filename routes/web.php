@@ -80,9 +80,11 @@ Route::middleware(['userAkses:store'])->group(function (){
     Route::post('/store/product/create', [StoreController::class, 'addProduct'])->name('store.createProduct');
     Route::get('/store/product/edit/{type}/{id}', [StoreController::class, 'editProductForm'])->name('store.editProductForm');
     Route::post('/store/product/update/{id}', [StoreController::class, 'updateProduct'])->name('store.updateProduct');
-    Route::get('/store/product/delete/{id}', [StoreController::class, 'deleteProduct'])->name('store.deleteProduct');
+    Route::get('/store/product/delete/{type}/{id}', [StoreController::class, 'deleteProduct'])->name('store.deleteProduct');
 
-    Route::get('/store/car/brand', [StoreController::class, 'getCarBrand'])->name('store.getCarBrand');
+    Route::get('/store/car/model', [StoreController::class, 'getCarModel'])->name('store.getCarModel');
+    Route::get('/store/car/year', [StoreController::class, 'getCarYear'])->name('store.getCarYear');
+    Route::get('/store/car/engine', [StoreController::class, 'getCarEngine'])->name('store.getCarEngine');
     Route::get('/store/subcategory', [StoreController::class, 'getSubcategory'])->name('store.getSubcategory');
     Route::get('/store/product/{imageName}', [StoreController::class, 'loadProductImage'])->name('store.productImage');
 });

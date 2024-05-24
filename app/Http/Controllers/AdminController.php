@@ -10,8 +10,12 @@ use App\Models\Car_engine;
 use App\Models\Product;
 use App\Models\Spareparts;
 use App\Models\Modification;
+use App\Models\ModificationDetail;
+use App\Models\SparepartDetail;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 
@@ -118,19 +122,67 @@ class AdminController extends Controller
         ]);
     }
 
+    public function deleteStore($id){
+        Log::info("Masuk ke dalam metode deleteStore pada AdminController");
+        $store = Store::find($id);
+
+        if ($store) {
+            $spareparts = Spareparts::where('store_id', $id)->get();
+            foreach ($spareparts as $sparepart) {
+                SparepartDetail::where('sparepart_id', $sparepart->id)->delete();
+            }
+            $modifications = Modification::where('store_id', $id)->get();
+            foreach ($modifications as $modification) {
+                ModificationDetail::where('modification_id', $modification->id)->delete();
+            }
+
+            $spareparts = Spareparts::where('store_id', $id)->delete();
+
+            $modifications = Modification::where('store_id', $id)->delete();
+
+            $store->delete();
+
+            $user_id = $store->user_id;
+            $user = User::find($user_id);
+            $user->delete();
+        }
+
+        return redirect()->route('view.store.list');
+    }
+
     public function viewProductList($id){
         Log::info("Masuk ke dalam metode viewProductList pada AdminController");
-        $product = Store::join('spareparts', 'stores.id', '=', 'spareparts.store_id')
-            ->join('modifications', 'stores.id', '=', 'modifications.store_id')
-            ->where('stores.id', $id)
-            ->select('spareparts.*', 'modifications.*')
-            ->simplePaginate(5);
 
-        $mod = Modification::where('store_id', $id)->get();
+        $modifications = Modification::select(
+            'modifications.id as id',
+            'product_name as product_name',
+            'mod_name as name',
+            'mod_image as image',
+            'mod_price as price',
+            'mod_height as height',
+            'mod_weight as weight',
+            'modifications.created_at as created_at',
+            DB::raw("'modification' as type")
+        )
+        ->join('products', 'modifications.product_id', '=', 'products.id')
+        ->where('store_id', $id);
 
-        $part = Spareparts::where('store_id', $id)->get();
+        $spareparts = Spareparts::select(
+            'spareparts.id as id',
+            'product_name as product_name',
+            'sparepart_name as name',
+            'sparepart_image as image',
+            'sparepart_price as price',
+            'sparepart_height as height',
+            'sparepart_weight as weight',
+            'spareparts.created_at as created_at',
+            DB::raw("'sparepart' as type")
+        )
+        ->join('products', 'spareparts.product_id', '=', 'products.id')
+        ->where('store_id', $id);
 
-        $products = $mod->merge($part);
+        $products = $modifications->union($spareparts)
+        ->orderBy('created_at', 'desc')->paginate(5);
 
         return view('admin.Store_product_list', [
             'title' => 'STORE PRODUCT',
@@ -139,13 +191,25 @@ class AdminController extends Controller
 
     }
 
+    public function loadProductImage($imageName){
+        $imagePath = storage_path('app/imageProduct/' . $imageName);
+
+        if (file_exists($imagePath)) {
+            $file = Storage::disk('local')->get('imageProduct/' . $imageName);
+            $type = mime_content_type($imagePath);
+            return response($file, 200)->header('Content-Type', $type);
+        } else {
+            // Handle jika gambar tidak ditemukan
+            abort(404);
+        }
+    }
+
     public function carModelList(){
         Log::info("Masuk ke dalam metode carModelList pada AdminController");
 
         $model = Car_model::join('car_brands', 'car_models.car_brand_id', '=', 'car_brands.id')
-            ->join('car_engines', 'car_models.id', '=', 'car_engines.car_model_id')
             ->orderBy('car_models.car_model_name', 'asc')
-            ->select('car_models.*', 'car_brands.car_brand_name as brand_name', 'car_engines.engine_name as engine_name')
+            ->select('car_models.*', 'car_brands.car_brand_name as brand_name')
             ->simplePaginate(5);
 
         return view('admin.Car_model_list', [
@@ -167,12 +231,27 @@ class AdminController extends Controller
 
     public function addCarModel(Request $request){
         Log::info("Masuk ke dalam metode addCarModel pada AdminController");
-        $request->validate([
+
+        $rules = [];
+
+        $rules = array_merge($rules, [
             'car_brand' => 'required',
             'car_model_name' => 'required',
             'car_year' => 'required | numeric',
-            'engine_name' => 'required | unique:car_engines',
         ]);
+
+        $model_car = Car_model::where('car_model_name', $request->car_model_name)
+            ->where('car_year', $request->car_year)
+            ->first();
+
+        if($model_car){
+            $rules['car_model_name'] = 'required|unique:car_models';
+        }
+
+        $validator = Validator::make($request->all(), $rules);
+        if($validator->fails()){
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
 
         $model = new Car_model;
         $model->car_brand_id = $request->car_brand;
@@ -180,26 +259,19 @@ class AdminController extends Controller
         $model->car_year = $request->car_year;
         $model->save();
 
-        $engine = new Car_engine;
-        $engine->car_model_id = $model->id;
-        $engine->engine_name = $request->engine_name;
-        $engine->save();
-
         return redirect()->route('car.model.list');
     }
 
     public function editCarModel($id){
         Log::info("Masuk ke dalam metode editCarModel pada AdminController");
 
-        $brand = Car_brand::orderBy('car_brand_name', 'asc')->get();
         $model = Car_model::find($id);
-        $engine = Car_engine::where('car_model_id', $id)->first();
+        $brand = Car_brand::where('id', $model->car_brand_id)->select('car_brand_name')->first();
 
         return view('admin.Model_edit', [
             'title' => 'EDIT CAR MODEL',
             'brand' => $brand,
             'model' => $model,
-            'engine' => $engine,
         ]);
     }
 
@@ -250,11 +322,12 @@ class AdminController extends Controller
     public function deleteCarModel($id){
         Log::info("Masuk ke dalam metode deleteCarModel pada AdminController");
 
-        $engine = Car_engine::where('car_model_id', $id)->first();
-        $engine->delete();
+        Car_engine::where('car_model_id', $id)->delete();
 
         $model = Car_model::find($id);
-        $model->delete();
+        if($model){
+            $model->delete();
+        }
 
         return redirect()->route('car.model.list');
     }
@@ -292,7 +365,7 @@ class AdminController extends Controller
         $car_brand->car_brand_name = $request->car_brand_name;
 
         $imageName = $request->file('car_brand_logo')->getClientOriginalName();
-        $request->file('car_brand_logo')->move(public_path('img/brand'), $imageName);
+        $request->file('car_brand_logo')->move(storage_path('app/brand_logo'), $imageName);
 
         $car_brand->car_brand_logo = $imageName;
         $car_brand->save();
@@ -329,11 +402,21 @@ class AdminController extends Controller
             return redirect()->route('car.brand.list');
         }
 
-        $imageName = $request->file('car_brand_logo')->getClientOriginalName();
-        $request->file('car_brand_logo')->move(public_path('img/brand'), $imageName);
+        $oldImage = $brand->car_brand_logo;
+        $imageName = !empty($request->file('car_brand_logo')) ? $request->file('car_brand_logo')->getClientOriginalName() : $oldImage;
+        $newImage = $imageName;
+
+        if (!empty($request->file('car_brand_logo'))) {
+            $newImage = uniqid() . '_' . $imageName;
+            $request->file('car_brand_logo')->move(storage_path('app/brand_logo'), $newImage);
+        }
 
         $brand->car_brand_logo = $imageName;
         $brand->save();
+
+        if ($oldImage && $oldImage !== $newImage && !empty($request->file('car_brand_logo'))) {
+            unlink(storage_path('app/brand_logo/' . $oldImage));
+        }
 
         return redirect()->route('car.brand.list');
     }
@@ -341,10 +424,190 @@ class AdminController extends Controller
     public function deleteCarBrand($id){
         Log::info("Masuk ke dalam metode deleteCarBrand pada AdminController");
 
-        $brand = Car_brand::find($id);
-        $brand->delete();
+        $carModels = Car_model::where('car_brand_id', $id)->get();
+
+        foreach ($carModels as $carModel) {
+            // Hapus semua engine terkait dengan setiap car_model
+            Car_engine::where('car_model_id', $carModel->id)->delete();
+
+            // Hapus car_model
+            $carModel->delete();
+        }
+
+        $carBrand = Car_brand::find($id);
+        if ($carBrand) {
+            $carBrand->delete();
+        }
 
         return redirect()->route('car.brand.list');
+    }
+
+    public function loadBrandImage($imageName){
+        Log::info("Masuk ke dalam metode loadBrandImage pada AdminController");
+
+        $path = storage_path('app/brand_logo/' . $imageName);
+        if (!file_exists($path)) {
+            abort(404);
+        }
+
+        return response()->file($path);
+    }
+
+    public function carEngineList(){
+        $engine = Car_engine::join('car_models', 'car_engines.car_model_id', '=', 'car_models.id')
+            ->join('car_brands', 'car_models.car_brand_id', '=', 'car_brands.id')
+            ->orderBy('car_engines.created_at', 'asc')
+            ->select('car_engines.*', 'car_models.car_model_name', 'car_brands.car_brand_name', 'car_models.car_year')
+            ->simplePaginate(5);
+
+        return view('admin.Car_engine_list', [
+            'title' => 'MANAGE CAR ENGINE',
+            'engine' => $engine,
+        ]);
+    }
+
+    public function carEngineForm(){
+        Log::info("Masuk ke dalam metode carEngineForm pada AdminController");
+
+        $year = Car_model::orderBy('car_year', 'asc')
+                ->select('car_year')
+                ->distinct()
+                ->get();
+
+        return view('admin.Engine_create', [
+            'title' => 'ADD CAR ENGINE',
+            'year'  => $year,
+        ]);
+    }
+
+    public function carBrand(Request $request){
+        Log::info($request->car_year);
+
+        $carBrand = Car_brand::join('car_models', 'car_brands.id', '=', 'car_models.car_brand_id')
+            ->where('car_models.car_year', $request->car_year)
+            ->select('car_brands.id as id', 'car_brands.car_brand_name as car_brand_name', 'car_models.car_year as car_year')
+            ->distinct()
+            ->get();
+
+
+        return $carBrand;
+    }
+
+    public function carModel(Request $request){
+        Log::info($request->brand_id);
+        Log::info($request->car_year);
+        $carModel = Car_model::where('car_brand_id', $request->brand_id)
+        ->where('car_year', $request->car_year)
+        ->select('car_model_name', 'id')
+        ->distinct()
+        ->get();
+
+        return $carModel;
+    }
+
+    public function carEngine(Request $request){
+        Log::info($request->model_id);
+        $carEngine = Car_engine::where('car_model_id', $request->model_id)
+        ->select('engine_name', 'id')
+        ->distinct()
+        ->get();
+
+        return $carEngine;
+    }
+
+    public function addCarEngine(Request $request){
+
+        $rules = [];
+
+        $rules = array_merge($rules, [
+            'engine_name' => 'required',
+        ]);
+
+        $engine = Car_engine::where('car_model_id', $request->car_model)
+            ->where('engine_name', $request->engine_name)
+            ->first();
+
+        if($engine){
+            $rules['engine_name'] = 'required|unique:car_engines';
+        }
+
+        $validator = Validator::make($request->all(), $rules);
+        if($validator->fails()){
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        $engine = new Car_engine;
+        $engine->car_model_id = $request->car_model;
+        $engine->engine_name = $request->engine_name;
+        $engine->save();
+
+        return redirect()->route('car.engine.list');
+    }
+
+    public function editCarEngine($id){
+        Log::info("Masuk ke dalam metode editCarEngine pada AdminController");
+
+        $engine = Car_engine::find($id);
+        $model = Car_model::where('id', $engine->car_model_id)->select('car_model_name', 'car_year')->first();
+        $brand = Car_brand::join('car_models', 'car_brands.id', '=', 'car_models.car_brand_id')
+            ->where('car_models.id', $engine->car_model_id)
+            ->select('car_brands.car_brand_name')
+            ->first();
+
+        return view('admin.Engine_edit', [
+            'title' => 'EDIT CAR ENGINE',
+            'engine' => $engine,
+            'model' => $model,
+            'brand' => $brand,
+        ]);
+    }
+
+    public function updateCarEngine(Request $request, $id){
+        Log::info("Masuk ke dalam metode updateCarEngine pada AdminController");
+
+        $rules = [];
+
+        $rules = array_merge($rules, [
+            'engine_name' => 'required',
+        ]);
+
+        $model = Car_model::where('car_year', $request->car_year)
+            ->where('car_model_name', $request->car_model_name)
+            ->first();
+
+        $engine = Car_engine::find($id);
+        if($engine->engine_name != $request->engine_name){
+            if($model){
+                $engine = Car_engine::where('engine_name', $request->engine_name)
+                    ->where('car_model_id', $model->id)
+                    ->first();
+            }
+            if($engine){
+                $rules['engine_name'] = 'required|unique:car_engines';
+            }
+        }
+
+        $validator = Validator::make($request->all(), $rules);
+        if($validator->fails()){
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        $engine = Car_engine::find($id);
+        $engine->engine_name = $request->engine_name;
+        $engine->save();
+
+        return redirect()->route('car.engine.list');
+    }
+
+    public function deleteCarEngine($id){
+        Log::info("Masuk ke dalam metode deleteCarEngine pada AdminController");
+
+        $engine = Car_engine::find($id);
+        if($engine){
+            $engine->delete();
+        }
+
+        return redirect()->route('car.engine.list');
     }
 
     public function carPartList(){
@@ -428,8 +691,14 @@ class AdminController extends Controller
     public function deleteCarPart($id){
         Log::info("Masuk ke dalam metode deleteCarPart pada AdminController");
 
+        Spareparts::where('product_id', $id)->delete();
+
+        Modification::where('product_id', $id)->delete();
+
         $part = Product::find($id);
-        $part->delete();
+        if($part){
+            $part->delete();
+        }
 
         return redirect()->route('car.part.list');
     }

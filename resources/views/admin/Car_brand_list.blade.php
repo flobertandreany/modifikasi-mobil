@@ -18,7 +18,7 @@
                     <tr>
                         <th scope="row">{{ $loop->index + 1 }}.</th>
                         <td>
-                            <img src="{{ asset('img/brand/' . $b->car_brand_logo) }}" alt="Brand Logo" width="100px" height="100px">
+                            <img src="{{ route('brand.image', ['imageName' => $b->car_brand_logo]) }}" alt="Brand Logo" width="100px" height="100px">
                         </td>
                         <td>{{ $b->car_brand_name }}</td>
                         <td style="width:300px;">

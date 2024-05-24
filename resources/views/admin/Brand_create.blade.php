@@ -1,8 +1,10 @@
 @extends('layouts.main')
 
 @section('content')
-    <h1 style="color: white; margin-bottom: 30px; padding-left:25px;">{{ $title }}</h1>
-
+    <div class="d-flex">
+        <a href="{{ route('car.brand.list') }}" class="btn-back"><i class="fa fa-arrow-left fa-2x"></i></a>
+        <h1 style="color: white; margin-bottom: 30px; margin-left: 1rem;">{{ $title }}</h1>
+    </div>
     <div class="container" style="">
         <form action="{{ route('brand.create') }}" method="POST" enctype="multipart/form-data">
             @csrf

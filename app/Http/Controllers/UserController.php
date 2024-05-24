@@ -13,25 +13,6 @@ use Illuminate\Support\Facades\Validator;
 class UserController extends Controller
 {
 
-    // public function getCity(Request $request)
-    // {
-    //     $cities = City::where('province_id', $request->id)->get();
-
-    //     return $cities;
-    // }
-
-    // public function getDistrict(Request $request){
-    //     $districts = District::where('city_id', $request->id)->get();
-
-    //     return $districts;
-    // }
-
-    // public function getSubdistrict(Request $request){
-    //     $subdistricts = Subdistrict::where('district_id', $request->id)->get();
-
-    //     return $subdistricts;
-    // }
-
     public function index(){
 
         $year = Car_model::select('car_year')->distinct()->orderBy('car_year', 'asc')->get();
@@ -63,7 +44,7 @@ class UserController extends Controller
         $carModel = Car_model::where('car_brand_id', $request->brand_id)
         ->where('car_year', $request->car_year)
         ->select('car_model_name', 'id')
-        ->distinct('car_model_name')
+        ->distinct()
         ->get();
 
         return $carModel;

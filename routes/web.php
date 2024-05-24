@@ -38,6 +38,7 @@ Route::middleware(['userAkses:user'])->group(function (){
     Route::get('/user/brand', [UserController::class, 'carBrandList'])->name('user.carBrandList');
     Route::get('/user/model', [UserController::class, 'carModelList'])->name('user.carModelList');
 
+
 });
 
 Route::middleware(['userAkses:admin'])->group(function (){
@@ -47,6 +48,7 @@ Route::middleware(['userAkses:admin'])->group(function (){
     Route::get('store/list', [AdminController::class, 'viewStoreList'])->name('view.store.list');
     Route::get('store/delete/{id}', [AdminController::class, 'deleteStore'])->name('store.delete');
     Route::get('store/product/list/{id}', [AdminController::class, 'viewProductList'])->name('view.store.product.list');
+    Route::get('/admin/store/product/{imageName}', [AdminController::class, 'loadProductImage'])->name('admin.store.productImage');
 
     Route::get('car/model', [AdminController::class, 'carModelList'])->name('car.model.list');
     Route::get('car/model/form', [AdminController::class, 'carModelForm'])->name('model.form');
@@ -61,6 +63,7 @@ Route::middleware(['userAkses:admin'])->group(function (){
     Route::get('car/brand/edit/{id}', [AdminController::class, 'editCarBrand'])->name('brand.edit');
     Route::post('car/brand/update/{id}', [AdminController::class, 'updateCarBrand'])->name('brand.update');
     Route::get('car/brand/delete/{id}', [AdminController::class, 'deleteCarBrand'])->name('brand.delete');
+    Route::get('car/brand/{imageName}', [AdminController::class, 'loadBrandImage'])->name('brand.image');
 
     Route::get('car/parts' , [AdminController::class, 'carPartList'])->name('car.part.list');
     Route::get('car/parts/form', [AdminController::class, 'carPartForm'])->name('part.form');
@@ -69,7 +72,19 @@ Route::middleware(['userAkses:admin'])->group(function (){
     Route::post('car/parts/update/{id}', [AdminController::class, 'updateCarPart'])->name('part.update');
     Route::get('car/parts/delete/{id}', [AdminController::class, 'deleteCarPart'])->name('part.delete');
 
+    Route::get('car/engine/', [AdminController::class, 'carEngineList'])->name('car.engine.list');
+    Route::get('car/engine/form', [AdminController::class, 'carEngineForm'])->name('engine.form');
+    Route::post('car/engine/create', [AdminController::class, 'addCarEngine'])->name('engine.create');
+    Route::get('car/engine/edit/{id}', [AdminController::class, 'editCarEngine'])->name('engine.edit');
+    Route::post('car/engine/update/{id}', [AdminController::class, 'updateCarEngine'])->name('engine.update');
+    Route::get('car/engine/delete/{id}', [AdminController::class, 'deleteCarEngine'])->name('engine.delete');
+
+    Route::get('/admin/brand', [AdminController::class, 'carBrand'])->name('admin.carBrandList');
+    Route::get('/admin/model', [AdminController::class, 'carModel'])->name('admin.carModelList');
+    Route::get('/admin/engine', [AdminController::class, 'carEngine'])->name('admin.carEngineList');
+
     Route::post('/admin/edit/profile', [AdminController::class, 'editProfileAdmin'])->name('admin.editProfile');
+
 });
 
 Route::middleware(['userAkses:store'])->group(function (){

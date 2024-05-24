@@ -1,45 +1,37 @@
 @extends('layouts.main')
 
 @section('content')
-    <h1 style="color: white; margin-bottom: 30px;">{{ $title }}</h1>
-
+    <div class="d-flex">
+        <a href="{{ route('car.model.list') }}" class="btn-back"><i class="fa fa-arrow-left fa-2x"></i></a>
+        <h1 style="color: white; margin-bottom: 30px; margin-left: 1rem;">{{ $title }}</h1>
+    </div>
     <div class="container" style="">
         <form action="{{ route('model.update', ['id' => $model->id]) }}" method="POST">
             @csrf
             <div class="divBorder container">
-                <div class="row g-3" style="padding: 50px 20px 50px 20px; color:white;">
-                    <div class="col-md-5 custom-column">
-                        <label for="car_brand" class="form-label">Car Brand</label>
-                        <select class="formModel form-select @error('car_brand') is-invalid @enderror" id="car_brand" name="car_brand" required>
-                            <option value="" disabled {{ old('car_brand', $model->car_brand_id ?? '') ? '' : 'selected' }}>Choose Car Brand</option>
-                            @foreach ($brand as $b)
-                                <option value="{{ $b->id }}" {{ old('car_brand', $model->car_brand_id ?? '') == $b->id ? 'selected' : '' }}>{{ $b->car_brand_name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="col-md-5">
-                        <label for="car_model_name" class="form-label">Car Model Name</label>
-                        <input type="text" class="formModel form-control @error('car_model_name') is-invalid @enderror" name="car_model_name" value="{{ $model->car_model_name }}" id="car_model_name">
-                        @error('car_model_name')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    <div class="col-md-5 custom-column">
-                        <label for="car_year" class="form-label">Car Year</label>
-                        <input type="text" class="formModel form-control @error('car_year') is-invalid @enderror" name="car_year" id="car_year" value="{{ $model->car_year }}" >
-                        @error('car_year')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    <div class="col-md-5">
-                        <label for="engine_name" class="form-label">Engine Type</label>
-                        <input type="text" class="formModel form-control @error('engine_name') is-invalid @enderror" name="engine_name" id="engine_name" value="{{ $engine->engine_name }}">
-                        @error('engine_name')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    <div class="col-md-12" style="text-align: center; margin-top: 50px;">
-                        <input type="submit" class="buttonSubmit btn" style="background-color: #f3b200;">
+                <div class="profile-form" style="padding: 50px 250px 50px 250px; background-color: rgb(83, 83, 83); color:white;">
+                    <div class="col-md-12">
+                        <div class="field-form">
+                            <label for="car_brand" class="form-label">Car Brand</label>
+                            <input type="text" class="formModel form-control @error('car_brand') is-invalid @enderror" name="car_brand" value="{{ $brand->car_brand_name }}" id="car_brand" disabled>
+                        </div>
+                        <div class="field-form">
+                            <label for="car_model_name" class="form-label">Car Model Name</label>
+                            <input type="text" class="formModel form-control @error('car_model_name') is-invalid @enderror" name="car_model_name" value="{{ $model->car_model_name }}" id="car_model_name">
+                            @error('car_model_name')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="field-form">
+                            <label for="car_year" class="form-label">Car Year</label>
+                            <input type="text" class="formModel form-control @error('car_year') is-invalid @enderror" name="car_year" id="car_year" value="{{ $model->car_year }}" >
+                            @error('car_year')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="col-md-12" style="text-align: center;">
+                            <input type="submit" class="buttonSubmit btn" style="background-color: #f3b200;">
+                        </div>
                     </div>
                 </div>
             </div>

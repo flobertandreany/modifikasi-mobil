@@ -68,10 +68,13 @@
                             <a class="nav-link text-white" href="{{ route('view.store.list') }}">Store List</a>
                         </li>
                         <li class="nav-item">
+                            <li class="nav-item">
+                                <a class="nav-link text-white" href="{{ route('car.brand.list') }}">Manage Car Brand</a>
+                            </li>
                             <a class="nav-link text-white" href="{{ route('car.model.list') }}">Manage Car Model</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-white" href="{{ route('car.brand.list') }}">Manage Car Brand</a>
+                            <a class="nav-link text-white" href="{{ route('car.engine.list') }}">Manage Car Engine</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-white" href="{{ route('car.part.list') }}">Manage Parts</a>

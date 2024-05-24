@@ -1,8 +1,10 @@
 @extends('layouts.main')
 
 @section('content')
-    <h1 style="color: white; margin-bottom: 30px; padding-left:25px;">{{ $title }}</h1>
-
+    <div class="d-flex">
+        <a href="{{ route('car.brand.list') }}" class="btn-back"><i class="fa fa-arrow-left fa-2x"></i></a>
+        <h1 style="color: white; margin-bottom: 30px; margin-left: 1rem;">{{ $title }}</h1>
+    </div>
     <div class="container" style="">
         <form action="{{ route('brand.update', ['id' => $brand->id]) }}" method="POST" enctype="multipart/form-data">
             @csrf
@@ -22,7 +24,7 @@
                     <label for="brand_name" class="form-label">Upload Brand Logo</label>
                     <div class="div_carLogo container-fluid @error('car_brand_logo') is-invalid @enderror" style="" width="285" height="245">
                         @if ($brand->car_brand_logo)
-                            <img id="output" src="{{ asset('img/brand/' . $brand->car_brand_logo) }}" class="img_logo rounded" alt="Image Profile" width="295" height="245">
+                            <img id="output" src="{{ route('brand.image', ['imageName' => $brand->car_brand_logo]) }}" class="img_logo rounded" alt="Image Profile" width="295" height="245">
                         @else
                         <img id="output" src="{{ asset('img/Logo/image.png') }}" class="img_logo rounded" alt="Image Profile" width="295" height="245" onerror="this.onerror=null;this.src='{{ asset('img/Logo/carLogo.png') }}';">
                         @endif

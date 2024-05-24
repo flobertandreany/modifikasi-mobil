@@ -167,5 +167,31 @@
                 });
             }
         });
+
+        $('#car_model').change(function(){
+            var model_id = $(this).val();
+            console.log(model_id);
+            //reset options
+            $('#car_engine').empty().append('<option value="">Select Car Engine</option>');
+
+            if(model_id){
+                $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name=\'csrf-token\']').attr('content')
+                    },
+                    url: "/admin/engine",
+                    method: "GET",
+                    dataType: "json",
+                    data: {
+                        model_id: model_id,
+                    },
+                    success: function(data){
+                        data.forEach(function(engine) {
+                        $('#car_engine').append('<option value="' + engine.id + '">' + engine.engine_name + '</option>');
+                    });
+                    }
+                });
+            }
+        });
     </script>
 @endpush

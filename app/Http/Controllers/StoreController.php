@@ -12,6 +12,7 @@ use App\Models\SparepartDetail;
 use App\Models\Spareparts;
 use App\Models\Store;
 use App\Models\User;
+use App\Rules\UniqueCarEngine;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
@@ -376,7 +377,7 @@ class StoreController extends Controller
                 ->where('car_model_name', $car_model_name)
                 ->distinct()
                 ->get();
-            $allCarEngine = Car_engine::select('engine_name')
+            $allCarEngine = Car_engine::select('id', 'engine_name')
                 ->where('car_model_id', $p_detail->car_model_id)
                 ->get();
 
@@ -444,7 +445,10 @@ class StoreController extends Controller
                 $carYears[$index] = $value;
             }
             if (strpos($key, 'car_engine_id-') === 0) {
-                $rules[$key] = 'required';
+                $rules[$key] = [
+                    'required',
+                    new UniqueCarEngine($request->all(), $key)
+                ];
 
                 $index = substr($key, strlen('car_engine_id-'));
                 $carEngines[$index] = $value;

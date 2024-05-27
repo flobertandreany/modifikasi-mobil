@@ -19,14 +19,14 @@
             <img class="mt-3" src="{{ asset('img/login/Logo SpareCar.png') }}" alt="image logo" width="250px" height="45px">
         </div>
         <div class="container-fluid">
-            <div class="d-flex flex-column" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSidebar">
+            <div class="d-flex flex-column" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSidebar" style="margin-left: 2rem;">
                 <i class="bi bi-list text-white fs-3"></i>
                 <span class="text-white" style="font-size: 11px;">Menu</span>
             </div>
             <input class="form-control me-2" style="width: 50%;" type="search" placeholder="Search" aria-label="Search">
             <!-- Button profile trigger modal -->
             @auth
-                <div type="button" class="" style="display: grid; justify-items: center; margin-right: 30px;" data-bs-toggle="modal" data-bs-target="#profileModal">
+                <div type="button" class="" style="display: grid; justify-items: center; margin-right: 3rem;" data-bs-toggle="modal" data-bs-target="#profileModal">
                     <i class="bi bi-person-circle text-white fs-4"></i>
                     <span class="text-white" style="font-size: 11px;">Profile</span>
                 </div>
@@ -56,56 +56,71 @@
 <!-- Menu Sidebar -->
 <div class="collapse collapse-horizontal" id="collapseSidebar" style="background-color: #363636; max-width: 0px; position: absolute;">
     <div style="min-height: 120px;">
-        <div class="card card-body" style="width: 223px; background-color: #363636; border-radius: 0 0 10px 0;">
-            @if(auth()->check())
-                @if(auth()->user()->isAdmin())
-                    <!-- Navbar untuk admin -->
-                    <ul class="nav flex-column">
-                        <li class="nav-item">
-                            <a class="nav-link text-white" href="{{ route('admin.store.approval') }}">Store Approval List</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-white" href="{{ route('view.store.list') }}">Store List</a>
-                        </li>
-                        <li class="nav-item">
-                            <li class="nav-item">
-                                <a class="nav-link text-white" href="{{ route('car.brand.list') }}">Manage Car Brand</a>
-                            </li>
-                            <a class="nav-link text-white" href="{{ route('car.model.list') }}">Manage Car Model</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-white" href="{{ route('car.engine.list') }}">Manage Car Engine</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-white" href="{{ route('car.part.list') }}">Manage Parts</a>
-                        </li>
-                    </ul>
-                @elseif(auth()->user()->isStore())
-                    <!-- Navbar untuk store -->
-                    <ul class="nav flex-column">
-                        <li class="nav-item">
-                            <a class="nav-link text-white" href="{{ route('store.productList') }}">Product List</a>
-                        </li>
-                    </ul>
-                @else
-                    <ul class="nav flex-column">
-                        <li class="nav-item">
-                            <a class="nav-link text-white" href="#">user dan guest</a>
-                        </li>
-                    </ul>
-                @endif
-            @else
-                <!-- Navbar untuk pengunjung tanpa login -->
+        <div class="card card-body menu-burger" style="width: 223px; background-color: #363636; border-radius: 0 0 10px 0; margin-top: 3.5rem;">
+            @if(auth()->check() && auth()->user()->isAdmin())
+                <!-- Navbar untuk admin -->
                 <ul class="nav flex-column">
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="#">user dan guest</a>
-                    </li>
-                    {{-- <li class="nav-item">
-                        <a class="nav-link" href="{{ route('login') }}">Login</a>
+                        <a class="nav-link text-white" href="{{ route('admin.store.approval') }}">Store Approval List</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('register') }}">Register</a>
-                    </li> --}}
+                        <a class="nav-link text-white" href="{{ route('view.store.list') }}">Store List</a>
+                    </li>
+                    <li class="nav-item">
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="{{ route('car.brand.list') }}">Manage Car Brand</a>
+                        </li>
+                        <a class="nav-link text-white" href="{{ route('car.model.list') }}">Manage Car Model</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{{ route('car.engine.list') }}">Manage Car Engine</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{{ route('car.part.list') }}">Manage Parts</a>
+                    </li>
+                </ul>
+            @elseif(auth()->check() && auth()->user()->isStore())
+                <!-- Navbar untuk store -->
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{{ route('store.productList') }}">Product List</a>
+                    </li>
+                </ul>
+            @else
+                <!-- Navbar untuk user dan guest -->
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <i class="fa fa-cog" style="color: white;"></i>
+                        <span class="text-white mb-2" style="font-size: 1.2em; font-weight: bold;">Spareparts</span>
+                    </li>
+                    <li class="nav-item-user">
+                        <a class="text-decoration-none text-white" href="#">Batteries</a>
+                    </li>
+                    <li class="nav-item-user">
+                        <a class="text-decoration-none text-white" href="#">Engine Oil</a>
+                    </li>
+                    <li class="nav-item-user">
+                        <a class="text-decoration-none text-white" href="#">Air Filter</a>
+                    </li>
+                    <li class="nav-item">
+                        <i class="fa fa-wrench" style="color: white;"></i>
+                        <span class="text-white mt-3 mb-2" style="font-size: 1.2em; font-weight: bold;">Modifications</span>
+                    </li>
+                    <li class="nav-item-user">
+                        <a class="text-decoration-none text-white" href="#">Rims</a>
+                    </li>
+                    <li class="nav-item-user">
+                        <a class="text-decoration-none text-white" href="#">Suspension</a>
+                    </li>
+                    <li class="nav-item-user">
+                        <a class="text-decoration-none text-white" href="#">Exhaust</a>
+                    </li>
+                    <li class="nav-item-user">
+                        <a class="text-decoration-none text-white" href="#" style="font-weight: bold;">About Us</a>
+                    </li>
+                    <li class="nav-item-user">
+                        <a class="text-decoration-none text-white" href="#" style="font-weight: bold;">Terms and Conditions</a>
+                    </li>
                 </ul>
             @endif
         </div>
@@ -125,9 +140,11 @@
             location.reload();
         });
 
-        // Handler untuk mengatasi klik di luar div collapse
-        $(document).click(function (event) {
-            $('.collapse-horizontal').removeClass('show');
+        $(document).click(function(event) {
+            var target = $(event.target);
+            if (!target.closest('.menu-burger').length) {
+                $('.collapse-horizontal').removeClass('show');
+            }
         });
     </script>
 @endpush

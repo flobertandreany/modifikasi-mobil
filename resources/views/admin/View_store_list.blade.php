@@ -108,11 +108,9 @@
 
         </table>
 
-        @if ($store->links()->paginator->hasPages())
-            <div class="pagination d-flex justify-content-center my-4">
-                {{ $store->links() }}
-            </div>
-        @endif
+        <div class="d-flex justify-content-end">
+            {{ $store->links('vendor.pagination.bootstrap-5') }}
+        </div>
     </div>
 @push('content_css')
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">

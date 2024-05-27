@@ -29,6 +29,9 @@
                 @endforeach
             </tbody>
         </table>
+            <div class="d-flex justify-content-end">
+                {{ $model->links('vendor.pagination.bootstrap-5') }}
+            </div>
             {{-- <a href="{{ route('model.form') }}" class="btn btn-primary">Add New Model</a> --}}
             <div class="d-flex justify-content-center">
                 <a href="{{ route('model.form') }}" class="btn btn-light btn-add">

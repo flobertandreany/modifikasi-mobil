@@ -23,6 +23,21 @@
                 <i class="bi bi-list text-white fs-3"></i>
                 <span class="text-white" style="font-size: 11px;">Menu</span>
             </div>
+            @if(auth()->check())
+                @if (auth()->user()->isUser())
+                    @if(auth()->user()->user_cars()->exists()){}
+                    @php
+                        $car = auth()->user()->user_cars()->first();
+                        // $model =
+                    @endphp
+                    <div class="user_car" style="width: 154px; height: 51px; position: relative">
+                        {{-- <div style="width: 154px; height: 51px; left: 0px; top: 0px; position: absolute; background: #202020; border-radius: 8px"></div> --}}
+                        <img style="width: 57px; height: 38px; left: 3px; top: 6px; position: absolute" src="" />
+                        <div style="width: 88px; height: 38px; left: 60px; top: 6px; position: absolute; color: white; font-size: 10px; font-family: Montserrat; font-weight: 500; line-height: 14px; letter-spacing: 0.50px; word-wrap: break-word">2024 Daihatsu<br/>All New Ertiga, K15C</div>
+                    </div>
+                    @endif
+                @endif
+            @endif
             <input class="form-control me-2" style="width: 50%;" type="search" placeholder="Search" aria-label="Search">
             <!-- Button profile trigger modal -->
             @auth

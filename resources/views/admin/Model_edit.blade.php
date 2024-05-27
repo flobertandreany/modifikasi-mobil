@@ -13,7 +13,7 @@
                     <div class="col-md-12">
                         <div class="field-form">
                             <label for="car_brand" class="form-label">Car Brand</label>
-                            <input type="text" class="formModel form-control @error('car_brand') is-invalid @enderror" name="car_brand" value="{{ $brand->car_brand_name }}" id="car_brand" disabled>
+                            <input type="text" class="formModel form-control @error('car_brand') is-invalid @enderror" name="car_brand" value="{{ $brand->car_brand_name }}" id="car_brand" disabled style="background-color: gray;">
                         </div>
                         <div class="field-form">
                             <label for="car_model_name" class="form-label">Car Model Name</label>

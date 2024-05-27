@@ -31,13 +31,11 @@ Route::middleware(['auth'])->group(function (){
     Route::get('/home', [UserController::class, 'index'])->middleware('userAkses:user');
     Route::get('/admin', [AdminController::class, 'index'])->middleware('userAkses:admin')->name('admin.store.approval');
     Route::get('/store', [StoreController::class, 'index'])->middleware('userAkses:store')->name('store.productList');
+
 });
 
 Route::middleware(['userAkses:user'])->group(function (){
     Route::post('/user/edit/profile', [UserController::class, 'editProfileUser'])->name('user.editProfile');
-    Route::get('/user/brand', [UserController::class, 'carBrandList'])->name('user.carBrandList');
-    Route::get('/user/model', [UserController::class, 'carModelList'])->name('user.carModelList');
-
 
 });
 
@@ -79,10 +77,6 @@ Route::middleware(['userAkses:admin'])->group(function (){
     Route::post('car/engine/update/{id}', [AdminController::class, 'updateCarEngine'])->name('engine.update');
     Route::get('car/engine/delete/{id}', [AdminController::class, 'deleteCarEngine'])->name('engine.delete');
 
-    Route::get('/admin/brand', [AdminController::class, 'carBrand'])->name('admin.carBrandList');
-    Route::get('/admin/model', [AdminController::class, 'carModel'])->name('admin.carModelList');
-    Route::get('/admin/engine', [AdminController::class, 'carEngine'])->name('admin.carEngineList');
-
     Route::post('/admin/edit/profile', [AdminController::class, 'editProfileAdmin'])->name('admin.editProfile');
 
 });
@@ -119,6 +113,12 @@ Route::post('/register/store', [RegisterController::class, 'postRegisterStore'])
 Route::get('/store/city', [RegisterController::class, 'getCity'])->name('store.getCity');
 Route::get('/store/district', [RegisterController::class, 'getDistrict'])->name('store.getDistrict');
 Route::get('/store/subdistrict', [RegisterController::class, 'getSubdistrict'])->name('store.getSubdistrict');
+
+Route::get('/user/brand', [UserController::class, 'carBrandList'])->name('user.carBrandList');
+Route::get('/user/model', [UserController::class, 'carModelList'])->name('user.carModelList');
+Route::get('/user/engine', [UserController::class, 'carEngineList'])->name('user.carEngineList');
+
+Route::post('user/car', [UserController::class, 'addUserCar'])->name('user.addUserCar');
 
 Route::get('users/{id}', function ($id) {
     return 'User '.$id;

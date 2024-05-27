@@ -13,15 +13,15 @@
                     <div class="col-md-12">
                         <div class="field-form">
                             <label for="car_year" class="form-label">Car Year</label>
-                            <input type="text" class="formModel form-control" name="car_year" id="car_year" disabled value="{{ $model->car_year }}">
+                            <input type="text" class="formModel form-control" name="car_year" id="car_year" disabled value="{{ $model->car_year }}" style="background-color: gray;">
                         </div>
                         <div class="field-form">
                             <label for="car_brand" class="form-label">Car Brand</label>
-                            <input type="text" class="formModel form-control" name="car_brand" id="car_brand" disabled value="{{ $brand->car_brand_name }}">
+                            <input type="text" class="formModel form-control" name="car_brand" id="car_brand" disabled value="{{ $brand->car_brand_name }}" style="background-color: gray;">
                         </div>
                         <div class="field-form">
                             <label for="car_model" class="form-label">Car Model</label>
-                            <input type="text" class="formModel form-control" name="car_model" id="car_model" disabled value="{{ $model->car_model_name }}">
+                            <input type="text" class="formModel form-control" name="car_model" id="car_model" disabled value="{{ $model->car_model_name }}" style="background-color: gray;">
                         </div>
                         <div class="field-form">
                             <label for="engine_name" class="form-label">Engine Name</label>
@@ -55,62 +55,7 @@
 @push('content_js')
     <script src="{{ asset('js/script.js') }}"></script>
     <script>
-        // $('#car_year').change(function(){
-        //     var year_id = $(this).val();
 
-        //     //reset options
-        //     $('#car_brand').empty().append('<option value="">Select Car Brand</option>');
-        //     $('#car_model').empty().append('<option value="">Select Car Model</option>');
-        //     $('#car_engine').empty().append('<option value="">Select Car Engine</option>');
-
-        //     if(year_id){
-        //         $.ajax({
-        //             headers: {
-        //                 'X-CSRF-TOKEN': $('meta[name=\'csrf-token\']').attr('content')
-        //             },
-        //             url: "/admin/brand",
-        //             method: "GET",
-        //             dataType: "json",
-        //             data: {
-        //                 car_year: year_id,
-        //             },
-        //             success: function(data){
-        //                 data.forEach(function(brand) {
-        //                 $('#car_brand').append('<option value="' + brand.id + '">' + brand.car_brand_name + '</option>');
-
-        //             });
-        //             }
-        //         });
-        //     }
-        // });
-
-        // $('#car_brand').change(function(){
-        //     var brand_id = $(this).val();
-        //     console.log(brand_id);
-        //     //reset options
-        //     $('#car_model').empty().append('<option value="">Select Car Model</option>');
-        //     $('#car_engine').empty().append('<option value="">Select Car Engine</option>');
-
-        //     if(brand_id){
-        //         $.ajax({
-        //             headers: {
-        //                 'X-CSRF-TOKEN': $('meta[name=\'csrf-token\']').attr('content')
-        //             },
-        //             url: "/admin/model",
-        //             method: "GET",
-        //             dataType: "json",
-        //             data: {
-        //                 brand_id: brand_id,
-        //                 car_year: $('#car_year').val(),
-        //             },
-        //             success: function(data){
-        //                 data.forEach(function(model) {
-        //                 $('#car_model').append('<option value="' + model.id + '">' + model.car_model_name + '</option>');
-        //             });
-        //             }
-        //         });
-        //     }
-        // });
     </script>
 @endpush
 @endsection

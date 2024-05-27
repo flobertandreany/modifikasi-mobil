@@ -480,41 +480,6 @@ class AdminController extends Controller
         ]);
     }
 
-    public function carBrand(Request $request){
-        Log::info($request->car_year);
-
-        $carBrand = Car_brand::join('car_models', 'car_brands.id', '=', 'car_models.car_brand_id')
-            ->where('car_models.car_year', $request->car_year)
-            ->select('car_brands.id as id', 'car_brands.car_brand_name as car_brand_name', 'car_models.car_year as car_year')
-            ->distinct()
-            ->get();
-
-
-        return $carBrand;
-    }
-
-    public function carModel(Request $request){
-        Log::info($request->brand_id);
-        Log::info($request->car_year);
-        $carModel = Car_model::where('car_brand_id', $request->brand_id)
-        ->where('car_year', $request->car_year)
-        ->select('car_model_name', 'id')
-        ->distinct()
-        ->get();
-
-        return $carModel;
-    }
-
-    public function carEngine(Request $request){
-        Log::info($request->model_id);
-        $carEngine = Car_engine::where('car_model_id', $request->model_id)
-        ->select('engine_name', 'id')
-        ->distinct()
-        ->get();
-
-        return $carEngine;
-    }
-
     public function addCarEngine(Request $request){
 
         $rules = [];

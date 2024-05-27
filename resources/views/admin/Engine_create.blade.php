@@ -78,7 +78,7 @@
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name=\'csrf-token\']').attr('content')
                     },
-                    url: "/admin/brand",
+                    url: "/user/brand",
                     method: "GET",
                     dataType: "json",
                     data: {
@@ -106,7 +106,7 @@
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name=\'csrf-token\']').attr('content')
                     },
-                    url: "/admin/model",
+                    url: "/user/model",
                     method: "GET",
                     dataType: "json",
                     data: {

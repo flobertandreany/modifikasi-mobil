@@ -130,9 +130,8 @@
                                             <div class="dropdown-wrapper">
                                                 <select name="car_engine_id-{{ $loop->index + 1 }}" id="car_engine_id" class="input-field form-control" >
                                                     <option value="">**Choose Car Engine**</option>
-                                                    {{-- <option {{ $p_detail->car_engine_id ? 'selected' : '' }} value="{{ $p_detail->car_engine_id }}">{{ $p_detail->car_engine_name }}</option> --}}
                                                     @foreach($p_detail->all_car_engine as $engine)
-                                                        <option {{ $p_detail->car_engine_name == $engine->engine_name ? 'selected' : '' }} value="{{ $p_detail->car_engine_id }}">{{ $engine->engine_name }}</option>
+                                                        <option {{ $p_detail->car_engine_id == $engine->id ? 'selected' : '' }} value="{{ $engine->id }}">{{ $engine->engine_name }}</option>
                                                     @endforeach
                                                 </select>
                                                 <i class="fas fa-chevron-down select-icon"></i>
@@ -452,6 +451,14 @@
                             $(this).next('.error-message').remove();
                         });
                     }
+
+                    $('select').each(function() {
+                        var selectName = $(this).attr('name');
+                        if (!errors || !errors.hasOwnProperty(selectName)) {
+                            $(this).removeClass('is-invalid');
+                            $(this).next('.error-message').remove();
+                        }
+                    });
                 }
             });
         });

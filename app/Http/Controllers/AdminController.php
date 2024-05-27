@@ -31,7 +31,7 @@ class AdminController extends Controller
             ->join('subdistrict', 'stores.store_subdistrict', '=', 'subdistrict.id')
             ->orderBy('stores.created_at', 'desc')
             ->select('stores.*', 'users.email as email', 'province.name as province_name', 'city.name as city_name', 'district.name as district_name', 'subdistrict.name as subdistrict_name')
-            ->simplePaginate(5);
+            ->paginate(5);
 
         return view('admin.Store_approval_list', [
             'title' => 'STORE APPROVAL LIST',
@@ -114,7 +114,7 @@ class AdminController extends Controller
             ->join('subdistrict', 'stores.store_subdistrict', '=', 'subdistrict.id')
             ->orderBy('stores.created_at', 'desc')
             ->select('stores.*', 'users.email as email', 'province.name as province_name', 'city.name as city_name', 'district.name as district_name', 'subdistrict.name as subdistrict_name')
-            ->simplePaginate(5);
+            ->paginate(5);
 
         return view('admin.View_store_list', [
             'title' => 'STORE LIST',
@@ -210,7 +210,7 @@ class AdminController extends Controller
         $model = Car_model::join('car_brands', 'car_models.car_brand_id', '=', 'car_brands.id')
             ->orderBy('car_models.car_model_name', 'asc')
             ->select('car_models.*', 'car_brands.car_brand_name as brand_name')
-            ->simplePaginate(5);
+            ->paginate(5);
 
         return view('admin.Car_model_list', [
             'title' => 'MANAGE CAR MODEL',
@@ -335,7 +335,7 @@ class AdminController extends Controller
     public function carBrandList(){
         Log::info("Masuk ke dalam metode carBrandList pada AdminController");
 
-        $brand = Car_brand::orderBy('created_at', 'desc')->simplePaginate(5);
+        $brand = Car_brand::orderBy('created_at', 'desc')->paginate(5);
 
         return view('admin.Car_brand_list', [
             'title' => 'MANAGE CAR BRAND',
@@ -458,7 +458,7 @@ class AdminController extends Controller
             ->join('car_brands', 'car_models.car_brand_id', '=', 'car_brands.id')
             ->orderBy('car_engines.created_at', 'asc')
             ->select('car_engines.*', 'car_models.car_model_name', 'car_brands.car_brand_name', 'car_models.car_year')
-            ->simplePaginate(5);
+            ->paginate(5);
 
         return view('admin.Car_engine_list', [
             'title' => 'MANAGE CAR ENGINE',
@@ -578,7 +578,7 @@ class AdminController extends Controller
     public function carPartList(){
         Log::info("Masuk ke dalam metode carPartList pada AdminController");
 
-        $parts = Product::orderBy('created_at', 'asc')->simplePaginate(5);
+        $parts = Product::orderBy('created_at', 'asc')->paginate(5);
 
         return view('admin.Car_part_list', [
             'title' => 'MANAGE PARTS',

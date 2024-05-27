@@ -29,6 +29,9 @@
                 @endforeach
             </tbody>
         </table>
+        <div class="d-flex justify-content-end">
+            {{ $brand->links('vendor.pagination.bootstrap-5') }}
+        </div>
             <div class="d-flex justify-content-center">
                 <a href="{{ route('car.brand.form') }}" class="btn btn-light btn-add">
                     <i class="fa fa-plus" style="color: #000000;"></i> Add Car Brand

@@ -120,6 +120,11 @@ Route::get('/user/engine', [UserController::class, 'carEngineList'])->name('user
 
 Route::post('user/car', [UserController::class, 'addUserCar'])->name('user.addUserCar');
 
+Route::get('/user/product-list/{type}/{name}', [UserController::class, 'viewUserProductList'])->name('user.productList');
+Route::get('/user/filter-product-list', [UserController::class, 'filterProductList'])->name('user.filterProductList');
+Route::get('/user/product-detail/{type}/{name}/{id}', [UserController::class, 'viewUserProductDetail'])->name('user.productDetail');
+Route::get('/user/store/product/{imageName}', [UserController::class, 'loadProductImage'])->name('user.store.productImage');
+
 Route::get('users/{id}', function ($id) {
     return 'User '.$id;
 });

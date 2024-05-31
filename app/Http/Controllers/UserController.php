@@ -20,6 +20,20 @@ class UserController extends Controller
 
         $year = Car_model::select('car_year')->distinct()->orderBy('car_year', 'asc')->get();
 
+        $car = User_car::where('user_id', Session::get('user_id'))->where('is_active', true)->first();
+
+        $user_car = User_car::where('user_id', Session::get('user_id'))->get();
+        if($car){
+            return view('home', [
+                'user_car' => $car,
+                'year' => $year,
+                'car_list' => $user_car,
+                'title' => 'Home',
+                'nama' => 'Welcome, user!',
+                'image' => 'Logo SpareCar.png',
+            ]);
+        }
+
         return view('home', [
             'nama' => 'Welcome, user!',
             'image' => 'Logo SpareCar.png',
@@ -43,7 +57,7 @@ class UserController extends Controller
 
     public function carModelList(Request $request){
         Log::info($request->brand_id);
-        Log::info($request->car_year);
+        Log::info("ini car year " . $request->car_year);
         $carModel = Car_model::where('car_brand_id', $request->brand_id)
         ->where('car_year', $request->car_year)
         ->select('car_model_name', 'id')
@@ -55,10 +69,29 @@ class UserController extends Controller
 
     public function addUserCar(Request $request){
         $userId = Session::get('user_id');
-
+        $rules = [];
+        Log::info($request->car_engine);
         if (!$userId) {
             // Redirect ke halaman login jika user_id tidak ditemukan
             return redirect()->route('view.login')->with('error', 'Please login first!');
+        }
+
+
+        $rules = array_merge($rules, [
+            'car_engine' => 'required|unique:user_cars,car_engine_id',
+        ]);
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if($validator->fails()){
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        $is_active = User_car::where('user_id', $userId)->where('is_active', true)->first();
+        if($is_active){
+            $is_active->update([
+                'is_active' => false,
+            ]);
         }
 
         $brand = Car_brand::find($request->car_brand);
@@ -74,9 +107,45 @@ class UserController extends Controller
         $car->car_year = $model->car_year;
         $car->car_engine_id = $request->car_engine;
         $car->car_engine_name = $engine->engine_name;
+        $car->is_active = true;
         $car->save();
 
-        return redirect()->back()->with('success', 'User car has been added successfully.');
+        return redirect()->back();
+    }
+
+    public function updateUserCar(Request $request){
+        $userId = Session::get('user_id');
+
+        $car = User_car::where('user_id', $userId)->where('is_active', true)->first();
+        if($car){
+            $car->update([
+                'is_active' => false,
+            ]);
+        }
+        $car_active = User_car::where('user_id', $userId)->where('id', $request->id)->first();
+        if($car_active){
+            $car_active->update([
+                'is_active' => true,
+            ]);
+        }
+        return redirect()->back();
+    }
+
+    public function deleteUserCar($id){
+        $car = User_car::find($id);
+        $car_active = User_car::where('user_id', Session::get('user_id'))->where('is_active', false)->first();
+
+        if($car){
+            $car->delete();
+        }
+
+        if($car_active){
+            $car_active->update([
+                'is_active' => true,
+            ]);
+        }
+
+        return redirect()->back();
     }
 
     public function carEngineList(Request $request){

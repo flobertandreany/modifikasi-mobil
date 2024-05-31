@@ -36,7 +36,8 @@ Route::middleware(['auth'])->group(function (){
 
 Route::middleware(['userAkses:user'])->group(function (){
     Route::post('/user/edit/profile', [UserController::class, 'editProfileUser'])->name('user.editProfile');
-
+    Route::get('/user/delete/car/{id}', [UserController::class, 'deleteUserCar'])->name('user.deleteCar');
+    Route::post('/user/update/car', [UserController::class, 'updateUserCar'])->name('user.updateCar');
 });
 
 Route::middleware(['userAkses:admin'])->group(function (){
@@ -61,7 +62,6 @@ Route::middleware(['userAkses:admin'])->group(function (){
     Route::get('car/brand/edit/{id}', [AdminController::class, 'editCarBrand'])->name('brand.edit');
     Route::post('car/brand/update/{id}', [AdminController::class, 'updateCarBrand'])->name('brand.update');
     Route::get('car/brand/delete/{id}', [AdminController::class, 'deleteCarBrand'])->name('brand.delete');
-    Route::get('car/brand/{imageName}', [AdminController::class, 'loadBrandImage'])->name('brand.image');
 
     Route::get('car/parts' , [AdminController::class, 'carPartList'])->name('car.part.list');
     Route::get('car/parts/form', [AdminController::class, 'carPartForm'])->name('part.form');
@@ -119,6 +119,7 @@ Route::get('/user/model', [UserController::class, 'carModelList'])->name('user.c
 Route::get('/user/engine', [UserController::class, 'carEngineList'])->name('user.carEngineList');
 
 Route::post('user/car', [UserController::class, 'addUserCar'])->name('user.addUserCar');
+Route::get('car/brand/{imageName}', [AdminController::class, 'loadBrandImage'])->name('brand.image');
 
 Route::get('users/{id}', function ($id) {
     return 'User '.$id;

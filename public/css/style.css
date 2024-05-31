@@ -4,7 +4,7 @@
 }
 
 .user-body {
-    background-image: url('../img/login/Bakcground home JPG.jpg');
+    background-image: url('../img/login/Backgroundstall_up.png');
     background-size: 100%;
     background-repeat: no-repeat;
 }
@@ -29,7 +29,7 @@
 }
 
 .container-content-user {
-    min-height: 100rem;
+    /* min-height: 100rem; */
     margin-top: 70px;
 }
 

@@ -24,9 +24,9 @@
                     <label for="brand_name" class="form-label">Upload Brand Logo</label>
                     <div class="div_carLogo container-fluid @error('car_brand_logo') is-invalid @enderror" style="" width="285" height="245">
                         @if ($brand->car_brand_logo)
-                            <img id="output" src="{{ route('brand.image', ['imageName' => $brand->car_brand_logo]) }}" class="img_logo rounded" alt="Image Profile" width="295" height="245">
+                            <img id="output" src="{{ route('brand.image', ['imageName' => $brand->car_brand_logo]) }}" class="img_logo rounded" alt="Image Profile" width="295" height="245" onerror="this.onerror=null;this.src='{{ asset('img/Logo/image.png') }}';">
                         @else
-                        <img id="output" src="{{ asset('img/Logo/image.png') }}" class="img_logo rounded" alt="Image Profile" width="295" height="245" onerror="this.onerror=null;this.src='{{ asset('img/Logo/carLogo.png') }}';">
+                        <img id="output" src="{{ asset('img/Logo/image.png') }}" class="img_logo rounded" alt="Image Profile" width="295" height="245" onerror="this.onerror=null;this.src='{{ asset('img/Logo/image.png') }}';">
                         @endif
                     </div>
                     @error('car_brand_logo')

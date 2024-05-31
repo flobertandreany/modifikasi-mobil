@@ -402,21 +402,19 @@ class AdminController extends Controller
             return redirect()->route('car.brand.list');
         }
 
-        $oldImage = $brand->car_brand_logo;
-        $imageName = !empty($request->file('car_brand_logo')) ? $request->file('car_brand_logo')->getClientOriginalName() : $oldImage;
-        $newImage = $imageName;
+        // $oldImage = $brand->car_brand_logo;
+        // $imageName = !empty($request->file('car_brand_logo')) ? $request->file('car_brand_logo')->getClientOriginalName() : $oldImage;
+        // $newImage = $imageName;
+
+        $imageName = $request->file('car_brand_logo')->getClientOriginalName();
 
         if (!empty($request->file('car_brand_logo'))) {
-            $newImage = uniqid() . '_' . $imageName;
-            $request->file('car_brand_logo')->move(storage_path('app/brand_logo'), $newImage);
+            // $newImage = uniqid() . '_' . $imageName;
+            $request->file('car_brand_logo')->move(storage_path('app/brand_logo'), $imageName);
         }
 
         $brand->car_brand_logo = $imageName;
         $brand->save();
-
-        if ($oldImage && $oldImage !== $newImage && !empty($request->file('car_brand_logo'))) {
-            unlink(storage_path('app/brand_logo/' . $oldImage));
-        }
 
         return redirect()->route('car.brand.list');
     }

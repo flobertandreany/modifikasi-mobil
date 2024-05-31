@@ -2,10 +2,10 @@
 
 @section('content')
     <div class="">
-        <div style="display: flex; justify-content: space-between; width:50%;">
+        <div style="width:50%; padding-top: 10px; padding-left: 70px;">
             <div class="container">
 
-                <div class="p-4 p-lg-5 text-black card-body">
+                <div class="p-lg-5 text-black card-body">
                     <form action="{{ route('user.addUserCar') }}" method="POST">
                         @csrf
                         <div class="d-flex align-items-center justify-content-center pb-1">
@@ -16,7 +16,7 @@
                         </div>
                         <div class="register-store overflow-auto">
                             <div class="form-outline mb-2 form-floating">
-                                <select name="car_year" id="car_year" class="form-control" required>
+                                <select name="car_year" id="car_year" class="form-control car-year-select" required>
                                     <option value="" hidden></option>
                                     @foreach($year as $y)
                                         <option value="{{ $y->car_year }}">{{ $y->car_year }}</option>
@@ -26,25 +26,28 @@
                                 <i class="fas fa-chevron-down select-icon"></i>
                             </div>
                             <div class="form-outline mb-2 form-floating">
-                                <select name="car_brand" id="car_brand" class="form-control" required>
+                                <select name="car_brand" id="car_brand" class="form-control car-brand-select" required>
                                     <option value="" hidden></option>
                                 </select>
                                 <label style="font-size: larger;" for="car_brand">Car Brand</label>
                                 <i class="fas fa-chevron-down select-icon"></i>
                             </div>
                             <div class="form-outline mb-2 form-floating">
-                                <select name="car_model" id="car_model" class="form-control" required>
+                                <select name="car_model" id="car_model" class="form-control car-model-select" required>
                                     <option value=""hidden ></option>
                                 </select>
                                 <label style="font-size: larger;" for="car_model">Car Model</label>
                                 <i class="fas fa-chevron-down select-icon"></i>
                             </div>
                             <div class="form-outline mb-2 form-floating">
-                                <select name="car_engine" id="car_engine" class="form-control" required>
+                                <select name="car_engine" id="car_engine" class="form-control car-engine-select @error('car_engine') is-invalid @enderror" required>
                                     <option value="" hidden></option>
                                 </select>
                                 <label style="font-size: larger;" for="car_engine">Car Engine</label>
                                 <i class="fas fa-chevron-down select-icon"></i>
+                                @error('car_engine')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
                             <div style="text-align: center; margin-top: 20px; height: 60px;">
                                 <button type="submit" class="button button-find">FIND NOW!</button>
@@ -63,7 +66,33 @@
 @push('content_css')
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <style>
+        .find-store{
+            background-color: #FDC42C;
+            color: black;
+            border-radius: 10px;
+            width: 105px;
+            height: 40px;
+            font-family: Montserrat;
+            border: 1px solid #FDC42C;
+            font-size: 15px;
+        }
 
+        .car-details{
+            width: 130px;
+            height: 42px;
+            left: 60px;
+            top: 6px;
+            position: absolute;
+            color: white;
+            font-size: 10px;
+            font-family: Montserrat;
+            font-weight: 500;
+            line-height: 14px;
+            letter-spacing: 0.50px;
+            word-wrap: break-word;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
         .button-find{
             background: #0A76DB;
             box-shadow: 0px 3px 3px rgba(0, 0, 0, 0.25);
@@ -129,15 +158,33 @@
     </style>
 @endpush
 @push('content_js')
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script src="{{ asset('js/script.js') }}"></script>
     <script>
-        $('#car_year').change(function(){
+        $(document).ready(function() {
+            @if(session('error'))
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Failed',
+                    text: 'engine already added.',
+                    confirmButtonColor: '#19B400',
+                    confirmButtonText: 'OK',
+                    customClass: {
+                        confirmButton: 'confirm-button-swal'
+                    }
+                });
+            @endif
+        });
+
+        $('.car-year-select').change(function(){
             var year_id = $(this).val();
+            var form = $(this).closest('form');
 
             //reset options
-            $('#car_brand').empty().append('<option value="" hidden></option>');
-            $('#car_model').empty().append('<option value="" hidden></option>');
-            $('#car_engine').empty().append('<option value="" hidden></option>');
+            form.find('.car-brand-select').empty().append('<option value="" hidden></option>');
+            form.find('.car-model-select').empty().append('<option value="" hidden></option>');
+            form.find('.car-engine-select').empty().append('<option value="" hidden></option>');
 
             if(year_id){
                 $.ajax({
@@ -152,7 +199,7 @@
                     },
                     success: function(data){
                         data.forEach(function(brand) {
-                        $('#car_brand').append('<option value="' + brand.id + '">' + brand.car_brand_name + '</option>');
+                            form.find('.car-brand-select').append('<option value="' + brand.id + '">' + brand.car_brand_name + '</option>');
 
                     });
                     }
@@ -160,12 +207,15 @@
             }
         });
 
-        $('#car_brand').change(function(){
+        $('.car-brand-select').change(function(){
             var brand_id = $(this).val();
+            var form = $(this).closest('form');
+            var car_year = form.find('.car-year-select').val();
+
             console.log(brand_id);
             //reset options
-            $('#car_model').empty().append('<option value="" hidden></option>');
-            $('#car_engine').empty().append('<option value="" hidden></option>');
+            form.find('.car-model-select').empty().append('<option value="" hidden></option>');
+            form.find('.car-engine-select').empty().append('<option value="" hidden></option>');
 
             if(brand_id){
                 $.ajax({
@@ -176,23 +226,25 @@
                     method: "GET",
                     dataType: "json",
                     data: {
+                        car_year: car_year,
                         brand_id: brand_id,
-                        car_year: $('#car_year').val(),
                     },
                     success: function(data){
                         data.forEach(function(model) {
-                        $('#car_model').append('<option value="' + model.id + '">' + model.car_model_name + '</option>');
+                            $('.car-model-select').append('<option value="' + model.id + '">' + model.car_model_name + '</option>');
                     });
                     }
                 });
             }
         });
 
-        $('#car_model').change(function(){
+        $('.car-model-select').change(function(){
             var model_id = $(this).val();
+            var form = $(this).closest('form');
+
             console.log(model_id);
             //reset options
-            $('#car_engine').empty().append('<option value="" hidden></option>');
+            $('.car-engine-select').empty().append('<option value="" hidden></option>');
 
             if(model_id){
                 $.ajax({
@@ -207,7 +259,7 @@
                     },
                     success: function(data){
                         data.forEach(function(engine) {
-                        $('#car_engine').append('<option value="' + engine.id + '">' + engine.engine_name + '</option>');
+                            $('.car-engine-select').append('<option value="' + engine.id + '">' + engine.engine_name + '</option>');
                     });
                     }
                 });

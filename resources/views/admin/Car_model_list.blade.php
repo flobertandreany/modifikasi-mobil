@@ -27,6 +27,15 @@
                         </td>
                     </tr>
                 @endforeach
+                @for ($i = count($model); $i < 5; $i++)
+                    <tr style="height: 5rem;">
+                        <th scope="row" class="center-position">{{ $i + 1 }}.</th>
+                        <td class="">&nbsp;</td>
+                        <td class="">&nbsp;</td>
+                        <td class="">&nbsp;</td>
+                        <td class="">&nbsp;</td>
+                    </tr>
+                @endfor
             </tbody>
         </table>
             <div class="d-flex justify-content-end">

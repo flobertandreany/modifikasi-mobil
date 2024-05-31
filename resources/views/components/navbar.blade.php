@@ -5,7 +5,9 @@
                 <i class="bi bi-list text-white fs-3"></i>
                 <span class="text-white" style="font-size: 11px;">Menu</span>
             </div>
-            <img class="mt-3" src="{{ asset('img/login/Logo SpareCar.png') }}" alt="image logo" width="250px" height="45px">
+            <a href="{{ route('home') }}">
+                <img class="mt-3" src="{{ asset('img/login/Logo SpareCar.png') }}" alt="image logo" width="250px" height="45px">
+            </a>
             <!-- Button profile trigger modal -->
             <div type="button" class="" style="display: grid; justify-items: center; margin-right: 3rem;" data-bs-toggle="modal" data-bs-target="#profileModal">
                 <i class="bi bi-person-circle text-white fs-4"></i>
@@ -15,9 +17,11 @@
     </nav>
 @elseif(auth()->check() && auth()->user()->isUser())
     <nav class="navbar" style="background-color: #363636;">
-        <a href="{{ route('home') }}" class="container-fluid" style="justify-content: center;">
-            <img class="mt-3" src="{{ asset('img/login/Logo SpareCar.png') }}" alt="image logo" width="250px" height="45px">
-        </a>
+        <div class="container-fluid" style="justify-content: center;">
+            <a href="{{ route('home') }}">
+                <img class="mt-3" src="{{ asset('img/login/Logo SpareCar.png') }}" alt="image logo" width="250px" height="45px">
+            </a>
+        </div>
         <div class="container-fluid" style="flex: 1">
             <div class="d-flex flex-row" style="padding-left: 10px;">
                 <div class="d-flex flex-column" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSidebar" style="align-items: center; padding-top: 10px;">
@@ -121,7 +125,7 @@
     </div>
 </div>
 <!-- Menu Sidebar -->
-<div class="collapse collapse-horizontal" id="collapseSidebar" style="background-color: #363636; max-width: 0px; position: absolute;">
+<div class="collapse collapse-horizontal" id="collapseSidebar" style="background-color: #363636; max-width: 0px; position: fixed; z-index: 950;">
     <div style="min-height: 120px;">
         <div class="card card-body menu-burger" style="width: 223px; background-color: #363636; border-radius: 0 0 10px 0; margin-top: 3.5rem;">
             @if(auth()->check() && auth()->user()->isAdmin())
@@ -160,28 +164,24 @@
                         <i class="fa fa-cog" style="color: white;"></i>
                         <span class="text-white mb-2" style="font-size: 1.2em; font-weight: bold;">Spareparts</span>
                     </li>
-                    <li class="nav-item-user">
-                        <a class="text-decoration-none text-white" href="#">Batteries</a>
-                    </li>
-                    <li class="nav-item-user">
-                        <a class="text-decoration-none text-white" href="#">Engine Oil</a>
-                    </li>
-                    <li class="nav-item-user">
-                        <a class="text-decoration-none text-white" href="#">Air Filter</a>
-                    </li>
+                    @foreach ($spareparts as $sparepart)
+                        <li class="nav-item-user">
+                            <a class="text-decoration-none text-white" href="{{ route('user.productList', ['type' => $sparepart->type, 'name' => $sparepart->product_name]) }}">
+                                {{ $sparepart->product_name }}
+                            </a>
+                        </li>
+                    @endforeach
                     <li class="nav-item">
                         <i class="fa fa-wrench" style="color: white;"></i>
                         <span class="text-white mt-3 mb-2" style="font-size: 1.2em; font-weight: bold;">Modifications</span>
                     </li>
-                    <li class="nav-item-user">
-                        <a class="text-decoration-none text-white" href="#">Rims</a>
-                    </li>
-                    <li class="nav-item-user">
-                        <a class="text-decoration-none text-white" href="#">Suspension</a>
-                    </li>
-                    <li class="nav-item-user">
-                        <a class="text-decoration-none text-white" href="#">Exhaust</a>
-                    </li>
+                    @foreach ($modifications as $modification)
+                        <li class="nav-item-user">
+                            <a class="text-decoration-none text-white" href="{{ route('user.productList', ['type' => $modification->type, 'name' => $modification->product_name]) }}">
+                                {{ $modification->product_name }}
+                            </a>
+                        </li>
+                    @endforeach
                     <li class="nav-item-user">
                         <a class="text-decoration-none text-white" href="#" style="font-weight: bold;">About Us</a>
                     </li>

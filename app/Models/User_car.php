@@ -23,4 +23,16 @@ class User_car extends Model
     {
         return $this->hasMany(Favorite::class);
     }
+
+    protected $fillable = [
+        'user_id',
+        'car_brand_id',
+        'car_brand_logo',
+        'car_model_id',
+        'car_model_name',
+        'car_year',
+        'car_engine_id',
+        'car_engine_name',
+        'is_active',
+    ];
 }

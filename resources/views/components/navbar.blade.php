@@ -15,40 +15,51 @@
             </div>
         </div>
     </nav>
-@else
+@elseif(auth()->check() && auth()->user()->isUser())
     <nav class="navbar" style="background-color: #363636;">
         <div class="container-fluid" style="justify-content: center;">
             <a href="{{ route('home') }}">
                 <img class="mt-3" src="{{ asset('img/login/Logo SpareCar.png') }}" alt="image logo" width="250px" height="45px">
             </a>
         </div>
-        <div class="container-fluid">
-            <div class="d-flex flex-column" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSidebar" style="margin-left: 2rem;">
-                <i class="bi bi-list text-white fs-3"></i>
-                <span class="text-white" style="font-size: 11px;">Menu</span>
+        <div class="container-fluid" style="flex: 1">
+            <div class="d-flex flex-row" style="padding-left: 10px;">
+                <div class="d-flex flex-column" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSidebar" style="align-items: center; padding-top: 10px;">
+                    <img src="{{ asset('img/Logo/burger.png') }}" style="width: 22px;" alt="">
+                    <span class="text-white" style="font-size: 12px;">Menu</span>
+                </div>
             </div>
-            @if(auth()->check())
-                @if (auth()->user()->isUser())
-                    @if(auth()->user()->user_cars()->exists())
-                    @php
-                        $car = auth()->user()->user_cars()->first();
-                        // $model =
-                    @endphp
-                    <div class="user_car" style="width: 154px; height: 51px; position: relative">
-                        {{-- <div style="width: 154px; height: 51px; left: 0px; top: 0px; position: absolute; background: #202020; border-radius: 8px"></div> --}}
-                        <img style="width: 57px; height: 38px; left: 3px; top: 6px; position: absolute" src="" />
-                        <div style="width: 88px; height: 38px; left: 60px; top: 6px; position: absolute; color: white; font-size: 10px; font-family: Montserrat; font-weight: 500; line-height: 14px; letter-spacing: 0.50px; word-wrap: break-word">2024 Daihatsu<br/>All New Ertiga, K15C</div>
-                    </div>
+            <div style="flex: 0.1;">
+                @if(auth()->check())
+                    @if (auth()->user()->isUser())
+                        @if (isset($user_car))
+                        <div type="button" class="user_car open-modal" data-bs-toggle="modal" data-bs-target="#popUpUserCar{{ $user_car->id }}" style="width:200px; height: 51px; position: relative; background: #202020; border-radius: 8px;">
+                            <div style="width: 194px; height: 51px; left: 0px; top: 0px; position: absolute;"></div>
+                            <img style="height: 38px; left: 8px; top: 6px; position: absolute" src="{{ route('brand.image', ['imageName' => $user_car->car_brand_logo]) }}" />
+                            <div class="car-details" >{{ $user_car->car_year }}<br/>{{ $user_car->car_model_name }}, {{ $user_car->car_engine_name }}</div>
+                        </div>
+                        @endif
                     @endif
                 @endif
-            @endif
-            <input class="form-control me-2" style="width: 50%;" type="search" placeholder="Search" aria-label="Search">
+            </div>
+            <div class="" style="flex: 0.6;">
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+            </div>
             <!-- Button profile trigger modal -->
             @auth
-                <div type="button" class="" style="display: grid; justify-items: center; margin-right: 3rem;" data-bs-toggle="modal" data-bs-target="#profileModal">
+            <div style="flex: 0.2; justify-content: space-around;" class="d-flex flex-row">
+                <div class="d-flex flex-column justify-content-center">
+                    <button class="find-store"><img style="width: 14px; padding-right: 2px; padding-bottom: 3px;" src="{{ asset('img/Logo/find.png') }}" alt="">Find Store</button>
+                </div>
+                <div class="d-flex flex-column" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSidebar" style="align-items: center; padding: 10px 20px 0px 20px;">
+                    <img src="{{ asset('img/Logo/favorite.png') }}" style="width: 22px; padding-bottom: 6px;" alt="">
+                    <span class="text-white" style="font-size: 11px;">Favorite</span>
+                </div>
+                <div type="button" class="d-flex flex-column" style="align-items: center; padding-right: 10px;" data-bs-toggle="modal" data-bs-target="#profileModal">
                     <i class="bi bi-person-circle text-white fs-4"></i>
                     <span class="text-white" style="font-size: 11px;">Profile</span>
                 </div>
+            </div>
             @else
             <div type="button" class="">
                 <a href="{{ route('view.login') }}" style="display: grid; justify-items: center; margin-right: 30px; text-decoration: none;">
@@ -59,6 +70,47 @@
             @endauth
         </div>
     </nav>
+@else
+<nav class="navbar" style="background-color: #363636;">
+    <div class="container-fluid" style="justify-content: center;">
+        <a href="{{ route('home') }}">
+            <img class="mt-3" src="{{ asset('img/login/Logo SpareCar.png') }}" alt="image logo" width="250px" height="45px">
+        </a>
+    </div>
+    <div class="container-fluid">
+        <div class="d-flex flex-column" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSidebar" style="margin-left: 2rem;">
+            <i class="bi bi-list text-white fs-3"></i>
+            <span class="text-white" style="font-size: 11px;">Menu</span>
+        </div>
+        <input class="form-control me-2" style="width: 50%;" type="search" placeholder="Search" aria-label="Search">
+        <!-- Button profile trigger modal -->
+        @auth
+            <div type="button" class="" style="display: grid; justify-items: center; margin-right: 3rem;" data-bs-toggle="modal" data-bs-target="#profileModal">
+                <i class="bi bi-person-circle text-white fs-4"></i>
+                <span class="text-white" style="font-size: 11px;">Profile</span>
+            </div>
+        @else
+        <div type="button" class="">
+            <a href="{{ route('view.login') }}" style="display: grid; justify-items: center; margin-right: 30px; text-decoration: none;">
+                <i class="bi bi-person-circle text-white fs-4"></i>
+                <span class="text-white" style="font-size: 11px;">Sign In</span>
+            </a>
+        </div>
+        @endauth
+    </div>
+</nav>
+@endif
+{{-- user car modal --}}
+@if(auth()->check())
+    @if (auth()->user()->isUser())
+        @if (isset($user_car))
+            @include('components.userCarModal')
+
+            @stack('content_profile_css')
+
+            @stack('content_profile_js')
+        @endif
+    @endif
 @endif
 <!-- Profile Modal -->
 <div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalLabel" aria-hidden="true">
@@ -144,6 +196,7 @@
 @push('content_css')
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <style>
+
 
     </style>
 @endpush

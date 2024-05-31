@@ -2,13 +2,13 @@
     <nav>
         <ul class="pagination">
             {{-- Previous Page Link --}}
-            @if ($paginator->onFirstPage())
+            @if ($paginator->currentPage() > 2)
                 <li class="page-item">
-                    <span class="page-link-disabled" rel="prev"><i class="fa fa-chevron-left"></i></span>
+                    <a class="page-link-prev-next" href="{{ $paginator->url(max(1, $paginator->currentPage() - 2)) }}" rel="prev"><i class="fa fa-angle-double-left"></i></a>
                 </li>
             @else
                 <li class="page-item">
-                    <a class="page-link-prev-next" href="{{ $paginator->previousPageUrl() }}" rel="prev"><i class="fa fa-chevron-left"></i></a>
+                    <span class="page-link-disabled" rel="prev"><i class="fa fa-angle-double-left"></i></span>
                 </li>
             @endif
 
@@ -16,8 +16,15 @@
             @foreach ($elements as $element)
                 {{-- Array Of Links --}}
                 @if (is_array($element))
+                    @php
+                        $start = max(1, $paginator->currentPage() - 1);
+                        $end = min($start + 2, $paginator->lastPage());
+                        if ($end - $start < 2) {
+                            $start = max(1, $end - 2);
+                        }
+                    @endphp
                     @foreach ($element as $page => $url)
-                        @if ($page <= 3)
+                        @if ($page >= $start && $page <= $end)
                             @if ($page == $paginator->currentPage())
                                 <li class="page-item active" aria-current="page"><span class="page-link">{{ $page }}</span></li>
                             @else
@@ -34,13 +41,13 @@
             @endif
 
             {{-- Next Page Link --}}
-            @if ($paginator->hasMorePages())
+            @if ($paginator->currentPage() + 2 <= $paginator->lastPage())
                 <li class="page-item">
-                    <a class="page-link-prev-next" href="{{ $paginator->nextPageUrl() }}" rel="next"><i class="fa fa-chevron-right"></i></a>
+                    <a class="page-link-prev-next" href="{{ $paginator->url(min($paginator->lastPage(), $paginator->currentPage() + 2)) }}" rel="next"><i class="fa fa-angle-double-right"></i></a>
                 </li>
             @else
                 <li class="page-item">
-                    <span class="page-link-disabled" rel="next"><i class="fa fa-chevron-right"></i></span>
+                    <span class="page-link-disabled" rel="next"><i class="fa fa-angle-double-right"></i></span>
                 </li>
             @endif
         </ul>
@@ -50,7 +57,7 @@
         <ul class="pagination">
             {{-- Previous Page Link --}}
             <li class="page-item">
-                <span class="page-link-disabled" rel="prev"><i class="fa fa-chevron-left"></i></span>
+                <span class="page-link-disabled" rel="prev"><i class="fa fa-angle-double-left"></i></span>
             </li>
 
             {{-- Pagination Elements --}}
@@ -60,7 +67,7 @@
 
             {{-- Next Page Link --}}
             <li class="page-item">
-                <span class="page-link-disabled" rel="next"><i class="fa fa-chevron-right"></i></span>
+                <span class="page-link-disabled" rel="next"><i class="fa fa-angle-double-right"></i></span>
             </li>
         </ul>
     </nav>

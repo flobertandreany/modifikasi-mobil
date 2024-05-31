@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use App\Models\City;
 use App\Models\District;
+use App\Models\Product;
 use App\Models\Province;
 use App\Models\Store;
 use App\Models\Subdistrict;
@@ -11,6 +12,7 @@ use App\Models\User;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
 class ProfileMiddleware
@@ -24,10 +26,17 @@ class ProfileMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
+        $menuSparepart = Product::select('products.*', DB::raw("'sparepart' as type"))->where('product_category_id', 1)->get();
+        $menuModification = Product::select('products.*', DB::raw("'modification' as type"))->where('product_category_id', 2)->get();
+
         if (Auth::check()) {
             $profileUserAdmin = $this->getProfileUserAdmin();
 
-            view()->share('user', $profileUserAdmin);
+            view()->share([
+                'user' => $profileUserAdmin,
+                'spareparts' => $menuSparepart,
+                'modifications' => $menuModification,
+            ]);
 
             if (Auth::user()->role == 'store') {
                 $profileStore = $this->getProfileStore();
@@ -40,6 +49,11 @@ class ProfileMiddleware
                     'subdistricts' => $profileStore['subdistricts'],
                 ]);
             }
+        } else {
+            view()->share([
+                'spareparts' => $menuSparepart,
+                'modifications' => $menuModification,
+            ]);
         }
 
         return $next($request);

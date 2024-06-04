@@ -52,7 +52,6 @@ Route::middleware(['userAkses:admin'])->group(function (){
     Route::get('store/list', [AdminController::class, 'viewStoreList'])->name('view.store.list');
     Route::get('store/delete/{id}', [AdminController::class, 'deleteStore'])->name('store.delete');
     Route::get('store/product/list/{id}', [AdminController::class, 'viewProductList'])->name('view.store.product.list');
-    Route::get('/admin/store/product/{imageName}', [AdminController::class, 'loadProductImage'])->name('admin.store.productImage');
 
     Route::get('car/model', [AdminController::class, 'carModelList'])->name('car.model.list');
     Route::get('car/model/form', [AdminController::class, 'carModelForm'])->name('model.form');
@@ -88,7 +87,6 @@ Route::middleware(['userAkses:admin'])->group(function (){
 
 Route::middleware(['userAkses:store'])->group(function (){
     Route::post('/store/edit/profile', [StoreController::class, 'editProfileStore'])->name('store.editProfile');
-    Route::get('/store/profile/{imageName}', [StoreController::class, 'loadProfileImage'])->name('store.profileImage');
 
     Route::get('/store/product/form', [StoreController::class, 'productForm'])->name('store.productForm');
     Route::post('/store/product/create', [StoreController::class, 'addProduct'])->name('store.createProduct');
@@ -100,7 +98,6 @@ Route::middleware(['userAkses:store'])->group(function (){
     Route::get('/store/car/year', [StoreController::class, 'getCarYear'])->name('store.getCarYear');
     Route::get('/store/car/engine', [StoreController::class, 'getCarEngine'])->name('store.getCarEngine');
     Route::get('/store/subcategory', [StoreController::class, 'getSubcategory'])->name('store.getSubcategory');
-    Route::get('/store/product/{imageName}', [StoreController::class, 'loadProductImage'])->name('store.productImage');
 });
 
 Route::middleware(['guest'])->group(function (){
@@ -118,6 +115,8 @@ Route::post('/register/store', [RegisterController::class, 'postRegisterStore'])
 Route::get('/store/city', [RegisterController::class, 'getCity'])->name('store.getCity');
 Route::get('/store/district', [RegisterController::class, 'getDistrict'])->name('store.getDistrict');
 Route::get('/store/subdistrict', [RegisterController::class, 'getSubdistrict'])->name('store.getSubdistrict');
+Route::get('/store/product/{imageName}', [StoreController::class, 'loadProductImage'])->name('store.productImage');
+Route::get('/store/profile/{imageName}', [StoreController::class, 'loadProfileImage'])->name('store.profileImage');
 
 Route::get('/user/brand', [UserController::class, 'carBrandList'])->name('user.carBrandList');
 Route::get('/user/model', [UserController::class, 'carModelList'])->name('user.carModelList');
@@ -131,6 +130,8 @@ Route::get('/user/filter-product-list', [UserController::class, 'filterProductLi
 Route::get('/user/product-detail/{type}/{name}/{id}', [UserController::class, 'viewUserProductDetail'])->name('user.productDetail');
 Route::get('/user/recommended-product', [UserController::class, 'getRecommendedProducts'])->name('user.recommendedProduct');
 Route::get('/user/store/product/{imageName}', [UserController::class, 'loadProductImage'])->name('user.store.productImage');
+Route::get('/user/store/detail/{id}', [UserController::class, 'viewStoreDetail'])->name('user.storeDetail');
+Route::get('/user/store/filter-product-list', [UserController::class, 'filterStoreProductList'])->name('user.filterStoreProductList');
 Route::get('/user/store/profile/{imageName}', [UserController::class, 'loadProfileImage'])->name('user.store.profileImage');
 
 Route::get('users/{id}', function ($id) {

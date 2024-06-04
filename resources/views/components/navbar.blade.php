@@ -48,7 +48,7 @@
             <!-- Button profile trigger modal -->
             @auth
             <div style="flex: 0.2; justify-content: space-around;" class="d-flex flex-row">
-                <div class="d-flex flex-column justify-content-center">
+                <a href="" class="d-flex flex-column justify-content-center href-find-store">
                     <button class="find-store"><img style="width: 14px; padding-right: 2px; padding-bottom: 3px;" src="{{ asset('img/Logo/find.png') }}" alt="">Find Store</button>
                 </div>
                 <a href="{{ route('user.favoriteList') }}" class="text-decoration-none">

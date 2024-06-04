@@ -7,7 +7,7 @@
                 <div class="container">
                   <div class="row gx-5">
                     <aside class="col-lg-6">
-                        <div class="border rounded-4 mb-3 d-flex justify-content-center">
+                        <div class="border rounded-4 mb-3 d-flex justify-content-center" style="background-color: white;">
                             @if($products->image)
                                 <img style="max-width: 100%; max-height: 100vh; margin: auto;" class="rounded-4 fit" src="{{ route('user.store.productImage', ['imageName' => $products->image]) }}" alt="Image Product">
                             @else

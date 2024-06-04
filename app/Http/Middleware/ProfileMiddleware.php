@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Car_model;
 use App\Models\City;
 use App\Models\District;
 use App\Models\Product;
@@ -9,6 +10,7 @@ use App\Models\Province;
 use App\Models\Store;
 use App\Models\Subdistrict;
 use App\Models\User;
+use App\Models\User_car;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -29,6 +31,12 @@ class ProfileMiddleware
         $menuSparepart = Product::select('products.*', DB::raw("'sparepart' as type"))->where('product_category_id', 1)->get();
         $menuModification = Product::select('products.*', DB::raw("'modification' as type"))->where('product_category_id', 2)->get();
 
+        $car = User_car::where('user_id', Session::get('user_id'))->where('is_active', true)->first();
+
+        $user_car = User_car::where('user_id', Session::get('user_id'))->get();
+
+        $year = Car_model::select('car_year')->distinct()->orderBy('car_year', 'asc')->get();
+
         if (Auth::check()) {
             $profileUserAdmin = $this->getProfileUserAdmin();
 
@@ -36,6 +44,9 @@ class ProfileMiddleware
                 'user' => $profileUserAdmin,
                 'spareparts' => $menuSparepart,
                 'modifications' => $menuModification,
+                'user_car' => $car,
+                'car_list' => $user_car,
+                'year' => $year,
             ]);
 
             if (Auth::user()->role == 'store') {

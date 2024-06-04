@@ -164,3 +164,86 @@
 {
     padding-right: 4rem;
 }
+
+.href-find-store{
+    color: black;
+    text-decoration: none;
+}
+
+.find-store{
+    background-color: #FDC42C;
+    border-radius: 10px;
+    width: 105px;
+    height: 40px;
+    font-family: Montserrat;
+    border: 1px solid #FDC42C;
+    font-size: 15px;
+    text-decoration: none;
+    color: black;
+}
+
+.car-details{
+    width: 130px;
+    height: 42px;
+    left: 60px;
+    top: 6px;
+    position: absolute;
+    color: white;
+    font-size: 10px;
+    font-family: Montserrat;
+    font-weight: 500;
+    line-height: 14px;
+    letter-spacing: 0.50px;
+    word-wrap: break-word;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.button-find{
+    background: #0A76DB;
+    box-shadow: 0px 3px 3px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px white solid;
+    width: 130px;
+    color: white;
+    height: 90%;
+}
+
+.header-recomend{
+    background-color: white;
+    text-align: center;
+    min-height: 170px;
+    max-height: 170px;
+}
+
+.card-body-recomend{
+    max-height: 110px;
+    min-height: 110px;
+    display: flex;
+    flex-direction: column;
+}
+
+.price {
+    margin-top: auto; /* Ini akan mendorong elemen ke bagian bawah */
+    color: inherit; /* Tambahkan ini untuk menjaga warna saat hover */
+}
+
+.judul-mod{
+    max-height: 50px;
+    font-size: 1rem;
+    font-weight: bold;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.price{
+    color: #F36600;
+    font-weight: 700;
+    font-size: large;
+}
+
+.car-mod{
+    box-shadow: 0px 3px 5px 6px rgba(0, 0, 0, 0.20);
+}

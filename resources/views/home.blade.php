@@ -1,10 +1,9 @@
 @extends('layouts.main')
 
 @section('content')
-    <div class="">
+    <div style="min-height: 140rem;">
         <div style="width:50%; padding-top: 10px; padding-left: 70px;">
             <div class="container">
-
                 <div class="p-lg-5 text-black card-body">
                     <form action="{{ route('user.addUserCar') }}" method="POST">
                         @csrf
@@ -57,8 +56,165 @@
                 </div>
             </div>
         </div>
-        <div class="container">
-
+        <div class="container" style="padding-top: 100px;">
+            <div class="text-black card-body">
+                <div class="d-flex align-items-center pb-1">
+                    <span class="popular-modification">POPULAR FOR MODIFICATIONS</span>
+                </div>
+                <div>
+                    <div class="row g-3" style="justify-content: space-evenly;">
+                        @foreach ($mod as $m)
+                        <a class="col-md-3 card-button" href="{{ route('user.productDetail', ['type' => $m->type, 'name' => $m->product_name, 'id' => $m->id ]) }}">
+                            <div class="card car-mod">
+                                <div class="card-header header-recomend ">
+                                    <img src="{{ route('store.productImage', ['imageName' => $m->mod_image]) }}" class="card-img-top" style="max-width: 140px; margin: 10px 40px 10px 40px;" alt="...">
+                                </div>
+                                <div class="card-body card-body-recomend">
+                                    <div class="judul-mod">
+                                        {{ $m->mod_name }}
+                                    </div>
+                                    <h5 class="price">Rp. {{ number_format($m->mod_price, 0, ',', '.') }}</h5>
+                                </div>
+                            </div>
+                        </a>
+                        @endforeach
+                        <div class="col-md-3" style="height: 300px; width: 290px;">
+                            <div class="card car-mod">
+                                <div class="card-header header-recomend" style="background-color: white;">
+                                    <img src="{{ asset('img/Logo/mt20-holden-colorado-2012-2020-strut-shock-kit-4-5-inch-603610_1280x.png') }}" class="card-img-top" style="max-width: 140px; margin: 10px 40px 10px 40px;" alt="...">
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title judul-mod">Volk Rays TE37 R18</h5>
+                                    <h5 class="price" style="color: #F36600">Rp. 14.000.000</h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3" style="height: 300px; width: 290px;">
+                            <div class="card car-mod">
+                                <div class="card-header header-recomend">
+                                    <img src="{{ asset('img/Logo/volk-rays-te37.png') }}" class="card-img-top" style="max-width: 140px; margin: 10px 40px 10px 40px;" alt="...">
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title judul-mod">Volk Rays TE37 R18</h5>
+                                    <h5 class="price" style="color: #F36600">Rp. 14.000.000</h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3" style="height: 300px; width: 290px;">
+                            <div class="card car-mod">
+                                <div class="card-header header-recomend">
+                                    <img src="{{ asset('img/Logo/volk-rays-te37.png') }}" class="card-img-top" style="max-width: 140px; margin: 10px 40px 10px 40px;" alt="...">
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title judul-mod">Volk Rays TE37 R18</h5>
+                                    <h5 class="price" style="color: #F36600">Rp. 14.000.000</h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3" style="height: 300px; width: 290px;">
+                            <div class="card car-mod">
+                                <div class="card-header header-recomend" style="background-color: white;">
+                                    <img src="{{ asset('img/Logo/volk-rays-te37.png') }}" class="card-img-top" style="max-width: 140px; margin: 10px 40px 10px 40px;" alt="...">
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title judul-mod">Volk Rays TE37 R18</h5>
+                                    <h5 class="price" style="color: #F36600">Rp. 14.000.000</h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3" style="height: 300px; width: 290px;">
+                            <div class="card car-mod">
+                                <div class="card-header header-recomend" style="background-color: white;">
+                                    <img src="{{ asset('img/Logo/mt20-holden-colorado-2012-2020-strut-shock-kit-4-5-inch-603610_1280x.png') }}" class="card-img-top" style="max-width: 140px; margin: 10px 40px 10px 40px;" alt="...">
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title judul-mod">Volk Rays TE37 R18</h5>
+                                    <h5 class="price" style="color: #F36600">Rp. 14.000.000</h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center pb-1" style="padding-top: 65px;">
+                    <span class="popular-modification">POPULAR FOR SPARE PARTS</span>
+                </div>
+                <div style="padding-bottom: 50px;">
+                    <div class="row g-3" style="justify-content: space-evenly;">
+                        @foreach ($sparepart as $s)
+                        <a class="col-md-3 card-button" href="{{ route('user.productDetail', ['type' => $s->type, 'name' => $s->product_name, 'id' => $s->id ]) }}">
+                            <div class="card car-mod">
+                                <div class="card-header header-recomend" style="background-color: white; text-align: center;">
+                                    <img src="{{ route('store.productImage', ['imageName' => $s->sparepart_image]) }}" class="card-img-top" style="max-width: 140px; margin: 10px 40px 10px 40px;" alt="...">
+                                </div>
+                                <div class="card-body card-body-recomend">
+                                    <div class="judul-mod">
+                                        {{ $s->sparepart_name }}
+                                    </div>
+                                    <h5 class="price">Rp. {{ number_format($s->sparepart_price, 0, ',', '.') }}</h5>
+                                </div>
+                            </div>
+                        </a>
+                        @endforeach
+                        <div class="col-md-3" style="height: 300px; width: 290px;">
+                            <div class="card car-mod">
+                                <div class="card-header header-recomend" style="background-color: white; text-align: center;">
+                                    <img src="{{ asset('img/Logo/volk-rays-te37.png') }}" class="card-img-top" style="max-width: 140px; margin: 10px 40px 10px 40px;" alt="...">
+                                </div>
+                                <div class="card-body" style="max-height: 95px; min-height: 95px;">
+                                    <div class="judul-mod">
+                                        Volk Rays TE37 R18 Volk Rays TE37 R18 Volk Rays jdejd andfj asdj
+                                    </div>
+                                    <h5 class="price">Rp. 14.000.000</h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3" style="height: 300px; width: 290px;">
+                            <div class="card car-mod">
+                                <div class="card-header header-recomend" style="background-color: white;">
+                                    <img src="{{ asset('img/Logo/mt20-holden-colorado-2012-2020-strut-shock-kit-4-5-inch-603610_1280x.png') }}" class="card-img-top" style="max-width: 140px; margin: 10px 40px 10px 40px;" alt="...">
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title judul-mod">Volk Rays TE37 R18</h5>
+                                    <h5 class="price" style="color: #F36600">Rp. 14.000.000</h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3" style="height: 300px; width: 290px;">
+                            <div class="card car-mod">
+                                <div class="card-header header-recomend">
+                                    <img src="{{ asset('img/Logo/volk-rays-te37.png') }}" class="card-img-top" style="max-width: 140px; margin: 10px 40px 10px 40px;" alt="...">
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title judul-mod">Volk Rays TE37 R18</h5>
+                                    <h5 class="price" style="color: #F36600">Rp. 14.000.000</h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3" style="height: 300px; width: 290px;">
+                            <div class="card car-mod">
+                                <div class="card-header header-recomend">
+                                    <img src="{{ asset('img/Logo/volk-rays-te37.png') }}" class="card-img-top" style="max-width: 140px; margin: 10px 40px 10px 40px;" alt="...">
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title judul-mod">Volk Rays TE37 R18</h5>
+                                    <h5 class="price" style="color: #F36600">Rp. 14.000.000</h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3" style="height: 300px; width: 290px;">
+                            <div class="card car-mod">
+                                <div class="card-header header-recomend" style="background-color: white;">
+                                    <img src="{{ asset('img/Logo/volk-rays-te37.png') }}" class="card-img-top" style="max-width: 140px; margin: 10px 40px 10px 40px;" alt="...">
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title judul-mod">Volk Rays TE37 R18</h5>
+                                    <h5 class="price" style="color: #F36600">Rp. 14.000.000</h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -66,48 +222,39 @@
 @push('content_css')
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <style>
-        .find-store{
-            background-color: #FDC42C;
-            color: black;
-            border-radius: 10px;
-            width: 105px;
-            height: 40px;
-            font-family: Montserrat;
-            border: 1px solid #FDC42C;
-            font-size: 15px;
+        .card-button{
+            height: 300px;
+            width: 290px;
+            text-decoration: none;
+            color: inherit;
         }
 
-        .car-details{
-            width: 130px;
-            height: 42px;
-            left: 60px;
-            top: 6px;
-            position: absolute;
-            color: white;
-            font-size: 10px;
-            font-family: Montserrat;
-            font-weight: 500;
-            line-height: 14px;
-            letter-spacing: 0.50px;
-            word-wrap: break-word;
-            overflow: hidden;
-            text-overflow: ellipsis;
+        .card-button:hover{
+            text-decoration: none;
+            color: inherit;
         }
-        .button-find{
-            background: #0A76DB;
-            box-shadow: 0px 3px 3px rgba(0, 0, 0, 0.25);
-            border-radius: 10px;
-            overflow: hidden;
-            border: 1px white solid;
-            width: 130px;
-            color: white;
-            height: 90%;
+
+        .card-button:active{
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .card-button:hover .judul-mod{
+            color: inherit;
         }
 
         .form-outline{
             box-shadow: 0px 3px 3px rgba(0, 0, 0, 0.25);
             border-radius: 10px;
             margin-bottom: 1.5rem !important;
+        }
+
+        .popular-modification{
+            font-weight: 1000;
+            font-size: 2rem;
+            color: white;
+            padding-left: 37px;
+            padding-bottom: 15px;
         }
 
         .find-now{

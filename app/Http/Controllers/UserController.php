@@ -6,7 +6,9 @@ use App\Models\Car_brand;
 use App\Models\Car_engine;
 use App\Models\Car_model;
 use App\Models\Modification;
+use App\Models\Product;
 use App\Models\Spareparts;
+use App\Models\Store;
 use App\Models\User;
 use App\Models\User_car;
 use Illuminate\Http\Request;
@@ -15,6 +17,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
@@ -24,25 +27,22 @@ class UserController extends Controller
 
         $year = Car_model::select('car_year')->distinct()->orderBy('car_year', 'asc')->get();
 
-        $car = User_car::where('user_id', Session::get('user_id'))->where('is_active', true)->first();
 
-        $user_car = User_car::where('user_id', Session::get('user_id'))->get();
-        if($car){
-            return view('home', [
-                'user_car' => $car,
-                'year' => $year,
-                'car_list' => $user_car,
-                'title' => 'Home',
-                'nama' => 'Welcome, user!',
-                'image' => 'Logo SpareCar.png',
-            ]);
-        }
+        $mod = Modification::select('modifications.*', 'products.product_name as product_name', DB::raw("'modification' as type"))
+            ->join('products', 'modifications.product_id', '=', 'products.id')
+            ->inRandomOrder()->limit(8)->get();
+
+        $spare = Spareparts::select('spareparts.*', 'products.product_name as product_name', DB::raw("'sparepart' as type"))
+            ->join('products', 'spareparts.product_id', '=', 'products.id')
+            ->inRandomOrder()->limit(8)->get();
 
         return view('home', [
+            'year' => $year,
+            'mod' => $mod,
+            'sparepart' => $spare,
+            'title' => 'Home',
             'nama' => 'Welcome, user!',
             'image' => 'Logo SpareCar.png',
-            'title' => 'Home',
-            'year' => $year,
         ]);
     }
 
@@ -82,7 +82,12 @@ class UserController extends Controller
 
 
         $rules = array_merge($rules, [
-            'car_engine' => 'required|unique:user_cars,car_engine_id',
+            'car_engine' => [
+                'required',
+                Rule::unique('user_cars', 'car_engine_id')->where(function ($query) use ($userId) {
+                    return $query->where('user_id', $userId);
+                }),
+            ],
         ]);
 
         $validator = Validator::make($request->all(), $rules);
@@ -325,6 +330,54 @@ class UserController extends Controller
             'title' => 'Product Detail',
             'products' => $products,
         ]);
+    }
+
+    public function viewStoreDetail($id){
+        $store = Store::where('id', $id)->first();
+
+        $menuSparepart = Product::where('product_category_id', 1)->get();
+        $menuModification = Product::select('products.*', DB::raw("'modification' as type"))->where('product_category_id', 2)->get();
+
+        $modifications = Modification::select(
+            'modifications.id as id',
+            'product_name as product_name',
+            'product_id as product_id',
+            'mod_name as name',
+            'mod_image as image',
+            'mod_price as price',
+            'modifications.created_at as created_at',
+            DB::raw("'modification' as type")
+        )
+        ->join('products', 'modifications.product_id', '=', 'products.id')
+        ->where('store_id', $id);
+
+        $spareparts = Spareparts::select(
+            'spareparts.id as id',
+            'product_name as product_name',
+            'product_id as product_id',
+            'sparepart_name as name',
+            'sparepart_image as image',
+            'sparepart_price as price',
+            'spareparts.created_at as created_at',
+            DB::raw("'sparepart' as type")
+        )
+        ->join('products', 'spareparts.product_id', '=', 'products.id')
+        ->where('store_id', $id);
+
+        $products = $modifications->union($spareparts)
+        ->orderBy('created_at', 'desc')->paginate(12);
+
+        return view('user.storeDetail', [
+            'title' => 'Store Detail',
+            'store' => $store,
+            'part' => $menuSparepart,
+            'mod' => $menuModification,
+            'products' => $products,
+        ]);
+    }
+
+    public function filterStoreProductList(){
+
     }
 
     public function loadProductImage($imageName){

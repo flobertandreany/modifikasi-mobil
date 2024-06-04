@@ -14,7 +14,6 @@
                     <th scope="col">Height</th>
                     <th scope="col">Weight</th>
                     <th scope="col">Price</th>
-                    <th scope="col">Settings</th>
                 </tr>
             </thead>
             <tbody>
@@ -23,7 +22,7 @@
                         <th scope="row" class="center-position" style="width:5%;">{{ $loop->index + 1 }}.</th>
                         <td style="text-align: left; width:50%;">
                             @if($p->image)
-                                <img class="img-product-table" src="{{ route('admin.store.productImage', ['imageName' => $p->image]) }}" alt="Image Product">
+                                <img class="img-product-table" src="{{ route('store.productImage', ['imageName' => $p->image]) }}" alt="Image Product">
                             @else
                                 <img class="img-product-table" src="{{ asset('img/logo/LogoParts.jpg') }}" alt="Image Product" onerror="this.onerror=null;this.src='{{ asset('img/logo/LogoParts.jpg') }}';">
                             @endif
@@ -35,12 +34,6 @@
                         <td class="center-position" style="width:10%;">{{ $p->height }} Cm</td>
                         <td class="center-position" style="width:10%;">{{ $p->weight }} Kg</td>
                         <td class="center-position" style="width:15%;">Rp. {{ number_format($p->price, 0, ',', '.') }}</td>
-                        <td class="center-position" style="width:10%;">
-                            <a href="{{ route('store.editProductForm', ['id' => $p->id, 'type' => $p->type]) }}" class="button-a btn btn-secondary btn-sm" style="background-color: black; margin-right: 10px;">Edit</a>
-                            <button class="btn btn-sm text-light" type="button" style="background-color: #FF0000;">
-                                <i class="fa fa-trash"></i>
-                            </button>
-                        </td>
                     </tr>
                 @endforeach
                 @for ($i = count($products); $i < 5; $i++)

@@ -48,9 +48,9 @@
             <!-- Button profile trigger modal -->
             @auth
             <div style="flex: 0.2; justify-content: space-around;" class="d-flex flex-row">
-                <div class="d-flex flex-column justify-content-center">
+                <a href="" class="d-flex flex-column justify-content-center href-find-store">
                     <button class="find-store"><img style="width: 14px; padding-right: 2px; padding-bottom: 3px;" src="{{ asset('img/Logo/find.png') }}" alt="">Find Store</button>
-                </div>
+                </a>
                 <div class="d-flex flex-column" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSidebar" style="align-items: center; padding: 10px 20px 0px 20px;">
                     <img src="{{ asset('img/Logo/favorite.png') }}" style="width: 22px; padding-bottom: 6px;" alt="">
                     <span class="text-white" style="font-size: 11px;">Favorite</span>

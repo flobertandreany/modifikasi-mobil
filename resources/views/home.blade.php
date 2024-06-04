@@ -66,17 +66,6 @@
 @push('content_css')
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <style>
-        .find-store{
-            background-color: #FDC42C;
-            color: black;
-            border-radius: 10px;
-            width: 105px;
-            height: 40px;
-            font-family: Montserrat;
-            border: 1px solid #FDC42C;
-            font-size: 15px;
-        }
-
         .car-details{
             width: 130px;
             height: 42px;

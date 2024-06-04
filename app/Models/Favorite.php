@@ -9,6 +9,8 @@ class Favorite extends Model
 {
     use HasFactory;
 
+    protected $guarded =['id'];
+
     public function user_car()
     {
         return $this->belongsTo(User_car::class);

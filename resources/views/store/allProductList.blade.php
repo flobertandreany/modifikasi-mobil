@@ -53,6 +53,9 @@
                 @endfor
             </tbody>
         </table>
+        <div class="d-flex justify-content-end">
+            {{ $products->links('vendor.pagination.bootstrap-5') }}
+        </div>
         <div class="d-flex justify-content-center">
             <button id="" class="btn btn-light btn-add" type="button">
                 <a href="{{ route('store.productForm') }}" class="text-decoration-none text-dark">
@@ -61,18 +64,11 @@
                 </a>
             </button>
         </div>
-        <div class="d-flex justify-content-end">
-            {{ $products->links('vendor.pagination.bootstrap-5') }}
-        </div>
     </div>
 @endsection
 @push('content_css')
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <style>
-        .btn-add {
-            position: absolute;
-            bottom: 0;
-        }
         .center-position {
             vertical-align: middle;
         }

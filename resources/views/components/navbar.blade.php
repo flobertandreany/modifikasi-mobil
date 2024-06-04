@@ -50,11 +50,13 @@
             <div style="flex: 0.2; justify-content: space-around;" class="d-flex flex-row">
                 <a href="" class="d-flex flex-column justify-content-center href-find-store">
                     <button class="find-store"><img style="width: 14px; padding-right: 2px; padding-bottom: 3px;" src="{{ asset('img/Logo/find.png') }}" alt="">Find Store</button>
-                </a>
-                <div class="d-flex flex-column" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSidebar" style="align-items: center; padding: 10px 20px 0px 20px;">
-                    <img src="{{ asset('img/Logo/favorite.png') }}" style="width: 22px; padding-bottom: 6px;" alt="">
-                    <span class="text-white" style="font-size: 11px;">Favorite</span>
                 </div>
+                <a href="{{ route('user.favoriteList') }}" class="text-decoration-none">
+                    <div class="d-flex flex-column" type="button" style="align-items: center; padding: 10px 20px 0px 20px;">
+                        <img src="{{ asset('img/Logo/favorite.png') }}" style="width: 22px; padding-bottom: 6px;" alt="">
+                        <span class="text-white" style="font-size: 11px;">Favorite</span>
+                    </div>
+                </a>
                 <div type="button" class="d-flex flex-column" style="align-items: center; padding-right: 10px;" data-bs-toggle="modal" data-bs-target="#profileModal">
                     <i class="bi bi-person-circle text-white fs-4"></i>
                     <span class="text-white" style="font-size: 11px;">Profile</span>

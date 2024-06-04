@@ -233,6 +233,22 @@
             text-decoration: none;
             color: inherit;
         }
+        .car-details{
+            width: 130px;
+            height: 42px;
+            left: 60px;
+            top: 6px;
+            position: absolute;
+            color: white;
+            font-size: 10px;
+            font-family: Montserrat;
+            font-weight: 500;
+            line-height: 14px;
+            letter-spacing: 0.50px;
+            word-wrap: break-word;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
 
         .card-button:active{
             text-decoration: none;

@@ -38,6 +38,11 @@ Route::middleware(['userAkses:user'])->group(function (){
     Route::post('/user/edit/profile', [UserController::class, 'editProfileUser'])->name('user.editProfile');
     Route::get('/user/delete/car/{id}', [UserController::class, 'deleteUserCar'])->name('user.deleteCar');
     Route::post('/user/update/car', [UserController::class, 'updateUserCar'])->name('user.updateCar');
+
+    Route::post('/user/add/favorite', [UserController::class, 'addFavoriteProduct'])->name('user.addFavoriteProduct');
+    Route::get('/user/remove/favorite', [UserController::class, 'removeFavoriteProduct'])->name('user.removeFavoriteProduct');
+    Route::get('/user/favorite-list/', [UserController::class, 'viewFavoriteList'])->name('user.favoriteList');
+    Route::get('/user/filter-favorite-list', [UserController::class, 'filterFavoriteList'])->name('user.filterFavoriteList');
 });
 
 Route::middleware(['userAkses:admin'])->group(function (){
@@ -123,9 +128,11 @@ Route::get('car/brand/{imageName}', [AdminController::class, 'loadBrandImage'])-
 Route::get('/user/product-list/{type}/{name}', [UserController::class, 'viewUserProductList'])->name('user.productList');
 Route::get('/user/filter-product-list', [UserController::class, 'filterProductList'])->name('user.filterProductList');
 Route::get('/user/product-detail/{type}/{name}/{id}', [UserController::class, 'viewUserProductDetail'])->name('user.productDetail');
+Route::get('/user/recommended-product', [UserController::class, 'getRecommendedProducts'])->name('user.recommendedProduct');
 Route::get('/user/store/product/{imageName}', [UserController::class, 'loadProductImage'])->name('user.store.productImage');
 Route::get('/user/store/detail/{id}', [UserController::class, 'viewStoreDetail'])->name('user.storeDetail');
 Route::get('/user/store/filter-product-list', [UserController::class, 'filterStoreProductList'])->name('user.filterStoreProductList');
+Route::get('/user/store/profile/{imageName}', [UserController::class, 'loadProfileImage'])->name('user.store.profileImage');
 
 Route::get('users/{id}', function ($id) {
     return 'User '.$id;

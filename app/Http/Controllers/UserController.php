@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Car_brand;
 use App\Models\Car_engine;
 use App\Models\Car_model;
+use App\Models\Favorite;
 use App\Models\Modification;
 use App\Models\Product;
 use App\Models\Spareparts;
@@ -182,10 +183,12 @@ class UserController extends Controller
                 'link_tokopedia as link_tokopedia',
                 'link_shopee as link_shopee',
                 'notes as notes',
+                'spareparts.created_at as created_at',
                 DB::raw("'sparepart' as type")
             )
             ->join('products', 'spareparts.product_id', '=', 'products.id')
             ->where('product_name', $name)
+            ->orderBy('created_at', 'desc')
             ->paginate(10);
         }else{
             $products = Modification::select(
@@ -201,10 +204,12 @@ class UserController extends Controller
                 'link_tokopedia as link_tokopedia',
                 'link_shopee as link_shopee',
                 'notes as notes',
+                'modifications.created_at as created_at',
                 DB::raw("'modification' as type")
             )
             ->join('products', 'modifications.product_id', '=', 'products.id')
             ->where('product_name', $name)
+            ->orderBy('created_at', 'desc')
             ->paginate(10);
         }
 
@@ -218,7 +223,7 @@ class UserController extends Controller
         $query = null;
         $sort = $request->input('sort');
         $type = $request->input('type');
-        $name = $request->input('name');
+        $product_name = $request->input('product_name');
 
         if($type == 'sparepart'){
             $query = Spareparts::select(
@@ -238,7 +243,7 @@ class UserController extends Controller
                 DB::raw("'sparepart' as type")
             )
             ->join('products', 'spareparts.product_id', '=', 'products.id')
-            ->where('product_name', $name);
+            ->where('product_name', $product_name);
         } else {
             $query = Modification::select(
                 'modifications.id as product_id',
@@ -257,7 +262,7 @@ class UserController extends Controller
                 DB::raw("'modification' as type")
             )
             ->join('products', 'modifications.product_id', '=', 'products.id')
-            ->where('product_name', $name);
+            ->where('product_name', $product_name);
         }
 
         switch ($sort) {
@@ -278,15 +283,29 @@ class UserController extends Controller
         }
 
         $products = $query->paginate(10);
-        // dd($products);
 
-        return response()->json($products);
+        return response()->json([
+            'products' => $products->items(),
+            'links' => (string) $products->links('vendor.pagination.bootstrap-5'),
+            'meta' => [
+                'current_page' => $products->currentPage(),
+                'last_page' => $products->lastPage(),
+                'per_page' => $products->perPage(),
+                'from_item' => $products->firstItem(),
+                'to_item' => $products->lastItem(),
+                'total' => $products->total()
+            ]
+        ]);
     }
 
     public function viewUserProductDetail($type, $name, $id){
+        $userId = Session::get('user_id');
+        $userCarId = User_car::where('user_id', $userId)->where('is_active', true)->value('id');
+
         if($type == 'sparepart'){
             $products = Spareparts::select(
                 'spareparts.id as product_id',
+                'spareparts.store_id as store_id',
                 'spareparts.product_id as product_subcategory_id',
                 'product_name as product_name',
                 'sparepart_name as name',
@@ -304,9 +323,15 @@ class UserController extends Controller
             ->where('product_name', $name)
             ->where('spareparts.id', $id)
             ->first();
+
+            $favoriteProduct = Favorite::select('user_car_id', 'part_id')
+            ->where('user_car_id', $userCarId)
+            ->where('part_id', $id)
+            ->first();
         }else{
             $products = Modification::select(
                 'modifications.id as product_id',
+                'modifications.store_id as store_id',
                 'modifications.product_id as product_subcategory_id',
                 'product_name as product_name',
                 'mod_image as image',
@@ -324,11 +349,248 @@ class UserController extends Controller
             ->where('product_name', $name)
             ->where('modifications.id', $id)
             ->first();
+
+            $favoriteProduct = Favorite::select('user_car_id', 'mod_id')
+            ->where('user_car_id', $userCarId)
+            ->where('mod_id', $id)
+            ->first();
         }
+        $store = Store::where('id', $products->store_id)->first();
 
         return view('user.productDetail', [
             'title' => 'Product Detail',
             'products' => $products,
+            'store' => $store,
+            'userId' => Session::get('user_id'),
+            'favoriteProduct' => $favoriteProduct
+        ]);
+    }
+
+    public function getRecommendedProducts(Request $request){
+        $userId = Session::get('user_id');
+        $type = $request->input('type');
+        $product_name = $request->input('product_name');
+
+        $userCar = User_car::select('car_model_id', 'car_engine_id','car_model_name', 'car_engine_name')
+            ->where('user_id', $userId)
+            ->where('is_active', true)
+            ->first();
+
+        if($type == 'sparepart'){
+            $products = Spareparts::select(
+                'spareparts.id as product_id',
+                'product_name as product_name',
+                'sparepart_name as name',
+                'sparepart_image as image',
+                'sparepart_price as price',
+                DB::raw("'sparepart' as type")
+            )
+            ->join('products', 'spareparts.product_id', '=', 'products.id')
+            ->where('product_name', $product_name);
+
+            if($userId){
+                $products = $products->join('sparepart_details', 'spareparts.id', '=', 'sparepart_details.sparepart_id')
+                ->where('car_model_id', $userCar->car_model_id)
+                ->where('car_engine_id', $userCar->car_engine_id)
+                ->addSelect(
+                    DB::raw("'" . $userCar->car_model_name . "' as car_model_name"),
+                    DB::raw("'" . $userCar->car_engine_name . "' as car_engine_name")
+                );
+            }
+        }else{
+            $products = Modification::select(
+                'modifications.id as product_id',
+                'product_name as product_name',
+                'mod_name as name',
+                'mod_image as image',
+                'mod_price as price',
+                DB::raw("'modification' as type")
+            )
+            ->join('products', 'modifications.product_id', '=', 'products.id')
+            ->where('product_name', $product_name);
+
+            if($userId){
+                $products = $products->join('modification_details', 'modifications.id', '=', 'modification_details.modification_id')
+                ->where('car_model_id', $userCar->car_model_id)
+                ->where('car_engine_id', $userCar->car_engine_id)
+                ->addSelect(
+                    DB::raw("'" . $userCar->car_model_name . "' as car_model_name"),
+                    DB::raw("'" . $userCar->car_engine_name . "' as car_engine_name")
+                );
+            }
+        }
+
+        $recommended_products = $products->inRandomOrder()->limit(10)->get();
+
+        return response()->json([
+            'products' => $recommended_products,
+        ]);
+    }
+
+    public function addFavoriteProduct(Request $request){
+        $userId = Session::get('user_id');
+        $id = $request->input('id');
+        $type = $request->input('type');
+
+        $userCarId = User_car::where('user_id', $userId)->where('is_active', true)->value('id');
+
+        if($type == 'sparepart'){
+            $existFavorite = Favorite::select('user_car_id', 'part_id')
+            ->where('user_car_id', $userCarId)
+            ->where('part_id', $id)
+            ->exists();
+
+            if(!$existFavorite) {
+                $favoriteInput = [
+                    'user_car_id' => $userCarId,
+                    'part_id' => $id,
+                    'mod_id' => NULL,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ];
+                Favorite::create($favoriteInput);
+            }
+        }else{
+            $existFavorite = Favorite::select('user_car_id', 'mod_id')
+            ->where('user_car_id', $userCarId)
+            ->where('mod_id', $id)
+            ->exists();
+
+            if(!$existFavorite) {
+                $favoriteInput = [
+                    'user_car_id' => $userCarId,
+                    'part_id' => NULL,
+                    'mod_id' => $id,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ];
+                Favorite::create($favoriteInput);
+            }
+        }
+
+        return response()->json([
+            'success' => true
+        ]);
+    }
+
+    public function removeFavoriteProduct(Request $request){
+        $userId = Session::get('user_id');
+        $id = $request->input('id');
+        $type = $request->input('type');
+
+        $userCarId = User_car::where('user_id', $userId)->where('is_active', true)->value('id');
+
+        if($type == 'sparepart'){
+            Favorite::select('user_car_id', 'part_id')
+            ->where('user_car_id', $userCarId)
+            ->where('part_id', $id)
+            ->delete();
+        }else{
+            $existFavorite = Favorite::select('user_car_id', 'mod_id')
+            ->where('user_car_id', $userCarId)
+            ->where('mod_id', $id)
+            ->delete();
+        }
+
+        return response()->json([
+            'success' => true
+        ]);
+    }
+
+    public function viewFavoriteList(){
+        $userId = Session::get('user_id');
+        $userCarId = User_car::where('user_id', $userId)->where('is_active', true)->value('id');
+
+        $spareparts = Spareparts::select(
+            'spareparts.id as id',
+            'product_name as product_name',
+            'sparepart_name as name',
+            'sparepart_image as image',
+            'sparepart_price as price',
+            'favorites.created_at as created_at',
+            DB::raw("'sparepart' as type")
+        )
+        ->join('products', 'spareparts.product_id', '=', 'products.id')
+        ->join('favorites', 'spareparts.id', '=', 'favorites.part_id')
+        ->where('user_car_id', $userCarId);
+
+        $modifications = Modification::select(
+            'modifications.id as id',
+            'product_name as product_name',
+            'mod_name as name',
+            'mod_image as image',
+            'mod_price as price',
+            'favorites.created_at as created_at',
+            DB::raw("'modification' as type")
+        )
+        ->join('products', 'modifications.product_id', '=', 'products.id')
+        ->join('favorites', 'modifications.id', '=', 'favorites.mod_id')
+        ->where('user_car_id', $userCarId);
+
+        $favorites = $spareparts->union($modifications)
+        ->orderBy('created_at', 'desc')
+        ->get();
+        // dd($favorites);
+        return view('user.favoriteList', [
+            'title' => 'Favorite List',
+            'products' => $favorites,
+        ]);
+    }
+
+    public function filterFavoriteList(Request $request){
+        $userId = Session::get('user_id');
+        $userCarId = User_car::where('user_id', $userId)->where('is_active', true)->value('id');
+        $sort = $request->input('sort');
+
+        $spareparts = Spareparts::select(
+            'spareparts.id as id',
+            'product_name as product_name',
+            'sparepart_name as name',
+            'sparepart_image as image',
+            'sparepart_price as price',
+            'favorites.created_at as created_at',
+            DB::raw("'sparepart' as type")
+        )
+        ->join('products', 'spareparts.product_id', '=', 'products.id')
+        ->join('favorites', 'spareparts.id', '=', 'favorites.part_id')
+        ->where('user_car_id', $userCarId);
+
+        $modifications = Modification::select(
+            'modifications.id as id',
+            'product_name as product_name',
+            'mod_name as name',
+            'mod_image as image',
+            'mod_price as price',
+            'favorites.created_at as created_at',
+            DB::raw("'modification' as type")
+        )
+        ->join('products', 'modifications.product_id', '=', 'products.id')
+        ->join('favorites', 'modifications.id', '=', 'favorites.mod_id')
+        ->where('user_car_id', $userCarId);
+
+        $query = $spareparts->union($modifications);
+
+        switch ($sort) {
+            case 'Newest':
+                $query->orderBy('created_at', 'desc');
+                break;
+            case 'Oldest':
+                $query->orderBy('created_at', 'asc');
+                break;
+            case 'Highest Price':
+                $query->orderBy('price', 'desc');
+                break;
+            case 'Lowest Price':
+                $query->orderBy('price', 'asc');
+                break;
+            default:
+                break;
+        }
+
+        $favoritesFilter = $query->get();
+
+        return response()->json([
+            'products' => $favoritesFilter
         ]);
     }
 
@@ -385,6 +647,19 @@ class UserController extends Controller
 
         if (file_exists($imagePath)) {
             $file = Storage::disk('local')->get('imageProduct/' . $imageName);
+            $type = mime_content_type($imagePath);
+            return response($file, 200)->header('Content-Type', $type);
+        } else {
+            // Handle jika gambar tidak ditemukan
+            abort(404);
+        }
+    }
+
+    public function loadProfileImage($imageName){
+        $imagePath = storage_path('app/imageProfile/' . $imageName);
+
+        if (file_exists($imagePath)) {
+            $file = Storage::disk('local')->get('imageProfile/' . $imageName);
             $type = mime_content_type($imagePath);
             return response($file, 200)->header('Content-Type', $type);
         } else {

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Car_brand;
 use App\Models\Car_engine;
 use App\Models\Car_model;
+use App\Models\City;
 use App\Models\Favorite;
 use App\Models\Modification;
 use App\Models\Product;
@@ -220,10 +221,15 @@ class UserController extends Controller
     }
 
     public function filterProductList(Request $request){
-        $query = null;
+        $userId = Session::get('user_id');
         $sort = $request->input('sort');
         $type = $request->input('type');
         $product_name = $request->input('product_name');
+
+        $userCar = User_car::select('car_model_id', 'car_engine_id','car_model_name', 'car_engine_name')
+        ->where('user_id', $userId)
+        ->where('is_active', true)
+        ->first();
 
         if($type == 'sparepart'){
             $query = Spareparts::select(
@@ -244,6 +250,16 @@ class UserController extends Controller
             )
             ->join('products', 'spareparts.product_id', '=', 'products.id')
             ->where('product_name', $product_name);
+
+            if($userId){
+                $query = $query->join('sparepart_details', 'spareparts.id', '=', 'sparepart_details.sparepart_id')
+                ->where('car_model_id', $userCar->car_model_id)
+                ->where('car_engine_id', $userCar->car_engine_id)
+                ->addSelect(
+                    DB::raw("'" . $userCar->car_model_name . "' as car_model_name"),
+                    DB::raw("'" . $userCar->car_engine_name . "' as car_engine_name")
+                );
+            }
         } else {
             $query = Modification::select(
                 'modifications.id as product_id',
@@ -263,6 +279,16 @@ class UserController extends Controller
             )
             ->join('products', 'modifications.product_id', '=', 'products.id')
             ->where('product_name', $product_name);
+
+            if($userId){
+                $query = $query->join('modification_details', 'modifications.id', '=', 'modification_details.modification_id')
+                ->where('car_model_id', $userCar->car_model_id)
+                ->where('car_engine_id', $userCar->car_engine_id)
+                ->addSelect(
+                    DB::raw("'" . $userCar->car_model_name . "' as car_model_name"),
+                    DB::raw("'" . $userCar->car_engine_name . "' as car_engine_name")
+                );
+            }
         }
 
         switch ($sort) {
@@ -640,6 +666,17 @@ class UserController extends Controller
 
     public function filterStoreProductList(){
 
+    }
+
+    public function viewFindStoreList(){
+        $stores = Store::all();
+        $cities = City::all();
+
+        return view('user.findStoreList', [
+            'title' => 'Find Store List',
+            'stores' => $stores,
+            'cities' => $cities
+        ]);
     }
 
     public function loadProductImage($imageName){

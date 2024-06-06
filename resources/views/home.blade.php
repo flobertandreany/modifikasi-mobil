@@ -78,61 +78,6 @@
                             </div>
                         </a>
                         @endforeach
-                        <div class="col-md-3" style="height: 300px; width: 290px;">
-                            <div class="card car-mod">
-                                <div class="card-header header-recomend" style="background-color: white;">
-                                    <img src="{{ asset('img/Logo/mt20-holden-colorado-2012-2020-strut-shock-kit-4-5-inch-603610_1280x.png') }}" class="card-img-top" style="max-width: 140px; margin: 10px 40px 10px 40px;" alt="...">
-                                </div>
-                                <div class="card-body">
-                                    <h5 class="card-title judul-mod">Volk Rays TE37 R18</h5>
-                                    <h5 class="price" style="color: #F36600">Rp. 14.000.000</h5>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3" style="height: 300px; width: 290px;">
-                            <div class="card car-mod">
-                                <div class="card-header header-recomend">
-                                    <img src="{{ asset('img/Logo/volk-rays-te37.png') }}" class="card-img-top" style="max-width: 140px; margin: 10px 40px 10px 40px;" alt="...">
-                                </div>
-                                <div class="card-body">
-                                    <h5 class="card-title judul-mod">Volk Rays TE37 R18</h5>
-                                    <h5 class="price" style="color: #F36600">Rp. 14.000.000</h5>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3" style="height: 300px; width: 290px;">
-                            <div class="card car-mod">
-                                <div class="card-header header-recomend">
-                                    <img src="{{ asset('img/Logo/volk-rays-te37.png') }}" class="card-img-top" style="max-width: 140px; margin: 10px 40px 10px 40px;" alt="...">
-                                </div>
-                                <div class="card-body">
-                                    <h5 class="card-title judul-mod">Volk Rays TE37 R18</h5>
-                                    <h5 class="price" style="color: #F36600">Rp. 14.000.000</h5>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3" style="height: 300px; width: 290px;">
-                            <div class="card car-mod">
-                                <div class="card-header header-recomend" style="background-color: white;">
-                                    <img src="{{ asset('img/Logo/volk-rays-te37.png') }}" class="card-img-top" style="max-width: 140px; margin: 10px 40px 10px 40px;" alt="...">
-                                </div>
-                                <div class="card-body">
-                                    <h5 class="card-title judul-mod">Volk Rays TE37 R18</h5>
-                                    <h5 class="price" style="color: #F36600">Rp. 14.000.000</h5>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3" style="height: 300px; width: 290px;">
-                            <div class="card car-mod">
-                                <div class="card-header header-recomend" style="background-color: white;">
-                                    <img src="{{ asset('img/Logo/mt20-holden-colorado-2012-2020-strut-shock-kit-4-5-inch-603610_1280x.png') }}" class="card-img-top" style="max-width: 140px; margin: 10px 40px 10px 40px;" alt="...">
-                                </div>
-                                <div class="card-body">
-                                    <h5 class="card-title judul-mod">Volk Rays TE37 R18</h5>
-                                    <h5 class="price" style="color: #F36600">Rp. 14.000.000</h5>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
                 <div class="d-flex align-items-center pb-1" style="padding-top: 65px;">
@@ -155,63 +100,6 @@
                             </div>
                         </a>
                         @endforeach
-                        <div class="col-md-3" style="height: 300px; width: 290px;">
-                            <div class="card car-mod">
-                                <div class="card-header header-recomend" style="background-color: white; text-align: center;">
-                                    <img src="{{ asset('img/Logo/volk-rays-te37.png') }}" class="card-img-top" style="max-width: 140px; margin: 10px 40px 10px 40px;" alt="...">
-                                </div>
-                                <div class="card-body" style="max-height: 95px; min-height: 95px;">
-                                    <div class="judul-mod">
-                                        Volk Rays TE37 R18 Volk Rays TE37 R18 Volk Rays jdejd andfj asdj
-                                    </div>
-                                    <h5 class="price">Rp. 14.000.000</h5>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3" style="height: 300px; width: 290px;">
-                            <div class="card car-mod">
-                                <div class="card-header header-recomend" style="background-color: white;">
-                                    <img src="{{ asset('img/Logo/mt20-holden-colorado-2012-2020-strut-shock-kit-4-5-inch-603610_1280x.png') }}" class="card-img-top" style="max-width: 140px; margin: 10px 40px 10px 40px;" alt="...">
-                                </div>
-                                <div class="card-body">
-                                    <h5 class="card-title judul-mod">Volk Rays TE37 R18</h5>
-                                    <h5 class="price" style="color: #F36600">Rp. 14.000.000</h5>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3" style="height: 300px; width: 290px;">
-                            <div class="card car-mod">
-                                <div class="card-header header-recomend">
-                                    <img src="{{ asset('img/Logo/volk-rays-te37.png') }}" class="card-img-top" style="max-width: 140px; margin: 10px 40px 10px 40px;" alt="...">
-                                </div>
-                                <div class="card-body">
-                                    <h5 class="card-title judul-mod">Volk Rays TE37 R18</h5>
-                                    <h5 class="price" style="color: #F36600">Rp. 14.000.000</h5>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3" style="height: 300px; width: 290px;">
-                            <div class="card car-mod">
-                                <div class="card-header header-recomend">
-                                    <img src="{{ asset('img/Logo/volk-rays-te37.png') }}" class="card-img-top" style="max-width: 140px; margin: 10px 40px 10px 40px;" alt="...">
-                                </div>
-                                <div class="card-body">
-                                    <h5 class="card-title judul-mod">Volk Rays TE37 R18</h5>
-                                    <h5 class="price" style="color: #F36600">Rp. 14.000.000</h5>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3" style="height: 300px; width: 290px;">
-                            <div class="card car-mod">
-                                <div class="card-header header-recomend" style="background-color: white;">
-                                    <img src="{{ asset('img/Logo/volk-rays-te37.png') }}" class="card-img-top" style="max-width: 140px; margin: 10px 40px 10px 40px;" alt="...">
-                                </div>
-                                <div class="card-body">
-                                    <h5 class="card-title judul-mod">Volk Rays TE37 R18</h5>
-                                    <h5 class="price" style="color: #F36600">Rp. 14.000.000</h5>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>

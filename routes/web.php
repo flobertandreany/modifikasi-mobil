@@ -133,6 +133,7 @@ Route::get('/user/store/product/{imageName}', [UserController::class, 'loadProdu
 Route::get('/user/store/detail/{id}', [UserController::class, 'viewStoreDetail'])->name('user.storeDetail');
 Route::get('/user/store/filter-product-list', [UserController::class, 'filterStoreProductList'])->name('user.filterStoreProductList');
 Route::get('/user/store/profile/{imageName}', [UserController::class, 'loadProfileImage'])->name('user.store.profileImage');
+Route::get('/user/find-store-list', [UserController::class, 'viewFindStoreList'])->name('user.findStoreList');
 
 Route::get('users/{id}', function ($id) {
     return 'User '.$id;

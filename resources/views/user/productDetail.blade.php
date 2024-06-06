@@ -6,7 +6,7 @@
         <div class="container" style="height: 88rem;">
             <div class="row" style="padding-top: 5rem; padding-bottom: 3rem;">
                 <aside class="col-lg-5">
-                    <div class="image-container rounded-4 d-flex justify-content-center" style="background-color: white;">
+                    <div class="image-container rounded-4 d-flex justify-content-center">
                         @if($products->image)
                             <img class="img-product-detail border rounded-4" src="{{ route('user.store.productImage', ['imageName' => $products->image]) }}" alt="Image Product">
                         @else
@@ -54,7 +54,7 @@
                             {{ $products->description }}
                         </p>
                         <hr class="text-white mt-4 mb-4"/>
-                        <a class="store-profile-container text-decoration-none" target="_blank" href="">
+                        <a class="store-profile-container text-decoration-none" target="_blank" href="{{ route('user.storeDetail', ['id' => $store->id ]) }}">
                             <div class="store-profile-content">
                                 @if($store->store_logo)
                                     <img class="img-store-profile border rounded-circle" src="{{ route('user.store.profileImage', ['imageName' => $store->store_logo]) }}" alt="Image Store Profile">

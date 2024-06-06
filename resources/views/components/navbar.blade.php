@@ -50,7 +50,7 @@
             <div style="flex: 0.2; justify-content: space-around;" class="d-flex flex-row">
                 <a href="" class="d-flex flex-column justify-content-center href-find-store">
                     <button class="find-store"><img style="width: 14px; padding-right: 2px; padding-bottom: 3px;" src="{{ asset('img/Logo/find.png') }}" alt="">Find Store</button>
-                </div>
+                </a>
                 <a href="{{ route('user.favoriteList') }}" class="text-decoration-none">
                     <div class="d-flex flex-column" type="button" style="align-items: center; padding: 10px 20px 0px 20px;">
                         <img src="{{ asset('img/Logo/favorite.png') }}" style="width: 22px; padding-bottom: 6px;" alt="">

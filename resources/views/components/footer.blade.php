@@ -3,7 +3,20 @@
             <div class="row">
                 @if(auth()->check() && auth()->user()->isAdmin())
                     <div class="col-lg-3 col-md-6 text-footer">
-                        <img class="mt-3 me-3" src="{{ asset('img/login/Logo SpareCar.png') }}" alt="image logo" width="250px" height="45px">
+                        <div>
+                            <img class="mt-3 me-3" src="{{ asset('img/login/Logo SpareCar.png') }}" alt="image logo" width="250px" height="45px">
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding-top: 25px; width: 240px; color: inherit; text-decoration: none;">
+                            <a class="text-decoration-none" style="color: inherit;" href="https://www.facebook.com/profile.php?id=61560989996217&mibextid=ZbWKwL" target="_blank">
+                                <i class="bi bi-facebook"></i>
+                            </a>
+                            <a href="https://www.instagram.com/sparecarid?igsh=MTk1ODBpd212NnBteA==" style="color: inherit;" target="_blank">
+                                <i class="bi bi-instagram"></i>
+                            </a>
+                            <a href="https://twitter.com/SparecarID?t=QoNEYmMCIhPs4ShkviLxSQ&s=09" style="color: inherit;" target="_blank">
+                                <i class="bi bi-twitter"></i>
+                            </a>
+                        </div>
                     </div>
                     <div class="col-lg-3 col-md-6 text-footer">
                         <h5 class="text-footer" style="font-weight: bold;">Manage Store</h5>
@@ -36,7 +49,20 @@
                     </div>
                 @elseif(auth()->check() && auth()->user()->isStore())
                     <div class="col-lg-4 col-md-6 text-footer">
-                        <img class="mt-3 me-3" src="{{ asset('img/login/Logo SpareCar.png') }}" alt="image logo" width="250px" height="45px">
+                        <div>
+                            <img class="mt-3 me-3" src="{{ asset('img/login/Logo SpareCar.png') }}" alt="image logo" width="250px" height="45px">
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding-top: 25px; width: 225px; color: inherit; text-decoration: none;">
+                            <a class="text-decoration-none" style="color: inherit;" href="https://www.facebook.com/profile.php?id=61560989996217&mibextid=ZbWKwL" target="_blank">
+                                <i class="bi bi-facebook"></i>
+                            </a>
+                            <a href="https://www.instagram.com/sparecarid?igsh=MTk1ODBpd212NnBteA==" style="color: inherit;" target="_blank">
+                                <i class="bi bi-instagram"></i>
+                            </a>
+                            <a href="https://twitter.com/SparecarID?t=QoNEYmMCIhPs4ShkviLxSQ&s=09" style="color: inherit;" target="_blank">
+                                <i class="bi bi-twitter"></i>
+                            </a>
+                        </div>
                     </div>
                     <div class="col-lg-4 col-md-6 text-footer">
                         <h5 class="text-footer" style="font-weight: bold;">ALL PRODUCT LIST</h5>
@@ -47,7 +73,20 @@
                     </div>
                 @else
                     <div class="col-lg-3 col-md-6 text-footer">
-                        <img class="mt-3 me-3" src="{{ asset('img/login/Logo SpareCar.png') }}" alt="image logo" width="250px" height="45px">
+                        <div>
+                            <img class="mt-3 me-3" src="{{ asset('img/login/Logo SpareCar.png') }}" alt="image logo" width="250px" height="45px">
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding-top: 25px; width: 235px; color: inherit; text-decoration: none;">
+                            <a class="text-decoration-none" style="color: inherit;" href="https://www.facebook.com/profile.php?id=61560989996217&mibextid=ZbWKwL" target="_blank">
+                                <i class="bi bi-facebook"></i>
+                            </a>
+                            <a href="https://www.instagram.com/sparecarid?igsh=MTk1ODBpd212NnBteA==" style="color: inherit;" target="_blank">
+                                <i class="bi bi-instagram"></i>
+                            </a>
+                            <a href="https://twitter.com/SparecarID?t=QoNEYmMCIhPs4ShkviLxSQ&s=09" style="color: inherit;" target="_blank">
+                                <i class="bi bi-twitter"></i>
+                            </a>
+                        </div>
                     </div>
                     <div class="col-lg-2 col-md-6 text-footer">
                         <h5 class="text-footer" style="font-weight: bold;">Spareparts</h5>

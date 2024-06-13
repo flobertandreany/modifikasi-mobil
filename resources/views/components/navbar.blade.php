@@ -84,7 +84,9 @@
             <i class="bi bi-list text-white fs-3"></i>
             <span class="text-white" style="font-size: 11px;">Menu</span>
         </div>
-        <input class="form-control me-2" style="width: 50%;" type="search" placeholder="Search" aria-label="Search">
+        <div style="width: 55%; padding-left: 140px;">
+            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+        </div>
         <!-- Button profile trigger modal -->
         @auth
             <div type="button" class="" style="display: grid; justify-items: center; margin-right: 3rem;" data-bs-toggle="modal" data-bs-target="#profileModal">
@@ -92,7 +94,10 @@
                 <span class="text-white" style="font-size: 11px;">Profile</span>
             </div>
         @else
-        <div type="button" class="">
+        <div type="button" class="d-flex flex-row">
+            <a href="" style="padding-right: 40px;" class="d-flex flex-column justify-content-center href-find-store">
+                <button class="find-store"><img style="width: 14px; padding-right: 2px; padding-bottom: 3px;" src="{{ asset('img/Logo/find.png') }}" alt="">Find Store</button>
+            </a>
             <a href="{{ route('view.login') }}" style="display: grid; justify-items: center; margin-right: 30px; text-decoration: none;">
                 <i class="bi bi-person-circle text-white fs-4"></i>
                 <span class="text-white" style="font-size: 11px;">Sign In</span>

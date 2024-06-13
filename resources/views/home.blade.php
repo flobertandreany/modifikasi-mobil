@@ -1,7 +1,7 @@
 @extends('layouts.main')
 
 @section('content')
-    <div style="min-height: 140rem;">
+    <div class="" style="min-height: 140rem;">
         <div style="width:50%; padding-top: 10px; padding-left: 70px;">
             <div class="container">
                 <div class="p-lg-5 text-black card-body">

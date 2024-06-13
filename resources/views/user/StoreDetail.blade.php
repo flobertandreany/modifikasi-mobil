@@ -19,8 +19,12 @@
                             <h3 class="store-name">{{ $store->store_name }}</h3>
                             <p>
                                 <i class="bi bi-geo-alt-fill"></i>
-                                <span style="color: white;">{{ $store->store_address }}</span>
+                                <span style="color: white; padding-left: 5px;">{{ $store->store_address }}</span>
                             </p>
+                            <a class="text-decoration-none text-white" target="_blank" href="{{ $store->store_instagram }}">
+                                <i class="bi bi-instagram"></i>
+                                <span style="color: white; padding-left: 5px;">Instagram</span>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -72,7 +76,7 @@
                                     @foreach ($part as $p)
                                     <div style="" class="products-sort">
                                         <li class="nav-item-user" style="list-style-type: none;">
-                                            <a class="text-decoration-none" style="color: #D4D4D4 !important;" href="#" onclick="sortProduct({{ $p->product_id }}, {{ $p->product_category_id }}, {{ $p->store_id }}); return false;">
+                                            <a class="text-decoration-none sortProduct" style="color: #D4D4D4 !important;" href="#" data-value="{{ $p->id }}" data-category="{{ $p->product_category_id }}" data-store="{{ $store_id }}">
                                                 {{ $p->product_name }}
                                             </a>
                                         </li>
@@ -86,7 +90,7 @@
                                     @foreach ($mod as $p)
                                     <div class="products-sort">
                                         <li class="nav-item-user" style="list-style-type: none;">
-                                            <a class="text-decoration-none products-sort sortProduct"  style="color: #D4D4D4 !important;" href="#" data-value="{{ $p->id }}" data-category="{{ $p->product_category_id }}" data-store="{{ $p->store_id }}">
+                                            <a class="text-decoration-none products-sort sortProduct"  style="color: #D4D4D4 !important;" href="#" data-value="{{ $p->id }}" data-category="{{ $p->product_category_id }}" data-store="{{ $store_id }}">
                                                 {{ $p->product_name }}
                                             </a>
                                         </li>
@@ -169,12 +173,6 @@
             border-radius: 5px;
             padding: 5px;
             font-family: monospace;
-        }
-
-        .div-store-info{
-            vertical-align: middle;
-            justify-content: center;
-            padding-bottom: 30px;
         }
 
         .store-name{

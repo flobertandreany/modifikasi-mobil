@@ -643,6 +643,7 @@ class UserController extends Controller
             'part' => $menuSparepart,
             'mod' => $menuModification,
             'products' => $products,
+            'store_id' => $id,
         ]);
     }
 

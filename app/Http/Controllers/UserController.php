@@ -170,6 +170,8 @@ class UserController extends Controller
         }
 
     public function viewUserProductList($type, $name){
+        log::info("session". session::get('user_id'));
+        // dd(session::get('user_id'));
         if($type == 'sparepart'){
             $products = Spareparts::select(
                 'spareparts.id as product_id',
@@ -211,7 +213,7 @@ class UserController extends Controller
             ->join('products', 'modifications.product_id', '=', 'products.id')
             ->where('product_name', $name)
             ->orderBy('created_at', 'desc')
-            ->paginate(10);
+            ->paginate(5);
         }
 
         return view('user.productList', [
@@ -308,7 +310,7 @@ class UserController extends Controller
                 break;
         }
 
-        $products = $query->paginate(10);
+        $products = $query->paginate(5);
 
         return response()->json([
             'products' => $products->items(),
@@ -630,6 +632,8 @@ class UserController extends Controller
             'modifications.id as id',
             'product_name as product_name',
             'product_id as product_id',
+            'store_id as store_id',
+            'product_category_id as product_category_id',
             'mod_name as name',
             'mod_image as image',
             'mod_price as price',
@@ -643,6 +647,8 @@ class UserController extends Controller
             'spareparts.id as id',
             'product_name as product_name',
             'product_id as product_id',
+            'store_id as store_id',
+            'product_category_id as product_category_id',
             'sparepart_name as name',
             'sparepart_image as image',
             'sparepart_price as price',
@@ -655,17 +661,74 @@ class UserController extends Controller
         $products = $modifications->union($spareparts)
         ->orderBy('created_at', 'desc')->paginate(12);
 
+        log::info($products);
+
         return view('user.storeDetail', [
             'title' => 'Store Detail',
             'store' => $store,
             'part' => $menuSparepart,
             'mod' => $menuModification,
             'products' => $products,
+            'store_id' => $id,
         ]);
     }
 
-    public function filterStoreProductList(){
+    public function filterStoreProductList(Request $request){
+        $product_id = $request->input('product_id');
+        $product_category_id = $request->input('category_id');
+        $store_id = $request->input('store_id');
 
+        Log::info("Product ID: $product_id, Category ID: $product_category_id, Store ID: $store_id");
+
+        if($product_category_id == 1){
+            $query = Spareparts::select(
+                'spareparts.id as product_id',
+                'spareparts.product_id as product_subcategory_id',
+                'product_name as product_name',
+                'sparepart_name as name',
+                'sparepart_image as image',
+                'sparepart_price as price',
+                'sparepart_height as height',
+                'sparepart_weight as weight',
+                'description as description',
+                'link_tokopedia as link_tokopedia',
+                'link_shopee as link_shopee',
+                'notes as notes',
+                'spareparts.created_at as created_at',
+                DB::raw("'sparepart' as type")
+            )
+            ->join('products', 'spareparts.product_id', '=', 'products.id')
+            ->where('store_id', $store_id)
+            ->where('product_id', $product_id);
+        }else{
+            $query = Modification::select(
+                'modifications.id as product_id',
+                'modifications.product_id as product_subcategory_id',
+                'product_name as product_name',
+                'mod_image as image',
+                'mod_name as name',
+                'mod_price as price',
+                'mod_height as height',
+                'mod_weight as weight',
+                'description as description',
+                'link_tokopedia as link_tokopedia',
+                'link_shopee as link_shopee',
+                'notes as notes',
+                'modifications.created_at as created_at',
+                DB::raw("'modification' as type")
+            )
+            ->join('products', 'modifications.product_id', '=', 'products.id')
+            ->where('store_id', $store_id)
+            ->where('product_id', $product_id);
+        }
+
+        $products = $query->orderBy('created_at', 'desc')->get();
+
+        log::info($products);
+
+        return response()->json([
+            'products' => $products,
+        ]);
     }
 
     public function viewFindStoreList(){

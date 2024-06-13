@@ -19,22 +19,28 @@
                             <h3 class="store-name">{{ $store->store_name }}</h3>
                             <p>
                                 <i class="bi bi-geo-alt-fill"></i>
-                                <span style="color: white;">{{ $store->store_address }}</span>
+                                <span style="color: white; padding-left: 5px;">{{ $store->store_address }}</span>
                             </p>
+                            <a class="text-decoration-none text-white" target="_blank" href="{{ $store->store_instagram }}">
+                                <i class="bi bi-instagram"></i>
+                                <span style="color: white; padding-left: 5px;">Instagram</span>
+                            </a>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-2 div-luar-button">
                     <div class="store-action d-flex flex-row">
                         <div class="d-flex flex-column" style="justify-content: space-evenly;">
-                            <button class="btn btn-filter rounded-3 d-flex justify-content-between" type="button" style="background-color: #F36600;">
-                                <a class="text-decoration-none" target="_blank" href="{{ $store->store_shopee }}">
-                                    <span class="text-white">Buy In Shopee</span>
+                            <button class="btn rounded-3 btn-store" style="background-color: #F26100;">
+                                <a class="text-decoration-none text-white" target="_blank" href="{{ $store->store_shopee }}">
+                                    <img src="{{ asset('img/Logo/shopee.png') }}" style="width: 18px; padding-bottom: 6px;" alt="">
+                                    <span>Buy In Shopee</span>
                                 </a>
                             </button>
-                            <button class="btn btn-filter rounded-3 d-flex justify-content-between" type="button" style="background-color: #00621C;">
-                                <a class="text-decoration-none" target="_blank" href="{{ $store->store_tokopedia }}">
-                                    <span class="text-white">Buy In Tokopedia</span>
+                            <button class="btn rounded-3 btn-store" style="background-color: #19B400;">
+                                <a class="text-decoration-none text-white" target="_blank" href="{{ $store->store_tokopedia }}">
+                                    <img src="{{ asset('img/Logo/tokopedia.png') }}" style="width: 18px; padding-bottom: 6px;" alt="">
+                                    <span>Buy In Tokopedia</span>
                                 </a>
                             </button>
                         </div>
@@ -70,7 +76,7 @@
                                     @foreach ($part as $p)
                                     <div style="" class="products-sort">
                                         <li class="nav-item-user" style="list-style-type: none;">
-                                            <a class="text-decoration-none" style="color: #D4D4D4 !important;" href="" data-value="{{ $p->product_id }}">
+                                            <a class="text-decoration-none sortProduct" style="color: #D4D4D4 !important;" href="#" data-value="{{ $p->id }}" data-category="{{ $p->product_category_id }}" data-store="{{ $store_id }}">
                                                 {{ $p->product_name }}
                                             </a>
                                         </li>
@@ -84,7 +90,7 @@
                                     @foreach ($mod as $p)
                                     <div class="products-sort">
                                         <li class="nav-item-user" style="list-style-type: none;">
-                                            <a class="text-decoration-none products-sort" style="color: #D4D4D4 !important;" href="">
+                                            <a class="text-decoration-none products-sort sortProduct"  style="color: #D4D4D4 !important;" href="#" data-value="{{ $p->id }}" data-category="{{ $p->product_category_id }}" data-store="{{ $store_id }}">
                                                 {{ $p->product_name }}
                                             </a>
                                         </li>
@@ -99,7 +105,7 @@
                     <div class="judul-sort">
                         ALL PRODUCTS
                     </div>
-                    <div class="row g-3" style="justify-content: space-evenly; width: 92%; margin-left: 40px;">
+                    <div id="productList"  class="row g-3 overflow-product" style="width: 92%; margin-left: 40px;">
                         @foreach ($products as $m)
                         <a class="col-md-4 card-button-store" href="{{ route('user.productDetail', ['type' => $m->type, 'name' => $m->product_name, 'id' => $m->id ]) }}">
                             <div class="card car-mod">
@@ -126,6 +132,27 @@
 @push('content_css')
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <style>
+
+        .overflow-product {
+            height: 935px !important;
+            overflow-y: scroll; /* Hanya scroll secara vertikal */
+            overflow-x: hidden; /* Sembunyikan scroll horizontal */
+        }
+
+        /* Sembunyikan scrollbar untuk browser WebKit (Chrome, Safari) */
+        .overflow-product::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Sembunyikan scrollbar untuk Firefox */
+        .overflow-product {
+            scrollbar-width: none; /* Firefox */
+        }
+
+        /* Sembunyikan scrollbar untuk Internet Explorer dan Edge */
+        .overflow-product {
+            -ms-overflow-style: none;  /* IE and Edge */
+        }
         .judul-sort{
             color: white;
             font-size: 35px;
@@ -146,12 +173,6 @@
             border-radius: 5px;
             padding: 5px;
             font-family: monospace;
-        }
-
-        .div-store-info{
-            vertical-align: middle;
-            justify-content: center;
-            padding-bottom: 30px;
         }
 
         .store-name{
@@ -233,6 +254,56 @@
 @push('content_js')
     <script src="{{ asset('js/script.js') }}"></script>
     <script>
+        $(document).ready(function () {
+            $(document).on('click', '.sortProduct', function (event) {
+                event.preventDefault();
+                var id = $(this).data('value');
+                var category_id = $(this).data('category');
+                var store_id = $(this).data('store');
+
+                fetchFilteredProducts(id, category_id, store_id);
+            });
+        });
+
+        function fetchFilteredProducts(id, category_id, store_id){
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                url: `{{ route('user.filterStoreProductList') }}`,
+                method: 'GET',
+                data: {
+                    product_id: id,
+                    category_id: category_id,
+                    store_id: store_id
+                },
+                success: function(response){
+                    $('#productList').empty();
+
+                    response.products.forEach(function (product){
+                        var productHtml = `
+                            <a class="col-md-4 card-button-store" href="/user/product-detail/${product.type}/${product.product_name}/${product.product_id}">
+                                <div class="card car-mod">
+                                    <div class="card-header header-recomend ">
+                                        <img src="/user/store/product/${product.image}" class="card-img-top" style="max-width: 140px; margin: 10px 40px 10px 40px;" alt="...">
+                                    </div>
+                                    <div class="card-body card-body-recomend">
+                                        <div class="judul-mod">
+                                            ${product.name}
+                                        </div>
+                                        <h5 class="price">Rp. ${new Intl.NumberFormat('id-ID').format(product.price)}</h5>
+                                    </div>
+                                </div>
+                            </a>
+                        `;
+                        $('#productList').append(productHtml);
+                    });
+                },
+                error: function(xhr, status, error){
+                    console.error(error);
+                }
+            })
+        }
 
     </script>
 @endpush

@@ -236,7 +236,7 @@
             event.preventDefault();
             Swal.fire({
                 icon: 'warning',
-                title: 'Are you sure want to approve this Store ?',
+                title: 'Are you sure want to approve this Store?',
                 text: 'This will approve this store, and you cannot undo this action.',
                 showCancelButton: true,
                 confirmButtonText: 'Approve',
@@ -244,10 +244,28 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     window.location.href = '/store/approval/' + id;
+                    sendApprovalEmail(id);
                 }
             });
         }
 
+        function sendApprovalEmail(id) {
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name=\'csrf-token\']').attr('content')
+                },
+                url : "{{ route('admin.sendEmailApproval') }}",
+                method : 'POST',
+                data : {
+                    id: id
+                },
+                success : function(response){
+                    if (response.status == true) {
+                        console.log('berhasil kirim email.');
+                    }
+                }
+            })
+        }
     </script>
 @endpush
 @endsection

@@ -12,9 +12,11 @@ use App\Models\Spareparts;
 use App\Models\Modification;
 use App\Models\ModificationDetail;
 use App\Models\SparepartDetail;
+use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
@@ -102,6 +104,28 @@ class AdminController extends Controller
         }
 
         return redirect()->route('admin.store.approval');
+    }
+
+    public function SendEmailApproval(Request $request){
+        $id = $request->id;
+        $store = Store::find($id);
+        $storeEmail = User::where('id', $store->user_id)->value('email');
+
+        try{
+            $contact = $storeEmail;
+
+            Mail::send('emailApproval', [
+                'store_name' => $store->store_name,
+            ], function ($message) use ($contact) {
+                $message->subject('Email Approval Store - SpareCar');
+                $message->from(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME'));
+                $message->to($contact);
+            });
+
+            return response(['status' => true]);
+        }catch (Exception $e) {
+            return response(['status' => false, 'errors' => $e->getMessage()]);
+        }
     }
 
     public function viewStoreList(){

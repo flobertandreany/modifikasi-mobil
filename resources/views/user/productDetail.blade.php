@@ -54,7 +54,7 @@
                             {{ $products->description }}
                         </p>
                         <hr class="text-white mt-4 mb-4"/>
-                        <a class="store-profile-container text-decoration-none" target="_blank" href="">
+                        <a class="store-profile-container text-decoration-none" target="_blank" href="{{ route('user.storeDetail', ['id' => $store->id ]) }}">
                             <div class="store-profile-content">
                                 @if($store->store_logo)
                                     <img class="img-store-profile border rounded-circle" src="{{ route('user.store.profileImage', ['imageName' => $store->store_logo]) }}" alt="Image Store Profile">
@@ -63,8 +63,7 @@
                                 @endif
                                 <div class="text-white">
                                     <strong>{{ $store->store_name }}</strong><br>
-                                    <i class="bi bi-geo-alt-fill"></i>
-                                    <span>{{ $store->store_address }}</span>
+                                    <span class="text-truncate-description"><i class="bi bi-geo-alt-fill me-1"></i>{{ $store->store_address }}</span>
                                 </div>
                             </div>
                         </a>

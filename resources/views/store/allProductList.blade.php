@@ -57,12 +57,19 @@
             {{ $products->links('vendor.pagination.bootstrap-5') }}
         </div>
         <div class="d-flex justify-content-center">
-            <button id="" class="btn btn-light btn-add" type="button">
-                <a href="{{ route('store.productForm') }}" class="text-decoration-none text-dark">
+            @if ($store->store_code)
+                <button id="" class="btn btn-light btn-add" type="button">
+                    <a href="{{ route('store.productForm') }}" class="text-decoration-none text-dark">
+                        <i class="fa fa-plus me-2" style="color: #000000;"></i>
+                        <span class="fw-bold">Add Product</span>
+                    </a>
+                </button>
+            @else
+                <button id="btnAddProduct" class="btn btn-light btn-add" type="button">
                     <i class="fa fa-plus me-2" style="color: #000000;"></i>
                     <span class="fw-bold">Add Product</span>
-                </a>
-            </button>
+                </button>
+            @endif
         </div>
     </div>
 @endsection
@@ -112,5 +119,15 @@
                 }
             });
         }
+
+        $('#btnAddProduct').click(function(){
+            Swal.fire({
+                title: 'Please Wait',
+                text: 'Your store is awaiting admin approval.',
+                icon: 'warning',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#F36600',
+            });
+        });
     </script>
 @endpush

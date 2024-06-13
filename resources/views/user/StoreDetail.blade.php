@@ -204,6 +204,7 @@
             border-radius: 999px;
             width: 138px;
             height: 138px;
+            object-fit: cover;
         }
 
         .detail-toko-container{

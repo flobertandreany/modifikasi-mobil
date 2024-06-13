@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Car_brand;
 use App\Models\Car_engine;
 use App\Models\Car_model;
+use App\Models\City;
 use App\Models\Favorite;
 use App\Models\Modification;
 use App\Models\Product;
@@ -222,10 +223,15 @@ class UserController extends Controller
     }
 
     public function filterProductList(Request $request){
-        $query = null;
+        $userId = Session::get('user_id');
         $sort = $request->input('sort');
         $type = $request->input('type');
         $product_name = $request->input('product_name');
+
+        $userCar = User_car::select('car_model_id', 'car_engine_id','car_model_name', 'car_engine_name')
+        ->where('user_id', $userId)
+        ->where('is_active', true)
+        ->first();
 
         if($type == 'sparepart'){
             $query = Spareparts::select(
@@ -246,6 +252,16 @@ class UserController extends Controller
             )
             ->join('products', 'spareparts.product_id', '=', 'products.id')
             ->where('product_name', $product_name);
+
+            if($userId){
+                $query = $query->join('sparepart_details', 'spareparts.id', '=', 'sparepart_details.sparepart_id')
+                ->where('car_model_id', $userCar->car_model_id)
+                ->where('car_engine_id', $userCar->car_engine_id)
+                ->addSelect(
+                    DB::raw("'" . $userCar->car_model_name . "' as car_model_name"),
+                    DB::raw("'" . $userCar->car_engine_name . "' as car_engine_name")
+                );
+            }
         } else {
             $query = Modification::select(
                 'modifications.id as product_id',
@@ -265,6 +281,16 @@ class UserController extends Controller
             )
             ->join('products', 'modifications.product_id', '=', 'products.id')
             ->where('product_name', $product_name);
+
+            if($userId){
+                $query = $query->join('modification_details', 'modifications.id', '=', 'modification_details.modification_id')
+                ->where('car_model_id', $userCar->car_model_id)
+                ->where('car_engine_id', $userCar->car_engine_id)
+                ->addSelect(
+                    DB::raw("'" . $userCar->car_model_name . "' as car_model_name"),
+                    DB::raw("'" . $userCar->car_engine_name . "' as car_engine_name")
+                );
+            }
         }
 
         switch ($sort) {
@@ -703,6 +729,153 @@ class UserController extends Controller
         return response()->json([
             'products' => $products,
         ]);
+    }
+
+    public function viewFindStoreList(){
+        $stores = Store::whereNotNUll('store_code')->inRandomOrder()->limit(6)->get();
+        $cities = City::all();
+
+        return view('user.findStoreList', [
+            'title' => 'Find Store List',
+            'stores' => $stores,
+            'cities' => $cities
+        ]);
+    }
+
+    public function filterFindStore(Request $request){
+        $cityId = $request->get('city');
+        $searchQuery = $request->get('search');
+        // dd($searchQuery);
+
+        if ($cityId && !$searchQuery) {
+            $stores = Store::where('store_city', $cityId);
+        } elseif (!$cityId && $searchQuery) {
+            $stores = Store::where('store_name', 'like', '%' . $searchQuery . '%');
+        } elseif ($cityId && $searchQuery) {
+            $stores = Store::where('store_name', 'like', '%' . $searchQuery . '%')->where('store_city', $cityId);
+        } else {
+            $stores = Store::inRandomOrder()->limit(6);
+        }
+
+        $stores = $stores->whereNotNUll('store_code')->get();
+
+        return response()->json([
+            'stores' => $stores
+        ]);
+    }
+
+    public function loadAutocompleteStore(){
+        $stores = Store::whereNotNUll('store_code')->get();
+
+        $data = [];
+        foreach($stores as $store){
+            $data[] = $store->store_name;
+        }
+
+        return $data;
+    }
+
+    public function viewUserProductSearch(Request $request){
+        $searchKeywords = $request->input('q');
+        $userId = Session::get('user_id');
+        $userCar = User_car::select('car_model_id', 'car_engine_id','car_model_name', 'car_engine_name')
+        ->where('user_id', $userId)
+        ->where('is_active', true)
+        ->first();
+
+        $spareparts = Spareparts::select(
+            'spareparts.id as id',
+            'product_name as product_name',
+            'sparepart_name as name',
+            'sparepart_image as image',
+            'sparepart_price as price',
+            'description as description',
+            'spareparts.created_at as created_at',
+            DB::raw("'sparepart' as type")
+        )
+        ->join('products', 'spareparts.product_id', '=', 'products.id')
+        ->where('sparepart_name', 'like', '%' . $searchKeywords . '%');
+
+        $modifications = Modification::select(
+            'modifications.id as id',
+            'product_name as product_name',
+            'mod_name as name',
+            'mod_image as image',
+            'mod_price as price',
+            'description as description',
+            'modifications.created_at as created_at',
+            DB::raw("'modification' as type")
+        )
+        ->join('products', 'modifications.product_id', '=', 'products.id')
+        ->where('mod_name', 'like', '%' . $searchKeywords . '%');
+
+        if($userId){
+            $spareparts = $spareparts->join('sparepart_details', 'spareparts.id', '=', 'sparepart_details.sparepart_id')
+            ->where('car_model_id', $userCar->car_model_id)
+            ->where('car_engine_id', $userCar->car_engine_id)
+            ->addSelect(
+                DB::raw("'" . $userCar->car_model_name . "' as car_model_name"),
+                DB::raw("'" . $userCar->car_engine_name . "' as car_engine_name")
+            );
+
+            $modifications = $modifications->join('modification_details', 'modifications.id', '=', 'modification_details.modification_id')
+            ->where('car_model_id', $userCar->car_model_id)
+            ->where('car_engine_id', $userCar->car_engine_id)
+            ->addSelect(
+                DB::raw("'" . $userCar->car_model_name . "' as car_model_name"),
+                DB::raw("'" . $userCar->car_engine_name . "' as car_engine_name")
+            );
+        }
+
+        $parts = $spareparts->union($modifications)
+        ->orderBy('created_at', 'desc')
+        ->paginate(10)
+        ->appends(['q' => $searchKeywords]);
+
+        return view('user.productSearch', [
+            'title' => 'Product Search',
+            'searchKeywords' => $searchKeywords,
+            'products' => $parts
+        ]);
+    }
+
+    public function loadAutocompleteParts(){
+        $userId = Session::get('user_id');
+        $userCar = User_car::select('car_model_id', 'car_engine_id','car_model_name', 'car_engine_name')
+        ->where('user_id', $userId)
+        ->where('is_active', true)
+        ->first();
+
+        $spareparts = Spareparts::select(
+            'spareparts.id as id',
+            'sparepart_name as name',
+            DB::raw("'sparepart' as type")
+        );
+
+        $modifications = Modification::select(
+            'modifications.id as id',
+            'mod_name as name',
+            DB::raw("'modification' as type")
+        );
+
+        if($userId){
+            $spareparts = $spareparts->join('sparepart_details', 'spareparts.id', '=', 'sparepart_details.sparepart_id')
+            ->where('car_model_id', $userCar->car_model_id)
+            ->where('car_engine_id', $userCar->car_engine_id);
+            
+            $modifications = $modifications->join('modification_details', 'modifications.id', '=', 'modification_details.modification_id')
+            ->where('car_model_id', $userCar->car_model_id)
+            ->where('car_engine_id', $userCar->car_engine_id);
+        }
+
+        $parts = $spareparts->union($modifications)->get()->unique('name');
+
+        $data = [];
+        foreach($parts as $part){
+            $data[] = $part->name;
+        }
+
+        return $data;
     }
 
     public function loadProductImage($imageName){

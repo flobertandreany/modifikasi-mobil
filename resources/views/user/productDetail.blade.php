@@ -63,8 +63,7 @@
                                 @endif
                                 <div class="text-white">
                                     <strong>{{ $store->store_name }}</strong><br>
-                                    <i class="bi bi-geo-alt-fill"></i>
-                                    <span>{{ $store->store_address }}</span>
+                                    <span class="text-truncate-description"><i class="bi bi-geo-alt-fill me-1"></i>{{ $store->store_address }}</span>
                                 </div>
                             </div>
                         </a>

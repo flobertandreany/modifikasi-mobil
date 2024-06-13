@@ -247,3 +247,24 @@
 .car-mod{
     box-shadow: 0px 3px 5px 6px rgba(0, 0, 0, 0.20);
 }
+
+.search-container {
+    position: relative;
+}
+
+.search-icon {
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: #67748E;
+}
+
+.search-keyword {
+    padding-left: 2.5rem;
+}
+
+.ui-menu{
+    z-index: 1050;
+}

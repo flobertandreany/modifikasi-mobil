@@ -48,6 +48,7 @@ Route::middleware(['userAkses:user'])->group(function (){
 Route::middleware(['userAkses:admin'])->group(function (){
     Route::get('/store/approval/{id}', [AdminController::class, 'approvalStore']);
     Route::get('/store/reject/{id}', [AdminController::class, 'rejectStore']);
+    Route::post('/store/send-email-approval', [AdminController::class, 'sendEmailApproval'])->name('admin.sendEmailApproval');
 
     Route::get('store/list', [AdminController::class, 'viewStoreList'])->name('view.store.list');
     Route::get('store/delete/{id}', [AdminController::class, 'deleteStore'])->name('store.delete');
@@ -133,6 +134,13 @@ Route::get('/user/store/product/{imageName}', [UserController::class, 'loadProdu
 Route::get('/user/store/detail/{id}', [UserController::class, 'viewStoreDetail'])->name('user.storeDetail');
 Route::get('/user/store/filter-product-list', [UserController::class, 'filterStoreProductList'])->name('user.filterStoreProductList');
 Route::get('/user/store/profile/{imageName}', [UserController::class, 'loadProfileImage'])->name('user.store.profileImage');
+
+Route::get('/user/find-store-list', [UserController::class, 'viewFindStoreList'])->name('user.findStoreList');
+Route::get('/user/filter-find-store', [UserController::class, 'filterFindStore'])->name('user.filterFindStore');
+Route::get('/user/autocomplete-store', [UserController::class, 'loadAutocompleteStore'])->name('user.autocompleteStore');
+
+Route::get('/user/product/search', [UserController::class, 'viewUserProductSearch'])->name('user.productSearch');
+Route::get('/user/autocomplete-parts', [UserController::class, 'loadAutocompleteParts'])->name('user.autocompleteParts');
 
 Route::get('users/{id}', function ($id) {
     return 'User '.$id;

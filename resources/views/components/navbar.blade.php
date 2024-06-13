@@ -42,15 +42,17 @@
                     @endif
                 @endif
             </div>
-            <div class="" style="flex: 0.6;">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+            <div class="search-container" style="flex: 0.6;">
+                <i class="fas fa-search search-icon"></i>
+                <form id="searchForm" action="{{ route('user.productSearch') }}" method="GET">
+                    <input id="searchKeyword" class="form-control search-keyword me-2" type="search" name="q" placeholder="Find Parts" aria-label="Search">
+                </form>
             </div>
             <!-- Button profile trigger modal -->
-            @auth
             <div style="flex: 0.2; justify-content: space-around;" class="d-flex flex-row">
-                <a href="" class="d-flex flex-column justify-content-center href-find-store">
+                <a href="{{ route('user.findStoreList') }}" class="d-flex flex-column justify-content-center href-find-store">
                     <button class="find-store"><img style="width: 14px; padding-right: 2px; padding-bottom: 3px;" src="{{ asset('img/Logo/find.png') }}" alt="">Find Store</button>
-                </div>
+                </a>
                 <a href="{{ route('user.favoriteList') }}" class="text-decoration-none">
                     <div class="d-flex flex-column" type="button" style="align-items: center; padding: 10px 20px 0px 20px;">
                         <img src="{{ asset('img/Logo/favorite.png') }}" style="width: 22px; padding-bottom: 6px;" alt="">
@@ -62,14 +64,6 @@
                     <span class="text-white" style="font-size: 11px;">Profile</span>
                 </div>
             </div>
-            @else
-            <div type="button" class="">
-                <a href="{{ route('view.login') }}" style="display: grid; justify-items: center; margin-right: 30px; text-decoration: none;">
-                    <i class="bi bi-person-circle text-white fs-4"></i>
-                    <span class="text-white" style="font-size: 11px;">Sign In</span>
-                </a>
-            </div>
-            @endauth
         </div>
     </nav>
 @else
@@ -84,21 +78,22 @@
             <i class="bi bi-list text-white fs-3"></i>
             <span class="text-white" style="font-size: 11px;">Menu</span>
         </div>
-        <input class="form-control me-2" style="width: 50%;" type="search" placeholder="Search" aria-label="Search">
+        <div class="search-container" style="width: 55%; padding-left: 140px;">
+            <i class="fas fa-search search-icon"></i>
+            <form id="searchForm" action="{{ route('user.productSearch') }}" method="GET">
+                <input id="searchKeyword" class="form-control search-keyword me-2" type="search" name="q" placeholder="Find Parts" aria-label="Search">
+            </form>
+        </div>
         <!-- Button profile trigger modal -->
-        @auth
-            <div type="button" class="" style="display: grid; justify-items: center; margin-right: 3rem;" data-bs-toggle="modal" data-bs-target="#profileModal">
-                <i class="bi bi-person-circle text-white fs-4"></i>
-                <span class="text-white" style="font-size: 11px;">Profile</span>
-            </div>
-        @else
-        <div type="button" class="">
+        <div type="button" class="d-flex flex-row">
+            <a href="{{ route('user.findStoreList') }}" style="padding-right: 40px;" class="d-flex flex-column justify-content-center href-find-store">
+                <button class="find-store"><img style="width: 14px; padding-right: 2px; padding-bottom: 3px;" src="{{ asset('img/Logo/find.png') }}" alt="">Find Store</button>
+            </a>
             <a href="{{ route('view.login') }}" style="display: grid; justify-items: center; margin-right: 30px; text-decoration: none;">
                 <i class="bi bi-person-circle text-white fs-4"></i>
                 <span class="text-white" style="font-size: 11px;">Sign In</span>
             </a>
-        </div>
-        @endauth
+        </div>
     </div>
 </nav>
 @endif
@@ -216,5 +211,39 @@
                 $('.collapse-horizontal').removeClass('show');
             }
         });
+
+        @auth
+            @unless (Auth::user()->isAdminOrStore())
+                $.ajax({
+                    url: "{{ route('user.autocompleteParts') }}",
+                    method: 'GET',
+                    success: function (data) {
+                        $('#searchKeyword').autocomplete({
+                            source: data,
+                            select: function(event, ui) {
+                                $('#searchKeyword').val(ui.item.value);
+                                $('#searchForm').submit();
+                            }
+                        });
+                    }
+                });
+            @endunless
+        @endauth
+
+        @guest
+            $.ajax({
+                url: "{{ route('user.autocompleteParts') }}",
+                method: 'GET',
+                success: function (data) {
+                    $('#searchKeyword').autocomplete({
+                        source: data,
+                        select: function(event, ui) {
+                            $('#searchKeyword').val(ui.item.value);
+                            $('#searchForm').submit();
+                        }
+                    });
+                }
+            });
+        @endguest
     </script>
 @endpush

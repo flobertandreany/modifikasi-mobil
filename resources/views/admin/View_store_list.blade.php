@@ -206,10 +206,10 @@
             event.preventDefault();
             Swal.fire({
                 icon: 'warning',
-                title: 'Are you sure want to decline this store ?',
-                text: 'This will decline this store permanently, and you cannot undo this action.',
+                title: 'Are you sure want to delete this store ?',
+                text: 'This will delete this store permanently, and you cannot undo this action.',
                 showCancelButton: true,
-                confirmButtonText: 'Decline',
+                confirmButtonText: 'Delete',
                 confirmButtonColor: '#F36600',
             }).then((result) => {
                 if (result.isConfirmed) {

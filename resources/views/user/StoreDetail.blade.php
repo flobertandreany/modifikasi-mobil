@@ -225,7 +225,7 @@
 
         .store-detail-container {
             padding-top: 100px;
-            min-height: 140rem;
+            min-height: 85rem;
         }
 
         .card-button-store{

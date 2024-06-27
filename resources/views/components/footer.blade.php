@@ -18,34 +18,37 @@
                             </a>
                         </div>
                     </div>
-                    <div class="col-lg-3 col-md-6 text-footer">
+                    <div class="col-lg-3 col-md-6 d-flex flex-column align-items-center text-footer">
                         <h5 class="text-footer" style="font-weight: bold;">Manage Store</h5>
                         <ul class="list-unstyled">
                             <li class="text-footer">
-                                <a href="#!" class="text-white text-decoration-none">Store Approval List</a>
+                                <a href="{{ route('admin.store.approval') }}" class="text-white text-decoration-none">Store Approval List</a>
                             </li>
                             <li class="text-footer">
-                                <a href="#!" class="text-white text-decoration-none">Store List</a>
+                                <a href="{{ route('view.store.list') }}" class="text-white text-decoration-none">Store List</a>
                             </li>
                         </ul>
                     </div>
                     <div class="col-lg-3 col-md-6 text-footer">
-                        <h5 class="text-footer" style="font-weight: bold;">Manage Store</h5>
+                        <h5 class="text-footer" style="font-weight: bold;">Manage Car</h5>
                         <ul class="list-unstyled mb-0">
                             <li class="text-footer">
-                                <a href="#!" class="text-white text-decoration-none">Car Brand</a>
+                                <a href="{{ route('car.brand.list') }}" class="text-white text-decoration-none">Manage Car Brand</a>
                             </li>
                             <li class="text-footer">
-                                <a href="#!" class="text-white text-decoration-none">Car Model</a>
+                                <a href="{{ route('car.model.list') }}" class="text-white text-decoration-none">Manage Car Model</a>
                             </li>
                             <li class="text-footer">
-                                <a href="#!" class="text-white text-decoration-none">Car Engine</a>
+                                <a href="{{ route('car.engine.list') }}" class="text-white text-decoration-none">Manage Car Engine</a>
+                            </li>
+                            <li class="text-footer">
+                                <a href="{{ route('car.part.list') }}" class="text-white text-decoration-none">Manage Car Parts</a>
                             </li>
                         </ul>
                     </div>
                     <div class="email-footer col-lg-3 col-md-6 text-footer d-flex flex-column align-items-center text-center">
                         <i class="fa fa-envelope fa-5x me-3"></i>
-                        <span class="">SpareCar@gmail.com</span>
+                        <span class="">sparecar.ind@gmail.com</span>
                     </div>
                 @elseif(auth()->check() && auth()->user()->isStore())
                     <div class="col-lg-4 col-md-6 text-footer">
@@ -64,12 +67,12 @@
                             </a>
                         </div>
                     </div>
-                    <div class="col-lg-4 col-md-6 text-footer">
+                    <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center text-footer">
                         <h5 class="text-footer" style="font-weight: bold;">ALL PRODUCT LIST</h5>
                     </div>
                     <div class="col-lg-4 col-md-6 text-footer d-flex flex-column align-items-center text-center">
                         <i class="fa fa-envelope fa-5x me-3"></i>
-                        <span class="">SpareCar@gmail.com</span>
+                        <span class="">sparecar.ind@gmail.com</span>
                     </div>
                 @else
                     <div class="col-lg-3 col-md-6 text-footer">
@@ -91,29 +94,25 @@
                     <div class="col-lg-2 col-md-6 text-footer">
                         <h5 class="text-footer" style="font-weight: bold;">Spareparts</h5>
                         <ul class="list-unstyled">
-                            <li class="text-footer">
-                                <a href="#!" class="text-white text-decoration-none">Batteries</a>
-                            </li>
-                            <li class="text-footer">
-                                <a href="#!" class="text-white text-decoration-none">Engine Oil</a>
-                            </li>
-                            <li class="text-footer">
-                                <a href="#!" class="text-white text-decoration-none">Air Filter</a>
-                            </li>
+                            @foreach ($spareparts as $sparepart)
+                                <li class="text-footer">
+                                    <a href="{{ route('user.productList', ['type' => $sparepart->type, 'name' => $sparepart->product_name]) }}" class="text-white text-decoration-none">
+                                        {{ $sparepart->product_name }}
+                                    </a>
+                                </li>
+                            @endforeach
                         </ul>
                     </div>
                     <div class="col-lg-2 col-md-6 text-footer">
                         <h5 class="text-footer" style="font-weight: bold;">Modification</h5>
                         <ul class="list-unstyled mb-0">
-                            <li class="text-footer">
-                                <a href="#!" class="text-white text-decoration-none">Rims</a>
-                            </li>
-                            <li class="text-footer">
-                                <a href="#!" class="text-white text-decoration-none">Suspension</a>
-                            </li>
-                            <li class="text-footer">
-                                <a href="#!" class="text-white text-decoration-none">Exhaust</a>
-                            </li>
+                            @foreach ($modifications as $modification)
+                                <li class="text-footer">
+                                    <a href="{{ route('user.productList', ['type' => $modification->type, 'name' => $modification->product_name]) }}" class="text-white text-decoration-none">
+                                        {{ $modification->product_name }}
+                                    </a>
+                                </li>
+                            @endforeach
                         </ul>
                     </div>
                     <div class="col-lg-2 col-md-6 text-footer">
@@ -123,13 +122,13 @@
                                 <a href="{{ route('user.aboutUs') }}" class="text-white text-decoration-none">About SpareCar</a>
                             </li>
                             <li class="text-footer">
-                                <a href="{{ route('user.termAndCondition') }}" class="text-white text-decoration-none">Terms and Condition</a>
+                                <a href="{{ route('user.termAndCondition') }}" class="text-white text-decoration-none">Terms and Conditions</a>
                             </li>
                         </ul>
                     </div>
                     <div class="col-lg-3 col-md-6 text-footer d-flex flex-column align-items-center text-center">
                         <i class="fa fa-envelope fa-5x me-3"></i>
-                        <span class="">SpareCar@gmail.com</span>
+                        <span class="">sparecar.ind@gmail.com</span>
                     </div>
                 @endif
             </div>

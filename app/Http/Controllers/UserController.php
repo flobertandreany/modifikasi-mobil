@@ -213,7 +213,7 @@ class UserController extends Controller
             ->join('products', 'modifications.product_id', '=', 'products.id')
             ->where('product_name', $name)
             ->orderBy('created_at', 'desc')
-            ->paginate(5);
+            ->paginate(10);
         }
 
         return view('user.productList', [
@@ -310,7 +310,7 @@ class UserController extends Controller
                 break;
         }
 
-        $products = $query->paginate(5);
+        $products = $query->paginate(10);
 
         return response()->json([
             'products' => $products->items(),

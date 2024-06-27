@@ -119,10 +119,10 @@
                         <h5 class="text-footer" style="font-weight: bold;">About</h5>
                         <ul class="list-unstyled">
                             <li class="text-footer">
-                                <a href="#!" class="text-white text-decoration-none">About SpareCar</a>
+                                <a href="{{ route('user.aboutUs') }}" class="text-white text-decoration-none">About SpareCar</a>
                             </li>
                             <li class="text-footer">
-                                <a href="#!" class="text-white text-decoration-none">Terms and Conditions</a>
+                                <a href="{{ route('user.termAndCondition') }}" class="text-white text-decoration-none">Terms and Conditions</a>
                             </li>
                         </ul>
                     </div>

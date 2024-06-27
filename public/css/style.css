@@ -255,7 +255,7 @@
 .search-icon {
     position: absolute;
     top: 50%;
-    left: 10px;
+    padding-left: 10px;
     transform: translateY(-50%);
     pointer-events: none;
     color: #67748E;

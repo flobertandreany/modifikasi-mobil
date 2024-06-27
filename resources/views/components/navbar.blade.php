@@ -85,7 +85,7 @@
             </form>
         </div>
         <!-- Button profile trigger modal -->
-        <div type="button" class="d-flex flex-row">
+        <div class="d-flex flex-row">
             <a href="{{ route('user.findStoreList') }}" style="padding-right: 40px;" class="d-flex flex-column justify-content-center href-find-store">
                 <button class="find-store"><img style="width: 14px; padding-right: 2px; padding-bottom: 3px;" src="{{ asset('img/Logo/find.png') }}" alt="">Find Store</button>
             </a>
@@ -93,7 +93,7 @@
                 <i class="bi bi-person-circle text-white fs-4"></i>
                 <span class="text-white" style="font-size: 11px;">Sign In</span>
             </a>
-        </div>
+        </div>
     </div>
 </nav>
 @endif

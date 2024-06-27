@@ -862,7 +862,7 @@ class UserController extends Controller
             $spareparts = $spareparts->join('sparepart_details', 'spareparts.id', '=', 'sparepart_details.sparepart_id')
             ->where('car_model_id', $userCar->car_model_id)
             ->where('car_engine_id', $userCar->car_engine_id);
-            
+
             $modifications = $modifications->join('modification_details', 'modifications.id', '=', 'modification_details.modification_id')
             ->where('car_model_id', $userCar->car_model_id)
             ->where('car_engine_id', $userCar->car_engine_id);
@@ -876,6 +876,18 @@ class UserController extends Controller
         }
 
         return $data;
+    }
+
+    public function viewTermAndCondition(){
+        return view('user.termAndCondition', [
+            'title' => 'TERMS AND CONDITIONS'
+        ]);
+    }
+
+    public function viewAboutUs(){
+        return view('user.aboutUs', [
+            'title' => 'ABOUT SPARECAR'
+        ]);
     }
 
     public function loadProductImage($imageName){

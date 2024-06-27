@@ -134,6 +134,8 @@ Route::get('/user/store/product/{imageName}', [UserController::class, 'loadProdu
 Route::get('/user/store/detail/{id}', [UserController::class, 'viewStoreDetail'])->name('user.storeDetail');
 Route::get('/user/store/filter-product-list', [UserController::class, 'filterStoreProductList'])->name('user.filterStoreProductList');
 Route::get('/user/store/profile/{imageName}', [UserController::class, 'loadProfileImage'])->name('user.store.profileImage');
+Route::get('/usr/term-and-condition', [UserController::class, 'viewTermAndCondition'])->name('user.termAndCondition');
+Route::get('/user/about-us', [UserController::class, 'viewAboutUs'])->name('user.aboutUs');
 
 Route::get('/user/find-store-list', [UserController::class, 'viewFindStoreList'])->name('user.findStoreList');
 Route::get('/user/filter-find-store', [UserController::class, 'filterFindStore'])->name('user.filterFindStore');

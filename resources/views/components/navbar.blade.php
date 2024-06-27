@@ -180,10 +180,10 @@
                         </li>
                     @endforeach
                     <li class="nav-item-user">
-                        <a class="text-decoration-none text-white" href="#" style="font-weight: bold;">About Us</a>
+                        <a class="text-decoration-none text-white" href="{{ route('user.aboutUs') }}" style="font-weight: bold;">About Us</a>
                     </li>
                     <li class="nav-item-user">
-                        <a class="text-decoration-none text-white" href="#" style="font-weight: bold;">Terms and Conditions</a>
+                        <a class="text-decoration-none text-white" href="{{ route('user.termAndCondition') }}" style="font-weight: bold;">Terms and Conditions</a>
                     </li>
                 </ul>
             @endif
